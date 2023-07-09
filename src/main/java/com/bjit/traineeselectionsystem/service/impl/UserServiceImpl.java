@@ -3,13 +3,10 @@ package com.bjit.traineeselectionsystem.service.impl;
 import com.bjit.traineeselectionsystem.entity.AdminEntity;
 import com.bjit.traineeselectionsystem.entity.UserEntity;
 import com.bjit.traineeselectionsystem.model.Response;
-import com.bjit.traineeselectionsystem.model.UserCreateRequest;
 import com.bjit.traineeselectionsystem.repository.AdminRepository;
 import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
