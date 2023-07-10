@@ -2,7 +2,10 @@ package com.bjit.traineeselectionsystem.controller;
 
 
 import com.bjit.traineeselectionsystem.model.ApplicantCreateRequest;
+import com.bjit.traineeselectionsystem.model.ApplyRequest;
+import com.bjit.traineeselectionsystem.model.CircularCreateRequest;
 import com.bjit.traineeselectionsystem.model.Response;
+import com.bjit.traineeselectionsystem.service.ApplicantService;
 import com.bjit.traineeselectionsystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,8 @@ import java.io.IOException;
 public class ApplicantController {
 
     private final UserService userService;
+    private final ApplicantService applicantService;
+
     @PostMapping("/register")
     public String register(
             @RequestParam("image") MultipartFile file1 ,
@@ -25,5 +30,11 @@ public class ApplicantController {
             throws IOException {
         userService.addApplicant(file1, applicantCreateRequest);
         return "Applicant registered successfully";
+    }
+
+
+    @PostMapping("/apply")
+    public ResponseEntity<Response<?>> apply(@RequestBody ApplyRequest applyRequest) {
+        return applicantService.apply(applyRequest);
     }
 }
