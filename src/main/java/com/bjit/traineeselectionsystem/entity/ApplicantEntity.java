@@ -48,17 +48,19 @@ public class ApplicantEntity {
 
     private String address;
 
+    private String imageFileName;
+    private String imageFileType;
+
+//    private String pdfFileName;
+//    private String pdfFileType;
+
+
     @Lob
-    @Column(name = "image_file")
+    @Column(name = "image_file"  ,length = 2000)
     private byte[] imageFile;
 
-    @Lob
-    @Column(name = "cv_file")
-    private byte[] cvFile;
+//    @Lob
+//    @Column(name = "cv_file" ,length = 2000)
+//    private byte[] cvFile;
 
-//    @Column(name = "image_file")
-//    private String imageFile;
-//
-//    @Column(name = "cv_file")
-//    private String cvFile;
 }
