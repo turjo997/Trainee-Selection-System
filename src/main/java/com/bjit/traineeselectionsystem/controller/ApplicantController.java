@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/applicant")
 @RequiredArgsConstructor
@@ -22,13 +23,17 @@ public class ApplicantController {
     private final UserService userService;
     private final ApplicantService applicantService;
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register" , consumes = "multipart/form-data")
     public String register(
-            @RequestParam("image") MultipartFile file1 ,
-//            @RequestParam("cv") MultipartFile file2,
+            //@RequestParam("imageFile") MultipartFile imageFile,
+            //@RequestParam("cvFile") MultipartFile cvFile,
             @RequestBody ApplicantCreateRequest applicantCreateRequest)
             throws IOException {
-        userService.addApplicant(file1, applicantCreateRequest);
+        // Set the MultipartFile objects in the createRequest object
+     //   applicantCreateRequest.setImageFile(imageFile);
+       // applicantCreateRequest.setCvFile(cvFile);
+
+        userService.addApplicant(applicantCreateRequest);
         return "Applicant registered successfully";
     }
 

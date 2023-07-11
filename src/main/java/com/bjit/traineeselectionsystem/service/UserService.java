@@ -12,5 +12,5 @@ public interface UserService {
     //ResponseEntity <Response<?>> addAdmin();
     void addAdmin();
 
-    void addApplicant(MultipartFile file1  , ApplicantCreateRequest applicantCreateRequest) throws IOException;
+    void addApplicant(ApplicantCreateRequest applicantCreateRequest) throws IOException;
 }

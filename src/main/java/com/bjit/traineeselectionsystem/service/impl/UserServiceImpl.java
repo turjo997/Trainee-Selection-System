@@ -2,12 +2,14 @@ package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.AdminEntity;
 import com.bjit.traineeselectionsystem.entity.ApplicantEntity;
+import com.bjit.traineeselectionsystem.entity.ImageEntity;
 import com.bjit.traineeselectionsystem.entity.UserEntity;
 import com.bjit.traineeselectionsystem.model.ApplicantCreateRequest;
 import com.bjit.traineeselectionsystem.model.Response;
 import com.bjit.traineeselectionsystem.model.UserCreateRequest;
 import com.bjit.traineeselectionsystem.repository.AdminRepository;
 import com.bjit.traineeselectionsystem.repository.ApplicantRepository;
+import com.bjit.traineeselectionsystem.repository.ImageRepository;
 import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.service.UserService;
 import com.bjit.traineeselectionsystem.util.HashingPassword;
@@ -28,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
     private final ApplicantRepository applicantRepository;
+    private final ImageRepository imageRepository;
     @Override
     public void addAdmin() {
 
@@ -66,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addApplicant(MultipartFile file1 , ApplicantCreateRequest applicantCreateRequest) throws IOException {
+    public void addApplicant(ApplicantCreateRequest applicantCreateRequest) throws IOException {
 
         String role = "Applicant";
 
@@ -79,6 +82,7 @@ public class UserServiceImpl implements UserService {
 
         // Save the user to the UserRepository
         UserEntity savedUser = userRepository.save(user);
+
 
         // Create a new ApplicantEntity with the saved user
         ApplicantEntity applicant = ApplicantEntity.builder()
@@ -93,22 +97,21 @@ public class UserServiceImpl implements UserService {
                 .cgpa(applicantCreateRequest.getCgpa())
                 .passingYear(applicantCreateRequest.getPassingYear())
                 .address(applicantCreateRequest.getAddress())
-                .imageFileName(file1.getOriginalFilename())
-                .imageFileType(file1.getContentType())
-                .imageFile(ImageUtils.compressImage(file1.getBytes()))
-                //.pdfFileName(file2.getOriginalFilename())
-                //.pdfFileType(file2.getContentType())
-               // .cvFile(ImageUtils.compressImage(file2.getBytes()))
                 .build();
 
         // Save the applicant to the ApplicantRepository
         ApplicantEntity savedApplicant = applicantRepository.save(applicant);
 
-        // Create a response with the saved applicant
-//        Response<ApplicantEntity> response = new Response<>();
-//        response.setData(savedApplicant);
+        ImageEntity image = ImageEntity.builder()
+                .applicant(savedApplicant)
+                .imageFileName(applicantCreateRequest.getImageFile().getOriginalFilename())
+                .imageFileType(applicantCreateRequest.getImageFile().getContentType())
+                .imageFile(applicantCreateRequest.getImageFile().getBytes())
+                .build();
 
-        //return new ResponseEntity<>(response, HttpStatus.OK);
+        imageRepository.save(image);
+
+
     }
 
 
