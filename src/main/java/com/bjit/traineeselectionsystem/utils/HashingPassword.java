@@ -1,4 +1,4 @@
-package com.bjit.traineeselectionsystem.util;
+package com.bjit.traineeselectionsystem.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
