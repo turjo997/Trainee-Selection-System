@@ -1,13 +1,12 @@
 package com.bjit.traineeselectionsystem.controller;
 
 
-import com.bjit.traineeselectionsystem.model.ApplicantCreateRequest;
-import com.bjit.traineeselectionsystem.model.ApplyRequest;
-import com.bjit.traineeselectionsystem.model.CircularCreateRequest;
-import com.bjit.traineeselectionsystem.model.Response;
+import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.service.ApplicantService;
 import com.bjit.traineeselectionsystem.service.UserService;
+import com.bjit.traineeselectionsystem.service.impl.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,12 +22,14 @@ public class ApplicantController {
     private final UserService userService;
     private final ApplicantService applicantService;
 
+
     @PostMapping(value = "/register")
     public ResponseEntity<Object> register(@RequestBody ApplicantCreateRequest applicantCreateRequest) {
 
         return userService.addApplicant(applicantCreateRequest);
         //return "Applicant registered successfully";
     }
+
 
 
     @PostMapping("/apply")

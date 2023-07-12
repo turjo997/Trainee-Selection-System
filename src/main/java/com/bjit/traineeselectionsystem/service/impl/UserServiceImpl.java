@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<Object> addAdmin() {
 
-        String email = "admin12@gmail.com";
+        String email = "admin123@gmail.com";
         //String password = HashingPassword.hashPass("admin12345");
         String password = "admin12345";
 

@@ -1,11 +1,10 @@
 package com.bjit.traineeselectionsystem.controller;
 
-import com.bjit.traineeselectionsystem.model.CircularCreateRequest;
-import com.bjit.traineeselectionsystem.model.EvaluatorCreateRequest;
-import com.bjit.traineeselectionsystem.model.Response;
-import com.bjit.traineeselectionsystem.model.UserCreateRequest;
+import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.service.AdminService;
+import com.bjit.traineeselectionsystem.service.impl.AuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +16,13 @@ import org.springframework.web.bind.annotation.*;
 public class AdminController {
 
     private final AdminService adminService;
+    private final AuthenticationService authenticationService;
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
+        return new ResponseEntity<>(authenticationService.login(authenticationRequest), HttpStatus.OK);
+    }
+
 
     @PostMapping("/create/circular")
     public ResponseEntity<Response<?>> createCircular(@RequestBody CircularCreateRequest circularCreateRequest) {
