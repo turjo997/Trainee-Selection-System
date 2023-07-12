@@ -1,18 +1,18 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.*;
-import com.bjit.traineeselectionsystem.model.CircularCreateRequest;
-import com.bjit.traineeselectionsystem.model.EvaluatorCreateRequest;
-import com.bjit.traineeselectionsystem.model.ExamCreateRequest;
-import com.bjit.traineeselectionsystem.model.Response;
+import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.repository.AdminRepository;
 import com.bjit.traineeselectionsystem.repository.EvaluatorRepository;
 import com.bjit.traineeselectionsystem.repository.ExamCreateRepository;
 import com.bjit.traineeselectionsystem.repository.JobCircularRepository;
 import com.bjit.traineeselectionsystem.service.AdminService;
+import com.bjit.traineeselectionsystem.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +27,8 @@ public class AdminServiceImpl implements AdminService {
     private final JobCircularRepository jobCircularRepository;
     private final EvaluatorRepository evaluatorRepository;
     private final ExamCreateRepository examCreateRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Override
     public ResponseEntity<Response<?>> createCircular(CircularCreateRequest circularCreateRequest) {
@@ -87,7 +89,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ResponseEntity<Response<?>> createEvaluator(EvaluatorCreateRequest evaluatorCreateRequest) {
+    public ResponseEntity<Object> createEvaluator(EvaluatorCreateRequest evaluatorCreateRequest) {
         // Get the admin by adminId from the circularCreateRequest
         AdminEntity adminEntity = adminRepository.findById(evaluatorCreateRequest.getAdminId())
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
@@ -98,6 +100,7 @@ public class AdminServiceImpl implements AdminService {
                 .admin(adminEntity)
                 .evaluatorName(evaluatorCreateRequest.getEvaluatorName())
                 .evaluatorEmail(evaluatorCreateRequest.getEvaluatorEmail())
+                .password(passwordEncoder.encode(evaluatorCreateRequest.getPassword()))
                 .designation(evaluatorCreateRequest.getDesignation())
                 .contactNumber(evaluatorCreateRequest.getContactNumber())
                 .qualification(evaluatorCreateRequest.getQualification())
@@ -112,7 +115,15 @@ public class AdminServiceImpl implements AdminService {
         Response<EvaluatorEntity> response = new Response<>();
         response.setData(savedEvaluator);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        //return new ResponseEntity<>(response, HttpStatus.OK);
+
+
+        AuthenticationResponse authRes = AuthenticationResponse.builder()
+                .token(jwtService.generateToken(savedEvaluator))
+                .build();
+
+        System.out.println(authRes);
+        return new ResponseEntity<>(authRes, HttpStatus.CREATED);
     }
 
     @Override

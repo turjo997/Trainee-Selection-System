@@ -14,6 +14,7 @@ public class EvaluatorCreateRequest {
     private Long evaluatorId;
     private Long adminId;
     private String evaluatorName;
+    private String password;
     private String evaluatorEmail;
     private String designation;
     private String contactNumber;

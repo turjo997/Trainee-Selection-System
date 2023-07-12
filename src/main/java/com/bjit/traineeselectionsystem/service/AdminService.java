@@ -10,7 +10,7 @@ public interface AdminService {
     ResponseEntity<Response<?>> createCircular(CircularCreateRequest circularCreateRequest);
     ResponseEntity<Response<?>> getAllCircular();
 
-    ResponseEntity<Response<?>> createEvaluator(EvaluatorCreateRequest evaluatorCreateRequest);
+    ResponseEntity<Object> createEvaluator(EvaluatorCreateRequest evaluatorCreateRequest);
     ResponseEntity<Response<?>> getAllEvaluator();
 
     ResponseEntity<Response<?>> createExamCategory(ExamCreateRequest examCreateRequest);

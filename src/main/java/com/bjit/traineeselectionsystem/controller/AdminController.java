@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -34,7 +34,7 @@ public class AdminController {
     }
 
     @PostMapping("/create/evaluator")
-    public ResponseEntity<Response<?>> createEvaluator(@RequestBody EvaluatorCreateRequest evaluatorCreateRequest) {
+    public ResponseEntity<Object> createEvaluator(@RequestBody EvaluatorCreateRequest evaluatorCreateRequest) {
         return adminService.createEvaluator(evaluatorCreateRequest);
     }
 
