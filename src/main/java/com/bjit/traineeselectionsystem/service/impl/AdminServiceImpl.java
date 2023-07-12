@@ -2,10 +2,7 @@ package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.model.*;
-import com.bjit.traineeselectionsystem.repository.AdminRepository;
-import com.bjit.traineeselectionsystem.repository.EvaluatorRepository;
-import com.bjit.traineeselectionsystem.repository.ExamCreateRepository;
-import com.bjit.traineeselectionsystem.repository.JobCircularRepository;
+import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.AdminService;
 import com.bjit.traineeselectionsystem.utils.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +21,7 @@ import java.util.List;
 public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
+    private final UserRepository userRepository;
     private final JobCircularRepository jobCircularRepository;
     private final EvaluatorRepository evaluatorRepository;
     private final ExamCreateRepository examCreateRepository;
@@ -94,13 +92,25 @@ public class AdminServiceImpl implements AdminService {
         AdminEntity adminEntity = adminRepository.findById(evaluatorCreateRequest.getAdminId())
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
 
+
+        // Create a new UserEntity
+        UserEntity user = UserEntity.builder()
+                .email(evaluatorCreateRequest.getEmail())
+                .password(passwordEncoder.encode(evaluatorCreateRequest.getPassword()))
+                .role(Role.EVALUATOR)
+                .build();
+
+
+        // Save the user to the UserRepository
+        UserEntity savedUser = userRepository.save(user);
+
+
         // Create a new JobCircularEntity
         EvaluatorEntity evaluatorEntity = EvaluatorEntity
                 .builder()
                 .admin(adminEntity)
+                .user(savedUser)
                 .evaluatorName(evaluatorCreateRequest.getEvaluatorName())
-                .evaluatorEmail(evaluatorCreateRequest.getEvaluatorEmail())
-                .password(passwordEncoder.encode(evaluatorCreateRequest.getPassword()))
                 .designation(evaluatorCreateRequest.getDesignation())
                 .contactNumber(evaluatorCreateRequest.getContactNumber())
                 .qualification(evaluatorCreateRequest.getQualification())
@@ -119,7 +129,7 @@ public class AdminServiceImpl implements AdminService {
 
 
         AuthenticationResponse authRes = AuthenticationResponse.builder()
-                .token(jwtService.generateToken(savedEvaluator))
+                .token(jwtService.generateToken(user))
                 .build();
 
         System.out.println(authRes);
@@ -140,9 +150,9 @@ public class AdminServiceImpl implements AdminService {
             modelList.add(
                     evaluatorEntity.builder()
                             .admin(evaluatorEntity.getAdmin())
+                            .user(evaluatorEntity.getUser())
                             .evaluatorId(evaluatorEntity.getEvaluatorId())
                             .evaluatorName(evaluatorEntity.getEvaluatorName())
-                            .evaluatorEmail(evaluatorEntity.getEvaluatorEmail())
                             .designation(evaluatorEntity.getDesignation())
                             .contactNumber(evaluatorEntity.getContactNumber())
                             .qualification(evaluatorEntity.getQualification())

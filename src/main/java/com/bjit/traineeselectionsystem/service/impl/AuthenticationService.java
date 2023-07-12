@@ -2,6 +2,7 @@ package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.model.AuthenticationRequest;
 import com.bjit.traineeselectionsystem.model.AuthenticationResponse;
+import com.bjit.traineeselectionsystem.repository.EvaluatorRepository;
 import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.utils.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final EvaluatorRepository evaluatorRepository;
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -23,10 +25,34 @@ public class AuthenticationService {
                 )
         );
         var user = userRepository.findByEmail(authenticationRequest.getEmail());
+        //var user = evaluatorRepository.findByEvaluatorEmail(authenticationRequest.getEmail());
+
+        System.out.println(user);
+
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
 
     }
+
+//    public AuthenticationResponse evaluatorLogin(AuthenticationRequest authenticationRequest) {
+//        System.out.println(authenticationRequest.getEmail());
+//        System.out.println(authenticationRequest.getPassword());
+//        authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(
+//                        authenticationRequest.getEmail(),
+//                        authenticationRequest.getPassword()
+//                )
+//        );
+//        //System.out.println("ekhane");
+//        var user = evaluatorRepository.findByEvaluatorEmail(authenticationRequest.getEmail());
+//
+//        System.out.println(user);
+//        var jwtToken = jwtService.generateToken(user);
+//        return AuthenticationResponse.builder()
+//                .token(jwtToken)
+//                .build();
+//
+//    }
 }

@@ -13,9 +13,10 @@ import lombok.NoArgsConstructor;
 public class EvaluatorCreateRequest {
     private Long evaluatorId;
     private Long adminId;
+    private Long userId;
     private String evaluatorName;
     private String password;
-    private String evaluatorEmail;
+    private String email;
     private String designation;
     private String contactNumber;
     private String qualification;
