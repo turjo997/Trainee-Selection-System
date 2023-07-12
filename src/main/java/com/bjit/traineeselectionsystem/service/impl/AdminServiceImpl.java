@@ -1,14 +1,13 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
-import com.bjit.traineeselectionsystem.entity.AdminEntity;
-import com.bjit.traineeselectionsystem.entity.EvaluationEntity;
-import com.bjit.traineeselectionsystem.entity.EvaluatorEntity;
-import com.bjit.traineeselectionsystem.entity.JobCircularEntity;
+import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.model.CircularCreateRequest;
 import com.bjit.traineeselectionsystem.model.EvaluatorCreateRequest;
+import com.bjit.traineeselectionsystem.model.ExamCreateRequest;
 import com.bjit.traineeselectionsystem.model.Response;
 import com.bjit.traineeselectionsystem.repository.AdminRepository;
 import com.bjit.traineeselectionsystem.repository.EvaluatorRepository;
+import com.bjit.traineeselectionsystem.repository.ExamCreateRepository;
 import com.bjit.traineeselectionsystem.repository.JobCircularRepository;
 import com.bjit.traineeselectionsystem.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +26,7 @@ public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
     private final JobCircularRepository jobCircularRepository;
     private final EvaluatorRepository evaluatorRepository;
+    private final ExamCreateRepository examCreateRepository;
 
     @Override
     public ResponseEntity<Response<?>> createCircular(CircularCreateRequest circularCreateRequest) {
@@ -143,6 +143,31 @@ public class AdminServiceImpl implements AdminService {
 
         Response<List<EvaluatorEntity>> response = new Response<List<EvaluatorEntity>>(modelList, null);
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<Response<?>> createExamCategory(ExamCreateRequest examCreateRequest) {
+        // Get the admin by adminId from the circularCreateRequest
+        AdminEntity adminEntity = adminRepository.findById(examCreateRequest.getAdminId())
+                .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
+
+        // Create a new JobCircularEntity
+        ExamCategoryEntity examCategoryEntity = ExamCategoryEntity.builder()
+                .admin(adminEntity)
+                .examTitle(examCreateRequest.getExamTitle())
+                .description(examCreateRequest.getDescription())
+                .passingMarks(examCreateRequest.getPassingMarks())
+                .build();
+
+
+        // Save the job circular to the repository
+        ExamCategoryEntity savedExamCategory = examCreateRepository.save(examCategoryEntity);
+
+        // Create a response with the saved job circular
+        Response<ExamCategoryEntity> response = new Response<>();
+        response.setData(savedExamCategory);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
