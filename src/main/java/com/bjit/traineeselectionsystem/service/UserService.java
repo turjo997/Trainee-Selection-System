@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public interface UserService {
     //ResponseEntity <Response<?>> addAdmin();
-    void addAdmin();
+    ResponseEntity<Object> addAdmin();
 
     ResponseEntity<Object> addApplicant(ApplicantCreateRequest applicantCreateRequest);
 }

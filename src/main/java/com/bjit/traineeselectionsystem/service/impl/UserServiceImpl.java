@@ -32,21 +32,24 @@ public class UserServiceImpl implements UserService {
     private final ApplicantRepository applicantRepository;
     private final ImageRepository imageRepository;
     @Override
-    public void addAdmin() {
+    public ResponseEntity<Object> addAdmin() {
 
-        String email = "admin@gmail.com";
-        String password = HashingPassword.hashPass("admin12345");
-        String role = "ADMIN";
+        String email = "admin12@gmail.com";
+        //String password = HashingPassword.hashPass("admin12345");
+        String password = "admin12345";
 
         if (userRepository.existsByEmail(email)) {
             String errorMessage = "Admin with the same email already exists";
             System.out.println(errorMessage);
-        }else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
+        }else {
             UserEntity userEntity = UserEntity.builder()
+                    .role(Role.ADMIN)
                     .email(email)
-                    .password(password)
-                    .role(Role.valueOf(role))
+                    .password(passwordEncoder.encode(password))
                     .build();
+
+
             // Save the user to the UserRepository
             UserEntity savedUser = userRepository.save(userEntity);
 
@@ -64,6 +67,13 @@ public class UserServiceImpl implements UserService {
             response.setData(savedAdmin);
 
             System.out.println("Account created");
+
+            AuthenticationResponse authRes = AuthenticationResponse.builder()
+                    .token(jwtService.generateToken(savedUser))
+                    .build();
+
+            System.out.println(authRes);
+            return new ResponseEntity<>(authRes, HttpStatus.CREATED);
             //return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
