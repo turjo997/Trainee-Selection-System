@@ -23,18 +23,11 @@ public class ApplicantController {
     private final UserService userService;
     private final ApplicantService applicantService;
 
-    @PostMapping(value = "/register" , consumes = "multipart/form-data")
-    public String register(
-            //@RequestParam("imageFile") MultipartFile imageFile,
-            //@RequestParam("cvFile") MultipartFile cvFile,
-            @RequestBody ApplicantCreateRequest applicantCreateRequest)
-            throws IOException {
-        // Set the MultipartFile objects in the createRequest object
-     //   applicantCreateRequest.setImageFile(imageFile);
-       // applicantCreateRequest.setCvFile(cvFile);
+    @PostMapping(value = "/register")
+    public ResponseEntity<Object> register(@RequestBody ApplicantCreateRequest applicantCreateRequest) {
 
-        userService.addApplicant(applicantCreateRequest);
-        return "Applicant registered successfully";
+        return userService.addApplicant(applicantCreateRequest);
+        //return "Applicant registered successfully";
     }
 
 

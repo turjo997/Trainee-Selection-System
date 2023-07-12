@@ -12,5 +12,5 @@ public interface UserService {
     //ResponseEntity <Response<?>> addAdmin();
     void addAdmin();
 
-    void addApplicant(ApplicantCreateRequest applicantCreateRequest) throws IOException;
+    ResponseEntity<Object> addApplicant(ApplicantCreateRequest applicantCreateRequest);
 }

@@ -1,10 +1,8 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
-import com.bjit.traineeselectionsystem.entity.AdminEntity;
-import com.bjit.traineeselectionsystem.entity.ApplicantEntity;
-import com.bjit.traineeselectionsystem.entity.ImageEntity;
-import com.bjit.traineeselectionsystem.entity.UserEntity;
+import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.model.ApplicantCreateRequest;
+import com.bjit.traineeselectionsystem.model.AuthenticationResponse;
 import com.bjit.traineeselectionsystem.model.Response;
 import com.bjit.traineeselectionsystem.repository.AdminRepository;
 import com.bjit.traineeselectionsystem.repository.ApplicantRepository;
@@ -12,14 +10,23 @@ import com.bjit.traineeselectionsystem.repository.ImageRepository;
 import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.service.UserService;
 import com.bjit.traineeselectionsystem.utils.HashingPassword;
+import com.bjit.traineeselectionsystem.utils.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+
+
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
     private final ApplicantRepository applicantRepository;
@@ -38,7 +45,7 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = UserEntity.builder()
                     .email(email)
                     .password(password)
-                    .role(role)
+                    .role(Role.valueOf(role))
                     .build();
             // Save the user to the UserRepository
             UserEntity savedUser = userRepository.save(userEntity);
@@ -62,16 +69,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addApplicant(ApplicantCreateRequest applicantCreateRequest) throws IOException {
-
-        String role = "Applicant";
+    public ResponseEntity<Object> addApplicant(ApplicantCreateRequest applicantCreateRequest) {
 
         // Create a new UserEntity
         UserEntity user = UserEntity.builder()
+                .role(Role.APPLICANT)
                 .email(applicantCreateRequest.getEmail())
-                .password(applicantCreateRequest.getPassword())
-                .role(role)
+                .password(passwordEncoder.encode(applicantCreateRequest.getPassword()))
                 .build();
+
 
         // Save the user to the UserRepository
         UserEntity savedUser = userRepository.save(user);
@@ -95,18 +101,23 @@ public class UserServiceImpl implements UserService {
         // Save the applicant to the ApplicantRepository
         ApplicantEntity savedApplicant = applicantRepository.save(applicant);
 
-        ImageEntity image = ImageEntity.builder()
-                .applicant(savedApplicant)
-                .imageFileName(applicantCreateRequest.getImageFile().getOriginalFilename())
-                .imageFileType(applicantCreateRequest.getImageFile().getContentType())
-                .imageFile(applicantCreateRequest.getImageFile().getBytes())
+        AuthenticationResponse authRes = AuthenticationResponse.builder()
+                .token(jwtService.generateToken(user))
                 .build();
+        return new ResponseEntity<>(authRes, HttpStatus.CREATED);
 
-        imageRepository.save(image);
+
+
+//        ImageEntity image = ImageEntity.builder()
+//                .applicant(savedApplicant)
+//                .imageFileName(applicantCreateRequest.getImageFile().getOriginalFilename())
+//                .imageFileType(applicantCreateRequest.getImageFile().getContentType())
+//                .imageFile(applicantCreateRequest.getImageFile().getBytes())
+//                .build();
+//
+//        imageRepository.save(image);
 
 
     }
-
-
 
 }

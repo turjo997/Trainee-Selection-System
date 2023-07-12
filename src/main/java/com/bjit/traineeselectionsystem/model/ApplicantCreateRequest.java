@@ -32,7 +32,7 @@ public class ApplicantCreateRequest {
     //private String imageFileName;
     //private String imageFileType;
     //private byte[] imageFile;
-    private MultipartFile imageFile;
+    //private MultipartFile imageFile;
 
    // private byte[] cvFile;
 
