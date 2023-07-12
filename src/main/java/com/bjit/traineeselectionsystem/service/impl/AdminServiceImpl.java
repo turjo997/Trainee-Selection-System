@@ -71,7 +71,7 @@ public class AdminServiceImpl implements AdminService {
         circulars.forEach(jobCircularEntity -> {
             modelList.add(
                    JobCircularEntity.builder()
-                           .admin(jobCircularEntity.getAdmin())
+                           //.admin(jobCircularEntity.getAdmin())
                            .circularId(jobCircularEntity.getCircularId())
                            .circularTitle(jobCircularEntity.getCircularTitle())
                            .jobType(jobCircularEntity.getJobType())
