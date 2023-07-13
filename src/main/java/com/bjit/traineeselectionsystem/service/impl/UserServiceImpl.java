@@ -6,10 +6,8 @@ import com.bjit.traineeselectionsystem.model.AuthenticationResponse;
 import com.bjit.traineeselectionsystem.model.Response;
 import com.bjit.traineeselectionsystem.repository.AdminRepository;
 import com.bjit.traineeselectionsystem.repository.ApplicantRepository;
-import com.bjit.traineeselectionsystem.repository.ImageRepository;
 import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.service.UserService;
-import com.bjit.traineeselectionsystem.utils.HashingPassword;
 import com.bjit.traineeselectionsystem.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AdminRepository adminRepository;
     private final ApplicantRepository applicantRepository;
-    private final ImageRepository imageRepository;
+
     @Override
     public ResponseEntity<Object> addAdmin() {
 
