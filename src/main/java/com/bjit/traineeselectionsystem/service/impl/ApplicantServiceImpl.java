@@ -37,8 +37,8 @@ public class ApplicantServiceImpl implements ApplicantService {
         ApplyEntity applyEntity = ApplyEntity.builder()
                 .applicant(applicantEntity)
                 .jobCircular(jobCircularEntity)
-                .appliedDate(applyRequest.getAppliedDate())
-                .approved(applyRequest.isApproved())
+                //.appliedDate(applyRequest.getAppliedDate())
+                //.approved(applyRequest.isApproved())
                 .build();
 
         // Save the application to the repository

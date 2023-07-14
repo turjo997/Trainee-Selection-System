@@ -24,15 +24,15 @@ public class AdmitCardEntity {
     @JoinColumn(name = "admin_id")
     private AdminEntity admin;
 
-
     @ManyToOne
     @JoinColumn(name = "applicant_id")
     private ApplicantEntity applicant;
 
-    @Column(nullable = false)
-    private String barCode;
+    @ManyToOne
+    @JoinColumn(name = "circular_id")
+    private JobCircularEntity jobCircular;
 
-    @Column(nullable = false)
+
     private String qrCode;
 
     @Column(length = 1000)

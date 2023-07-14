@@ -2,6 +2,7 @@ package com.bjit.traineeselectionsystem.controller;
 
 import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.service.AdminService;
+import com.bjit.traineeselectionsystem.service.AdmitCardService;
 import com.bjit.traineeselectionsystem.service.UploadMarksService;
 import com.bjit.traineeselectionsystem.service.impl.AuthenticationService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class AdminController {
 
     private final AdminService adminService;
     private final AuthenticationService authenticationService;
-
+    private final AdmitCardService admitCardService;
     private final UploadMarksService uploadMarksService;
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
@@ -49,6 +50,14 @@ public class AdminController {
     public ResponseEntity<String> uploadMarks(@RequestBody UploadMarksHrRequest uploadMarksHrRequest) {
         uploadMarksService.uploadMarksByAdmin(uploadMarksHrRequest);
         return ResponseEntity.ok("Marks uploaded successfully");
+    }
+
+
+
+    @PostMapping("/generateAdmitCard")
+    public String generateAdmitCard(@RequestBody AdmitCardRequest admitCardRequest){
+        admitCardService.generateAdmitCards(admitCardRequest);
+        return "Successfully generated";
     }
 
 }

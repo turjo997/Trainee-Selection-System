@@ -28,9 +28,9 @@ public class ApplyEntity {
     @JoinColumn(name = "circular_id")
     private JobCircularEntity jobCircular;
 
-    @Column(nullable = false)
-    private LocalDate appliedDate;
-
-    @Column(nullable = false)
-    private boolean approved;
+//    @Column(nullable = false)
+//    private LocalDate appliedDate;
+//
+//    @Column(nullable = false)
+//    private boolean approved;
 }

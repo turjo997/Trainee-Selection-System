@@ -23,6 +23,7 @@ public class ApproveServiceImpl implements ApproveService {
     private final ApplicantRepository applicantRepository;
     private final ExamCreateRepository examCreateRepository;
     private final JobCircularRepository jobCircularRepository;
+    private final ApplyRepository applyRepository;
     @Override
     public void approveApplicant(Long adminId , Long applicantId , Long circularId , Long examId) {
 
@@ -30,6 +31,9 @@ public class ApproveServiceImpl implements ApproveService {
 //        System.out.println(applicantId);
 //        System.out.println(examId);
 
+
+        ApplyEntity applyEntity = applyRepository.findById(applicantId)
+                .orElseThrow(()-> new IllegalArgumentException("No Application found"));
 
         // Retrieve the admin entity from the authenticated context
         // Get the admin by adminId from the circularCreateRequest
