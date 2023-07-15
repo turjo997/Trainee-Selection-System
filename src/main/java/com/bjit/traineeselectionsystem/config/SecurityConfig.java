@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers(  "evaluator/upload-marks","/applicant/register" , "/hello/**","/applicant/login" , "/evaluator/login" , "/admin/login" , "admin/getAllCircular")
+                .requestMatchers(  "/download/{applicantId}" , "evaluator/upload-marks","/applicant/register" , "/hello/**","/applicant/login" , "/evaluator/login" , "/admin/login" , "admin/getAllCircular")
                 .permitAll()
                 .requestMatchers("/admin/approve/written/{adminId}/{applicantId}/{circularId}/{examId}","/admin/approve/technical/{adminId}/{circularId}/{examId}","admin/upload-marks" , "/admin/create/circular" ,"/admin/create/evaluator" , "/admin/getAllEvaluator" , "admin/create/examCategory").hasAuthority("ADMIN")
                 .requestMatchers("/applicant/admitCard/{applicantId}" , "/applicant/upload" , "/applicant/apply").hasAuthority("APPLICANT")

@@ -3,7 +3,6 @@ package com.bjit.traineeselectionsystem.service.impl;
 import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.CodeGeneratorService;
-import com.bjit.traineeselectionsystem.utils.UniqueCode;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -25,7 +24,8 @@ public class QRCodeGenerator implements CodeGeneratorService {
     private final JobCircularRepository jobCircularRepository;
     private final ExamCreateRepository examCreateRepository;
     private final ApplicantRepository applicantRepository;
-    private static String QRCODE_PATH = "C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
+    private static String QRCODE_PATH = "E:\\BJIT Final Project\\YSD_B02_J2EE_FinalProject_Ullash\\QR_images\\";
+            //"C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
 
     public String writeQRCode(Long circularId, Long examId) throws Exception {
 
@@ -45,12 +45,12 @@ public class QRCodeGenerator implements CodeGeneratorService {
             String qrcode = QRCODE_PATH + approve.getApplicant().getApplicantId()+"_"+ approve.getApplicant().getFirstName()+
                     "_"+approve.getApplicant().getLastName()+"-QRCODE.png";
 
-            String contents = approve.getApplicant().getApplicantId() + ","
-                    + approve.getApplicant().getFirstName() + ","
-                    + approve.getApplicant().getLastName() + ","
-                    + approve.getApplicant().getAddress() + ","
-                    + approve.getApplicant().getDob() + ","
-                    + approve.getApplicant().getGender();
+            String contents = "Id: " + approve.getApplicant().getApplicantId() + "\n"+
+                    "Name : "+ approve.getApplicant().getFirstName() + " "
+                    + approve.getApplicant().getLastName() + "\n"+
+                    "Address: "+ approve.getApplicant().getAddress() + "\n"+
+                    "Date of Birth : "+ approve.getApplicant().getDob() + "\n"
+                    + "Gender : " + approve.getApplicant().getGender();
 
             QRCodeWriter writer = new QRCodeWriter();
             BitMatrix bitMatrix = writer.encode(contents, BarcodeFormat.QR_CODE, 350, 350);

@@ -8,6 +8,8 @@ import com.bjit.traineeselectionsystem.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,8 +30,29 @@ public class AdminServiceImpl implements AdminService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+
+
     @Override
     public ResponseEntity<Response<?>> createCircular(CircularCreateRequest circularCreateRequest) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId(); // 23
+
+        UserEntity user = userRepository.findById(loggedInApplicantId)
+                .orElseThrow(()->new IllegalArgumentException("User not found"));
+
+        //Applicant --> user(23) -- > email
+
+        AdminEntity admin= adminRepository.findByUser(user);
+
+        //System.out.println(loggedInApplicantId);
+
+        // Check if the applicantId from the ApplyRequest matches the logged-in user's applicantId
+        if (!circularCreateRequest.getAdminId().equals(admin.getAdminId())) {
+            throw new IllegalArgumentException("Invalid admin ID");
+            // or return an error response indicating that the applicant ID does not match the logged-in user
+        }
+
 
         // Get the admin by adminId from the circularCreateRequest
         AdminEntity adminEntity = adminRepository.findById(circularCreateRequest.getAdminId())
@@ -88,6 +111,26 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ResponseEntity<Object> createEvaluator(EvaluatorCreateRequest evaluatorCreateRequest) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId(); // 23
+
+        UserEntity userAdmin = userRepository.findById(loggedInApplicantId)
+                .orElseThrow(()->new IllegalArgumentException("User not found"));
+
+        //Applicant --> user(23) -- > email
+
+        AdminEntity admin= adminRepository.findByUser(userAdmin);
+
+        //System.out.println(loggedInApplicantId);
+
+        // Check if the applicantId from the ApplyRequest matches the logged-in user's applicantId
+        if (!evaluatorCreateRequest.getAdminId().equals(admin.getAdminId())) {
+            throw new IllegalArgumentException("Invalid admin ID");
+            // or return an error response indicating that the applicant ID does not match the logged-in user
+        }
+
+
         // Get the admin by adminId from the circularCreateRequest
         AdminEntity adminEntity = adminRepository.findById(evaluatorCreateRequest.getAdminId())
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
@@ -168,6 +211,27 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ResponseEntity<Response<?>> createExamCategory(ExamCreateRequest examCreateRequest) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId(); // 23
+
+        UserEntity userAdmin = userRepository.findById(loggedInApplicantId)
+                .orElseThrow(()->new IllegalArgumentException("User not found"));
+
+        //Applicant --> user(23) -- > email
+
+        AdminEntity admin= adminRepository.findByUser(userAdmin);
+
+        //System.out.println(loggedInApplicantId);
+
+        // Check if the applicantId from the ApplyRequest matches the logged-in user's applicantId
+        if (!examCreateRequest.getAdminId().equals(admin.getAdminId())) {
+            throw new IllegalArgumentException("Invalid admin ID");
+            // or return an error response indicating that the applicant ID does not match the logged-in user
+        }
+
+
+
         // Get the admin by adminId from the circularCreateRequest
         AdminEntity adminEntity = adminRepository.findById(examCreateRequest.getAdminId())
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));

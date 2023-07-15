@@ -6,11 +6,15 @@ import com.bjit.traineeselectionsystem.model.ApplicantRank;
 import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.ApproveService;
 import com.bjit.traineeselectionsystem.utils.ApplicantRankComparator;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -23,6 +27,7 @@ public class ApproveServiceImpl implements ApproveService {
     private final ApplicantRepository applicantRepository;
     private final ExamCreateRepository examCreateRepository;
     private final JobCircularRepository jobCircularRepository;
+    private final UserRepository userRepository;
     private final ApplyRepository applyRepository;
     @Override
     public void approveApplicant(Long adminId , Long applicantId , Long circularId , Long examId) {
@@ -31,17 +36,40 @@ public class ApproveServiceImpl implements ApproveService {
 //        System.out.println(applicantId);
 //        System.out.println(examId);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId(); // 23
 
-        ApplyEntity applyEntity = applyRepository.findById(applicantId)
-                .orElseThrow(()-> new IllegalArgumentException("No Application found"));
+        UserEntity userAdmin = userRepository.findById(loggedInApplicantId)
+                .orElseThrow(()->new IllegalArgumentException("User not found"));
+
+        //Applicant --> user(23) -- > email
+
+        AdminEntity admin= adminRepository.findByUser(userAdmin);
+
+        //System.out.println(loggedInApplicantId);
+
+        // Check if the applicantId from the ApplyRequest matches the logged-in user's applicantId
+        if (adminId != admin.getAdminId()) {
+            throw new IllegalArgumentException("Invalid admin ID");
+            // or return an error response indicating that the applicant ID does not match the logged-in user
+        }
+
+        ApplicantEntity applicantEntity = applicantRepository.findById(applicantId)
+                .orElseThrow(()-> new IllegalArgumentException("Applicant not found"));
+
+
+        Optional<ApplyEntity> applyOptional = applyRepository.findByApplicant(applicantEntity);
+
+        applyOptional.orElseThrow(() ->
+                new EntityNotFoundException("ApplyEntity not found for the given applicant"));
+                //.orElseThrow(()-> new IllegalArgumentException("No Application found"));
 
         // Retrieve the admin entity from the authenticated context
         // Get the admin by adminId from the circularCreateRequest
         AdminEntity adminEntity = adminRepository.findById(adminId)
                 .orElseThrow(() -> new IllegalArgumentException("Admin not found"));
 
-        ApplicantEntity applicantEntity = applicantRepository.findById(applicantId)
-                .orElseThrow(()-> new IllegalArgumentException("Applicant not found"));
+
 
 
         JobCircularEntity jobCircularEntity = jobCircularRepository.findById(circularId)
