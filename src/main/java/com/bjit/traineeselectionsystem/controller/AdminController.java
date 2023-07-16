@@ -53,7 +53,6 @@ public class AdminController {
     }
 
 
-
     @PostMapping("/generateAdmitCard")
     public String generateAdmitCard(@RequestBody AdmitCardRequest admitCardRequest){
         admitCardService.generateAdmitCards(admitCardRequest);

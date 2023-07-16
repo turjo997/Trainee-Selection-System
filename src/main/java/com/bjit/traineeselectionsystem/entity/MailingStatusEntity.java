@@ -17,7 +17,6 @@ public class MailingStatusEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mailingId;
 
-
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private AdminEntity admin;
@@ -31,9 +30,6 @@ public class MailingStatusEntity {
 
     @Column(nullable = false, length = 2000)
     private String body;
-
-    @Column(nullable = false)
-    private String status;
 
     @Column(nullable = false)
     private String fromEmail;
