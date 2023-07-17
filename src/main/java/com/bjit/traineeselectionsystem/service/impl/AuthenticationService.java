@@ -5,6 +5,7 @@ import com.bjit.traineeselectionsystem.model.AuthenticationResponse;
 import com.bjit.traineeselectionsystem.repository.EvaluatorRepository;
 import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.utils.JwtService;
+import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,8 +16,7 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final EvaluatorRepository evaluatorRepository;
+    private final RepositoryManager repositoryManager;
     public AuthenticationResponse login(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -24,7 +24,7 @@ public class AuthenticationService {
                         authenticationRequest.getPassword()
                 )
         );
-        var user = userRepository.findByEmail(authenticationRequest.getEmail());
+        var user = repositoryManager.getUserRepository().findByEmail(authenticationRequest.getEmail());
         //var user = evaluatorRepository.findByEvaluatorEmail(authenticationRequest.getEmail());
 
         System.out.println(user);

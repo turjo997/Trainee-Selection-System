@@ -26,10 +26,6 @@ public class AdmitCardController {
         this.admitCardService = admitCardService;
     }
 
-//    private final AdmitCardService admitCardService;
-//    private final AdmitCardRepository admitCardRepository;
-//    private final ApplicantRepository applicantRepository;
-
 
     @GetMapping("/download/{applicantId}")
     public void generatePDF(HttpServletResponse response , @PathVariable Long applicantId) throws IOException {

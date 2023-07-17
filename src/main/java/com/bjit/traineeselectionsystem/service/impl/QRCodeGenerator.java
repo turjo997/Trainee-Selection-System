@@ -1,8 +1,11 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.*;
+import com.bjit.traineeselectionsystem.exception.ExamCreateServiceException;
+import com.bjit.traineeselectionsystem.exception.JobCircularServiceException;
 import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.CodeGeneratorService;
+import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -18,50 +21,56 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QRCodeGenerator implements CodeGeneratorService {
 
-    private final ApproveRepository approveRepository;
-    private final ExamTrackRepository examTrackRepository;
-    private final AdminRepository adminRepository;
-    private final JobCircularRepository jobCircularRepository;
-    private final ExamCreateRepository examCreateRepository;
-    private final ApplicantRepository applicantRepository;
+    private final RepositoryManager repositoryManager;
+
+
     private static String QRCODE_PATH = "E:\\BJIT Final Project\\YSD_B02_J2EE_FinalProject_Ullash\\QR_images\\";
             //"C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
 
     public String writeQRCode(Long circularId, Long examId) throws Exception {
 
-        JobCircularEntity jobCircularEntity = jobCircularRepository.findById(circularId)
-                .orElseThrow(()-> new IllegalArgumentException("Circular not found"));
+        try {
+            repositoryManager.getJobCircularRepository().findById(circularId)
+                    .orElseThrow(()-> new JobCircularServiceException("Circular not found"));
 
 
-        ExamCategoryEntity examCategoryEntity = examCreateRepository.findById(examId)
-                .orElseThrow(()->new IllegalArgumentException("Exam not found"));
+            repositoryManager.getExamCreateRepository().findById(examId)
+                    .orElseThrow(()->new ExamCreateServiceException("Exam not found"));
 
 
-        // Get the approved applicants for a specific circular and exam
-        List<ApproveEntity> approvedApplicants = approveRepository.findByJobCircularCircularIdAndExamCategoryExamId(circularId, examId);
+            // Get the approved applicants for a specific circular and exam
+            List<ApproveEntity> approvedApplicants = repositoryManager.getApproveRepository().findByJobCircularCircularIdAndExamCategoryExamId(circularId, examId);
 
 
-        for (ApproveEntity approve : approvedApplicants) {
-            String qrcode = QRCODE_PATH + approve.getApplicant().getApplicantId()+"_"+ approve.getApplicant().getFirstName()+
-                    "_"+approve.getApplicant().getLastName()+"-QRCODE.png";
+            for (ApproveEntity approve : approvedApplicants) {
+                String qrcode = QRCODE_PATH + approve.getApplicant().getApplicantId()+"_"+ approve.getApplicant().getFirstName()+
+                        "_"+approve.getApplicant().getLastName()+"-QRCODE.png";
 
-            String contents = "Id: " + approve.getApplicant().getApplicantId() + "\n"+
-                    "Name : "+ approve.getApplicant().getFirstName() + " "
-                    + approve.getApplicant().getLastName() + "\n"+
-                    "Address: "+ approve.getApplicant().getAddress() + "\n"+
-                    "Date of Birth : "+ approve.getApplicant().getDob() + "\n"
-                    + "Gender : " + approve.getApplicant().getGender();
+                String contents = "Id: " + approve.getApplicant().getApplicantId() + "\n"+
+                        "Name : "+ approve.getApplicant().getFirstName() + " "
+                        + approve.getApplicant().getLastName() + "\n"+
+                        "Address: "+ approve.getApplicant().getAddress() + "\n"+
+                        "Date of Birth : "+ approve.getApplicant().getDob() + "\n"
+                        + "Gender : " + approve.getApplicant().getGender();
 
-            QRCodeWriter writer = new QRCodeWriter();
-            BitMatrix bitMatrix = writer.encode(contents, BarcodeFormat.QR_CODE, 350, 350);
+                QRCodeWriter writer = new QRCodeWriter();
+                BitMatrix bitMatrix = writer.encode(contents, BarcodeFormat.QR_CODE, 350, 350);
 
-            Path path = FileSystems.getDefault().getPath(qrcode);
-            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+                Path path = FileSystems.getDefault().getPath(qrcode);
+                MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
 
 
+            }
+
+            return "QRCODE is generated successfully....";
+        }catch (JobCircularServiceException e){
+            throw new JobCircularServiceException(e.getMessage());
+        }catch (ExamCreateServiceException e){
+            throw new ExamCreateServiceException(e.getMessage());
+        }catch (Exception e){
+            throw e;
         }
 
-        return "QRCODE is generated successfully....";
     }
 
 }

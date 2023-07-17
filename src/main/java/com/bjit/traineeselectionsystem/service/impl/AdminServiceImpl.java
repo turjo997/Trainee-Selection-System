@@ -9,6 +9,7 @@ import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.AdminService;
 import com.bjit.traineeselectionsystem.utils.JwtService;
+import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,11 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
 
-    private final AdminRepository adminRepository;
-    private final UserRepository userRepository;
-    private final JobCircularRepository jobCircularRepository;
-    private final EvaluatorRepository evaluatorRepository;
-    private final ExamCreateRepository examCreateRepository;
+    private final RepositoryManager repositoryManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
@@ -42,20 +39,20 @@ public class AdminServiceImpl implements AdminService {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
 
-            UserEntity user = userRepository.findById(loggedInApplicantId)
+            UserEntity user = repositoryManager.getUserRepository().findById(loggedInApplicantId)
                     .orElseThrow(() -> new UserServiceException("User not found"));
 
-            AdminEntity admin = adminRepository.findByUser(user);
+            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(user);
 
             if (!circularCreateRequest.getAdminId().equals(admin.getAdminId())) {
                 throw new IllegalArgumentException("Invalid admin ID");
             }
 
-            AdminEntity adminEntity = adminRepository.findById(circularCreateRequest.getAdminId())
+            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(circularCreateRequest.getAdminId())
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));
 
             // Check if a job circular with the same title already exists
-            boolean isCircularTitleExists = jobCircularRepository.existsByCircularTitle(circularCreateRequest.getCircularTitle());
+            boolean isCircularTitleExists = repositoryManager.getJobCircularRepository().existsByCircularTitle(circularCreateRequest.getCircularTitle());
             if (isCircularTitleExists) {
                 throw new IllegalArgumentException("Job circular with the same title already exists");
             }
@@ -85,7 +82,7 @@ public class AdminServiceImpl implements AdminService {
                     .build();
 
 
-            jobCircularRepository.save(jobCircularEntity);
+            repositoryManager.getJobCircularRepository().save(jobCircularEntity);
 
             return ResponseEntity.ok("Job circular created successfully");
         } catch (UserServiceException e){
@@ -106,19 +103,19 @@ public class AdminServiceImpl implements AdminService {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
 
-            UserEntity userAdmin = userRepository.findById(loggedInApplicantId)
+            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId)
                     .orElseThrow(() -> new UserServiceException("User not found"));
 
-            AdminEntity admin = adminRepository.findByUser(userAdmin);
+            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin);
 
             if (!evaluatorCreateRequest.getAdminId().equals(admin.getAdminId())) {
                 throw new IllegalArgumentException("Invalid admin ID");
             }
 
-            AdminEntity adminEntity = adminRepository.findById(evaluatorCreateRequest.getAdminId())
+            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(evaluatorCreateRequest.getAdminId())
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));
 
-            if (userRepository.existsByEmail(evaluatorCreateRequest.getEmail())) {
+            if (repositoryManager.getUserRepository().existsByEmail(evaluatorCreateRequest.getEmail())) {
                 String errorMessage = "Evaluator with the same email already exists";
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
             }
@@ -129,7 +126,7 @@ public class AdminServiceImpl implements AdminService {
                     .role(Role.EVALUATOR)
                     .build();
 
-            UserEntity savedUser = userRepository.save(user);
+            UserEntity savedUser = repositoryManager.getUserRepository().save(user);
 
             EvaluatorEntity evaluatorEntity = EvaluatorEntity.builder()
                     .admin(adminEntity)
@@ -142,7 +139,7 @@ public class AdminServiceImpl implements AdminService {
                     .active(evaluatorCreateRequest.isActive())
                     .build();
 
-            evaluatorRepository.save(evaluatorEntity);
+            repositoryManager.getEvaluatorRepository().save(evaluatorEntity);
 
             AuthenticationResponse authRes = AuthenticationResponse.builder()
                     .token(jwtService.generateToken(user))
@@ -166,16 +163,16 @@ public class AdminServiceImpl implements AdminService {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
 
-            UserEntity userAdmin = userRepository.findById(loggedInApplicantId)
+            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId)
                     .orElseThrow(() -> new UserServiceException("User not found"));
 
-            AdminEntity admin = adminRepository.findByUser(userAdmin);
+            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin);
 
             if (!examCreateRequest.getAdminId().equals(admin.getAdminId())) {
                 throw new IllegalArgumentException("Invalid admin ID");
             }
 
-            AdminEntity adminEntity = adminRepository.findById(examCreateRequest.getAdminId())
+            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(examCreateRequest.getAdminId())
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));
 
             ExamCategoryEntity examCategoryEntity = ExamCategoryEntity.builder()
@@ -185,7 +182,7 @@ public class AdminServiceImpl implements AdminService {
                     .passingMarks(examCreateRequest.getPassingMarks())
                     .build();
 
-            examCreateRepository.save(examCategoryEntity);
+            repositoryManager.getExamCreateRepository().save(examCategoryEntity);
 
             return ResponseEntity.ok("Exam category created successfully");
         } catch (UserServiceException e) {
@@ -203,7 +200,7 @@ public class AdminServiceImpl implements AdminService {
     public ResponseEntity<Response<?>> getAllCircular() {
 
         try {
-            List<JobCircularEntity> circulars = jobCircularRepository.findAll();
+            List<JobCircularEntity> circulars = repositoryManager.getJobCircularRepository().findAll();
             if (circulars.isEmpty()) {
                 throw new JobCircularServiceException("There is no circular open right now");
             }
@@ -239,7 +236,7 @@ public class AdminServiceImpl implements AdminService {
 
         try {
 
-            List<EvaluatorEntity> evaluators = evaluatorRepository.findAll();
+            List<EvaluatorEntity> evaluators = repositoryManager.getEvaluatorRepository().findAll();
 
             if (evaluators.isEmpty()) {
                 throw new EvaluatorServiceException("No evaluator found");

@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler({EntryNotFoundException.class})
+    public ResponseEntity<Response> EntryExceptionHandler(Exception ex) {
+        Response<EntryNotFoundException> apiResponse = new Response<>(null, ex.getMessage());
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler({ApplicantServiceException.class})
     public ResponseEntity<Response> ApplicantServiceExceptionHandler(Exception ex) {
         Response<ApplicantEntity> apiResponse = new Response<>(null, ex.getMessage());
@@ -48,5 +54,10 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler({ExamCreateServiceException.class})
+    public ResponseEntity<Response> ExamCreateServiceExceptionHandler(Exception ex) {
+        Response<ExamCategoryEntity> apiResponse = new Response<>(null, ex.getMessage());
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+    }
 
 }
