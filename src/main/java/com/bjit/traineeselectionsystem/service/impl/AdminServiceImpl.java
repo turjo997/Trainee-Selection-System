@@ -1,10 +1,7 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.*;
-import com.bjit.traineeselectionsystem.exception.AdminServiceException;
-import com.bjit.traineeselectionsystem.exception.EvaluatorServiceException;
-import com.bjit.traineeselectionsystem.exception.JobCircularServiceException;
-import com.bjit.traineeselectionsystem.exception.UserServiceException;
+import com.bjit.traineeselectionsystem.exception.*;
 import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.AdminService;
@@ -197,6 +194,73 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public ResponseEntity<Response<?>> getAllApplicant() {
+        try {
+            List<ApplicantEntity> applicants = repositoryManager.getApplicantRepository().findAll();
+            if (applicants.isEmpty()) {
+                throw new ApplicantServiceException("No applicant found");
+            }
+
+            List<ApplicantEntity> modelList = new ArrayList<>();
+            applicants.forEach(applicant -> {
+                modelList.add(
+                        ApplicantEntity.builder()
+                                .applicantId(applicant.getApplicantId())
+                                .firstName(applicant.getFirstName())
+                                .lastName(applicant.getLastName())
+                                .dob(applicant.getDob())
+                                .cgpa(applicant.getCgpa())
+                                .address(applicant.getAddress())
+                                .contact(applicant.getContact())
+                                .degreeName(applicant.getDegreeName())
+                                .institute(applicant.getInstitute())
+                                .gender(applicant.getGender())
+                                .passingYear(applicant.getPassingYear())
+                                .build()
+                );
+            });
+            Response<List<ApplicantEntity>> response = new Response<>(modelList, null);
+            return ResponseEntity.ok(response);
+        }
+        catch (ApplicantServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(e.getMessage(), null));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
+        }
+    }
+
+    @Override
+    public ResponseEntity<Response<?>> getAllExamCategory() {
+        try {
+            List<ExamCategoryEntity> categories = repositoryManager.getExamCreateRepository().findAll();
+            if (categories.isEmpty()) {
+                throw new ExamCreateServiceException("No exam categories found");
+            }
+
+            List<ExamCategoryEntity> modelList = new ArrayList<>();
+            categories.forEach(examCategory -> {
+                modelList.add(
+                        ExamCategoryEntity.builder()
+                                .examId(examCategory.getExamId())
+                                .examTitle(examCategory.getExamTitle())
+                                .description(examCategory.getDescription())
+                                .passingMarks(examCategory.getPassingMarks())
+                                .build()
+                );
+            });
+            Response<List<ExamCategoryEntity>> response = new Response<>(modelList, null);
+            return ResponseEntity.ok(response);
+        }
+        catch (ExamCreateServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(e.getMessage(), null));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
+        }
+    }
+
+    @Override
     public ResponseEntity<Response<?>> getAllCircular() {
 
         try {
@@ -209,7 +273,7 @@ public class AdminServiceImpl implements AdminService {
             circulars.forEach(jobCircularEntity -> {
                 modelList.add(
                         JobCircularEntity.builder()
-                                //.admin(jobCircularEntity.getAdmin())
+                                .admin(jobCircularEntity.getAdmin())
                                 .circularId(jobCircularEntity.getCircularId())
                                 .circularTitle(jobCircularEntity.getCircularTitle())
                                 .jobType(jobCircularEntity.getJobType())

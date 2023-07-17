@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3030")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -19,8 +19,6 @@ public class AdminController {
 
     private final ServiceManager serviceManager;
     private final AuthenticationService authenticationService;
-
-
 
     @PostMapping("/login")
     public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
@@ -60,4 +58,13 @@ public class AdminController {
         return "Successfully generated";
     }
 
+    @GetMapping("/getAllApplicant")
+    public  ResponseEntity<Response<?>> getAllApplicant(){
+        return serviceManager.getAdminService().getAllApplicant();
+    }
+
+    @GetMapping("/getAllExamCategory")
+    public  ResponseEntity<Response<?>> getAllExamCategory(){
+        return serviceManager.getAdminService().getAllExamCategory();
+    }
 }

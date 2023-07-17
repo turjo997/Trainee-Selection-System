@@ -14,4 +14,11 @@ public interface AdminService {
     ResponseEntity<Response<?>> getAllEvaluator();
 
     ResponseEntity<String> createExamCategory(ExamCreateRequest examCreateRequest);
+
+    ResponseEntity<Response<?>> getAllApplicant();
+
+    ResponseEntity<Response<?>> getAllExamCategory();
+
+
+
 }

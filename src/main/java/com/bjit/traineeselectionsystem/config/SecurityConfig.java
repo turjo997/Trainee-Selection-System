@@ -51,7 +51,9 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/admin/create/circular"),
                     new AntPathRequestMatcher("/admin/create/evaluator"),
                     new AntPathRequestMatcher("/admin/getAllEvaluator"),
-                    new AntPathRequestMatcher("/admin/create/examCategory")
+                    new AntPathRequestMatcher("/admin/create/examCategory"),
+                    new AntPathRequestMatcher("/admin/getAllExamCategory"),
+                    new AntPathRequestMatcher("/admin/getAllApplicant")
     };
 
     RequestMatcher[] applicantMatchers = new RequestMatcher[]{
