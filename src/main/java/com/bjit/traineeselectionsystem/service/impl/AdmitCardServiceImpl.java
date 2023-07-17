@@ -212,9 +212,4 @@ public class AdmitCardServiceImpl implements AdmitCardService {
         document.close();
     }
 
-
-
-
-
-
 }

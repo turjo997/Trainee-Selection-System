@@ -23,19 +23,17 @@ public class ApplicantEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @Column(nullable = false)
     private String firstName;
 
-    @Column(nullable = false)
+
     private String lastName;
 
-    @Column(nullable = false)
+
     private String gender;
 
-    @Column(nullable = false)
+
     private LocalDate dob;
 
-    @Column(nullable = false)
     private String contact;
 
     private String degreeName;
@@ -47,20 +45,5 @@ public class ApplicantEntity {
     private Integer passingYear;
 
     private String address;
-
-//    private String imageFileName;
-//    private String imageFileType;
-//
-//    @Lob
-//    @Column(name = "image_file"  ,length = 2000)
-//    private byte[] imageFile;
-
-//    private String cvFileName;
-//    private String cvFileType;
-//
-//
-//    @Lob
-//    @Column(name = "cv_file" ,length = 2000)
-//    private byte[] cvFile;
 
 }

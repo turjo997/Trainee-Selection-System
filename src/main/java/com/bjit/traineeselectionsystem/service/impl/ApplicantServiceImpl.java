@@ -4,6 +4,11 @@ import com.bjit.traineeselectionsystem.entity.ApplicantEntity;
 import com.bjit.traineeselectionsystem.entity.ApplyEntity;
 import com.bjit.traineeselectionsystem.entity.JobCircularEntity;
 import com.bjit.traineeselectionsystem.entity.UserEntity;
+import com.bjit.traineeselectionsystem.exception.ApplicantServiceException;
+import com.bjit.traineeselectionsystem.exception.ApplyServiceException;
+import com.bjit.traineeselectionsystem.exception.JobCircularServiceException;
+import com.bjit.traineeselectionsystem.exception.UserServiceException;
+import com.bjit.traineeselectionsystem.model.ApplicantUpdateRequest;
 import com.bjit.traineeselectionsystem.model.ApplyRequest;
 import com.bjit.traineeselectionsystem.model.Response;
 import com.bjit.traineeselectionsystem.repository.ApplicantRepository;
@@ -11,7 +16,10 @@ import com.bjit.traineeselectionsystem.repository.ApplyRepository;
 import com.bjit.traineeselectionsystem.repository.JobCircularRepository;
 import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.service.ApplicantService;
+import com.bjit.traineeselectionsystem.utils.RepositoryManager;
+import com.bjit.traineeselectionsystem.utils.ServiceManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,57 +32,101 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ApplicantServiceImpl implements ApplicantService {
 
-    private final ApplicantRepository applicantRepository;
-    private final JobCircularRepository jobCircularRepository;
-    private final ApplyRepository applyRepository;
-    private final UserRepository userRepository;
+    private final RepositoryManager repositoryManager;
 
     @Override
-    public ResponseEntity<Response<?>> apply(ApplyRequest applyRequest) {
+    public ResponseEntity<String> apply(ApplyRequest applyRequest) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId(); // 23
+            UserEntity user = repositoryManager.getUserRepository().findById(loggedInApplicantId)
+                    .orElseThrow(() -> new UserServiceException("User not found"));
 
-        UserEntity user = userRepository.findById(loggedInApplicantId)
-                .orElseThrow(()->new IllegalArgumentException("User not found"));
+            ApplicantEntity applicant = repositoryManager.getApplicantRepository().findByUser(user);
 
-        //Applicant --> user(23) -- > email
+            if (!applyRequest.getApplicantId().equals(applicant.getApplicantId())) {
+                throw new IllegalArgumentException("Invalid applicant ID");
+            }
 
-        ApplicantEntity applicant= applicantRepository.findByUser(user);
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(applyRequest.getApplicantId())
+                    .orElseThrow(() -> new ApplyServiceException("Applicant not found"));
 
-        //System.out.println(loggedInApplicantId);
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(applyRequest.getCircularId())
+                    .orElseThrow(() -> new JobCircularServiceException("Job circular not found"));
 
-        // Check if the applicantId from the ApplyRequest matches the logged-in user's applicantId
-        if (!applyRequest.getApplicantId().equals(applicant.getApplicantId())) {
-            throw new IllegalArgumentException("Invalid applicant ID");
-            // or return an error response indicating that the applicant ID does not match the logged-in user
+            ApplyEntity applyEntity = ApplyEntity.builder()
+                    .applicant(applicantEntity)
+                    .jobCircular(jobCircularEntity)
+                    .build();
+
+            ApplyEntity savedApplication = repositoryManager.getApplyRepository().save(applyEntity);
+
+//            Response<ApplyEntity> response = new Response<>();
+//            response.setData(savedApplication);
+
+            return ResponseEntity.ok("Your application has been recorded");
+        } catch (UserServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (ApplyServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (JobCircularServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
 
 
+    @Override
+    public ResponseEntity<Response<?>> updateApplicant(ApplicantUpdateRequest applicantUpdateRequest) {
+        try {
+            Optional<ApplicantEntity> optionalApplicant = repositoryManager.getApplicantRepository().findById(applicantUpdateRequest.getApplicantId());
 
-        // Retrieve the applicant by applicantId from the applyRequest
-        ApplicantEntity applicantEntity = applicantRepository.findById(applyRequest.getApplicantId())
-                .orElseThrow(() -> new IllegalArgumentException("Applicant not found"));
+            if (optionalApplicant.isPresent()) {
+                ApplicantEntity applicant = optionalApplicant.get();
 
-        // Retrieve the job circular by circularId from the applyRequest
-        JobCircularEntity jobCircularEntity = jobCircularRepository.findById(applyRequest.getCircularId())
-                .orElseThrow(() -> new IllegalArgumentException("Job circular not found"));
+                // Update the book entity with the new values from the request model
+                applicant.setFirstName(applicantUpdateRequest.getFirstName());
+                applicant.setLastName(applicantUpdateRequest.getLastName());
+                applicant.setAddress(applicantUpdateRequest.getAddress());
+                applicant.setDob(applicantUpdateRequest.getDob());
+                applicant.setContact(applicantUpdateRequest.getContact());
+                applicant.setGender(applicantUpdateRequest.getGender());
+                applicant.setInstitute(applicantUpdateRequest.getInstitute());
+                applicant.setDegreeName(applicantUpdateRequest.getDegreeName());
+                applicant.setCgpa(applicantUpdateRequest.getCgpa());
+                applicant.setPassingYear(applicantUpdateRequest.getPassingYear());
 
-        // Create a new ApplyEntity
-        ApplyEntity applyEntity = ApplyEntity.builder()
-                .applicant(applicantEntity)
-                .jobCircular(jobCircularEntity)
-                //.appliedDate(applyRequest.getAppliedDate())
-                //.approved(applyRequest.isApproved())
-                .build();
+                // Save the updated book entity
+                ApplicantEntity updatedApplicant = repositoryManager.getApplicantRepository().save(applicant);
 
-        // Save the application to the repository
-        ApplyEntity savedApplication = applyRepository.save(applyEntity);
+                ApplicantUpdateRequest model = ApplicantUpdateRequest.builder()
+                        .applicantId(applicantUpdateRequest.getApplicantId())
+                        .firstName(applicantUpdateRequest.getFirstName())
+                        .lastName(applicantUpdateRequest.getLastName())
+                        .dob(applicantUpdateRequest.getDob())
+                        .cgpa(applicantUpdateRequest.getCgpa())
+                        .address(applicantUpdateRequest.getAddress())
+                        .contact(applicantUpdateRequest.getContact())
+                        .degreeName(applicantUpdateRequest.getDegreeName())
+                        .institute(applicant.getInstitute())
+                        .gender(applicantUpdateRequest.getGender())
+                        .passingYear(applicantUpdateRequest.getPassingYear())
+                        .build();
 
-        // Create a response with the saved application
-        Response<ApplyEntity> response = new Response<>();
-        response.setData(savedApplication);
+                Response<ApplicantUpdateRequest> apiResponse = new Response<>(model, null);
+                // Return the ResponseEntity with the APIResponse
+                return ResponseEntity.ok(apiResponse);
 
-        return ResponseEntity.ok(response);
+            } else {
+                throw new ApplicantServiceException("Applicant not found");
+            }
+        } catch (Exception e) {
+
+            throw new ApplicantServiceException(e.getMessage());
+        }
     }
 }

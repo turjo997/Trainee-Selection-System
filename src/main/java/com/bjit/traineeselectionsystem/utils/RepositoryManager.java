@@ -25,7 +25,6 @@ public class RepositoryManager {
 
 
 
-    // If you need individual getters:
     public MailingStatusRepository getMailingStatusRepository() {
         return mailingStatusRepository;
     }

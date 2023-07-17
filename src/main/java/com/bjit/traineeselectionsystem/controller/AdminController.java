@@ -27,7 +27,7 @@ public class AdminController {
     }
 
     @PostMapping("/create/circular")
-    public ResponseEntity<Response<?>> createCircular(@RequestBody CircularCreateRequest circularCreateRequest) {
+    public ResponseEntity<String> createCircular(@RequestBody CircularCreateRequest circularCreateRequest) {
         return adminService.createCircular(circularCreateRequest);
     }
     @GetMapping("/getAllCircular")

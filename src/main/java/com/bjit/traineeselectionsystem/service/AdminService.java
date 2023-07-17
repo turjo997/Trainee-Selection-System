@@ -7,11 +7,11 @@ import com.bjit.traineeselectionsystem.model.Response;
 import org.springframework.http.ResponseEntity;
 
 public interface AdminService {
-    ResponseEntity<Response<?>> createCircular(CircularCreateRequest circularCreateRequest);
+    ResponseEntity<String> createCircular(CircularCreateRequest circularCreateRequest);
     ResponseEntity<Response<?>> getAllCircular();
 
     ResponseEntity<Object> createEvaluator(EvaluatorCreateRequest evaluatorCreateRequest);
     ResponseEntity<Response<?>> getAllEvaluator();
 
-    ResponseEntity<Response<?>> createExamCategory(ExamCreateRequest examCreateRequest);
+    ResponseEntity<String> createExamCategory(ExamCreateRequest examCreateRequest);
 }

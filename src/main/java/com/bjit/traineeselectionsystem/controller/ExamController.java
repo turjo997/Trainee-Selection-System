@@ -18,7 +18,7 @@ public class ExamController {
 
     private final AdminService adminService;
     @PostMapping("/create/examCategory")
-    public ResponseEntity<Response<?>> createExam(@RequestBody ExamCreateRequest examCreateRequest) {
+    public ResponseEntity<String> createExam(@RequestBody ExamCreateRequest examCreateRequest) {
         return adminService.createExamCategory(examCreateRequest);
     }
 }

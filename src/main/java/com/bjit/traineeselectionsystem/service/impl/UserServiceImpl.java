@@ -1,6 +1,7 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.*;
+import com.bjit.traineeselectionsystem.exception.UserServiceException;
 import com.bjit.traineeselectionsystem.model.ApplicantCreateRequest;
 import com.bjit.traineeselectionsystem.model.AuthenticationResponse;
 import com.bjit.traineeselectionsystem.model.Response;
@@ -78,53 +79,49 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Object> addApplicant(ApplicantCreateRequest applicantCreateRequest) {
+        try {
+            if (userRepository.existsByEmail(applicantCreateRequest.getEmail())) {
+                String errorMessage = "Applicant with the same email already exists";
+                throw new UserServiceException(errorMessage);
+            } else {
+                // Create a new UserEntity
+                UserEntity user = UserEntity.builder()
+                        .role(Role.APPLICANT)
+                        .email(applicantCreateRequest.getEmail())
+                        .password(passwordEncoder.encode(applicantCreateRequest.getPassword()))
+                        .build();
 
-        // Create a new UserEntity
-        UserEntity user = UserEntity.builder()
-                .role(Role.APPLICANT)
-                .email(applicantCreateRequest.getEmail())
-                .password(passwordEncoder.encode(applicantCreateRequest.getPassword()))
-                .build();
+                // Save the user to the UserRepository
+                UserEntity savedUser = userRepository.save(user);
 
+                // Create a new ApplicantEntity with the saved user
+                ApplicantEntity applicant = ApplicantEntity.builder()
+                        .user(savedUser)
+                        .firstName(applicantCreateRequest.getFirstName())
+                        .lastName(applicantCreateRequest.getLastName())
+                        .gender(applicantCreateRequest.getGender())
+                        .dob(applicantCreateRequest.getDob())
+                        .contact(applicantCreateRequest.getContact())
+                        .degreeName(applicantCreateRequest.getDegreeName())
+                        .institute(applicantCreateRequest.getInstitute())
+                        .cgpa(applicantCreateRequest.getCgpa())
+                        .passingYear(applicantCreateRequest.getPassingYear())
+                        .address(applicantCreateRequest.getAddress())
+                        .build();
 
-        // Save the user to the UserRepository
-        UserEntity savedUser = userRepository.save(user);
+                // Save the applicant to the ApplicantRepository
+                applicantRepository.save(applicant);
 
-
-        // Create a new ApplicantEntity with the saved user
-        ApplicantEntity applicant = ApplicantEntity.builder()
-                .user(savedUser)
-                .firstName(applicantCreateRequest.getFirstName())
-                .lastName(applicantCreateRequest.getLastName())
-                .gender(applicantCreateRequest.getGender())
-                .dob(applicantCreateRequest.getDob())
-                .contact(applicantCreateRequest.getContact())
-                .degreeName(applicantCreateRequest.getDegreeName())
-                .institute(applicantCreateRequest.getInstitute())
-                .cgpa(applicantCreateRequest.getCgpa())
-                .passingYear(applicantCreateRequest.getPassingYear())
-                .address(applicantCreateRequest.getAddress())
-                .build();
-
-        // Save the applicant to the ApplicantRepository
-        ApplicantEntity savedApplicant = applicantRepository.save(applicant);
-
-        AuthenticationResponse authRes = AuthenticationResponse.builder()
-                .token(jwtService.generateToken(user))
-                .build();
-        return new ResponseEntity<>(authRes, HttpStatus.CREATED);
-
-
-
-//        ImageEntity image = ImageEntity.builder()
-//                .applicant(savedApplicant)
-//                .imageFileName(applicantCreateRequest.getImageFile().getOriginalFilename())
-//                .imageFileType(applicantCreateRequest.getImageFile().getContentType())
-//                .imageFile(applicantCreateRequest.getImageFile().getBytes())
-//                .build();
-//
-//        imageRepository.save(image);
-
+                AuthenticationResponse authRes = AuthenticationResponse.builder()
+                        .token(jwtService.generateToken(user))
+                        .build();
+                return new ResponseEntity<>(authRes, HttpStatus.CREATED);
+            }
+        } catch (UserServiceException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while adding the applicant", e);
+        }
 
     }
 

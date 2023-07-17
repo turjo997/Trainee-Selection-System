@@ -36,23 +36,4 @@ public class AuthenticationService {
 
     }
 
-//    public AuthenticationResponse evaluatorLogin(AuthenticationRequest authenticationRequest) {
-//        System.out.println(authenticationRequest.getEmail());
-//        System.out.println(authenticationRequest.getPassword());
-//        authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        authenticationRequest.getEmail(),
-//                        authenticationRequest.getPassword()
-//                )
-//        );
-//        //System.out.println("ekhane");
-//        var user = evaluatorRepository.findByEvaluatorEmail(authenticationRequest.getEmail());
-//
-//        System.out.println(user);
-//        var jwtToken = jwtService.generateToken(user);
-//        return AuthenticationResponse.builder()
-//                .token(jwtToken)
-//                .build();
-//
-//    }
 }
