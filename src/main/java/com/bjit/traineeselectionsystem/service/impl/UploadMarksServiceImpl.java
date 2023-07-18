@@ -10,6 +10,8 @@ import com.bjit.traineeselectionsystem.service.UploadMarksService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class UploadMarksServiceImpl implements UploadMarksService {
 
 
     @Override
-    public void uploadMarksByEvaluator(UploadMarksRequest uploadMarksRequest) {
+    public ResponseEntity<String> uploadMarksByEvaluator(UploadMarksRequest uploadMarksRequest) {
         try {
             // Get the Evaluator, Applicant, Job Circular, and Exam Categories based on the provided IDs
             EvaluatorEntity evaluator = repositoryManager.getEvaluatorRepository().findById(uploadMarksRequest.getEvaluatorId())
@@ -55,23 +57,27 @@ public class UploadMarksServiceImpl implements UploadMarksService {
 
             // Save the UploadMarksEntities to the repository
             repositoryManager.getUploadMarksRepository().saveAll(uploadMarksList);
+
+
+            return ResponseEntity.ok("Marks added successfully");
+
         }catch (EvaluatorServiceException e){
-            throw new EvaluatorServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }catch (ApplicantServiceException e){
-            throw new ApplicantServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }catch (JobCircularServiceException e){
-            throw new JobCircularServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }catch (ExamCreateServiceException e){
-            throw new ExamCreateServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         catch (Exception e){
-            throw e;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
 
     @Override
-    public void uploadMarksByAdmin(UploadMarksHrRequest uploadMarksHrRequest ) {
+    public ResponseEntity<String> uploadMarksByAdmin(UploadMarksHrRequest uploadMarksHrRequest ) {
       try {
 
           // Get the Evaluator, Applicant, Job Circular, and Exam Categories based on the provided IDs
@@ -104,18 +110,19 @@ public class UploadMarksServiceImpl implements UploadMarksService {
 
           // Save the UploadMarksEntities to the repository
           repositoryManager.getUploadMarksHrRepository().saveAll(uploadMarksList);
+          return ResponseEntity.ok("Marks added successfully");
 
       }catch (AdminServiceException e){
-          throw new AdminServiceException(e.getMessage());
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
       }catch (ApplicantServiceException e){
-          throw new ApplicantServiceException(e.getMessage());
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
       }catch (JobCircularServiceException e){
-          throw new JobCircularServiceException(e.getMessage());
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
       }catch (ExamCreateServiceException e){
-          throw new ExamCreateServiceException(e.getMessage());
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
       }
       catch (Exception e){
-          throw e;
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
       }
 
     }

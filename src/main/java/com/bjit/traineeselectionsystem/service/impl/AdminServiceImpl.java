@@ -97,17 +97,17 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseEntity<Object> createEvaluator(EvaluatorCreateRequest evaluatorCreateRequest) {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
-
-            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId)
-                    .orElseThrow(() -> new UserServiceException("User not found"));
-
-            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin);
-
-            if (!evaluatorCreateRequest.getAdminId().equals(admin.getAdminId())) {
-                throw new IllegalArgumentException("Invalid admin ID");
-            }
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
+//
+//            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId)
+//                    .orElseThrow(() -> new UserServiceException("User not found"));
+//
+//            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin);
+//
+//            if (!evaluatorCreateRequest.getAdminId().equals(admin.getAdminId())) {
+//                throw new IllegalArgumentException("Invalid admin ID");
+//            }
 
             AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(evaluatorCreateRequest.getAdminId())
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));
@@ -157,17 +157,17 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseEntity<String> createExamCategory(ExamCreateRequest examCreateRequest) {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
-
-            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId)
-                    .orElseThrow(() -> new UserServiceException("User not found"));
-
-            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin);
-
-            if (!examCreateRequest.getAdminId().equals(admin.getAdminId())) {
-                throw new IllegalArgumentException("Invalid admin ID");
-            }
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
+//
+//            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId)
+//                    .orElseThrow(() -> new UserServiceException("User not found"));
+//
+//            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin);
+//
+//            if (!examCreateRequest.getAdminId().equals(admin.getAdminId())) {
+//                throw new IllegalArgumentException("Invalid admin ID");
+//            }
 
             AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(examCreateRequest.getAdminId())
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));
@@ -194,43 +194,6 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ResponseEntity<Response<?>> getAllApplicant() {
-        try {
-            List<ApplicantEntity> applicants = repositoryManager.getApplicantRepository().findAll();
-            if (applicants.isEmpty()) {
-                throw new ApplicantServiceException("No applicant found");
-            }
-
-            List<ApplicantEntity> modelList = new ArrayList<>();
-            applicants.forEach(applicant -> {
-                modelList.add(
-                        ApplicantEntity.builder()
-                                .applicantId(applicant.getApplicantId())
-                                .firstName(applicant.getFirstName())
-                                .lastName(applicant.getLastName())
-                                .dob(applicant.getDob())
-                                .cgpa(applicant.getCgpa())
-                                .address(applicant.getAddress())
-                                .contact(applicant.getContact())
-                                .degreeName(applicant.getDegreeName())
-                                .institute(applicant.getInstitute())
-                                .gender(applicant.getGender())
-                                .passingYear(applicant.getPassingYear())
-                                .build()
-                );
-            });
-            Response<List<ApplicantEntity>> response = new Response<>(modelList, null);
-            return ResponseEntity.ok(response);
-        }
-        catch (ApplicantServiceException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(e.getMessage(), null));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
-        }
-    }
-
-    @Override
     public ResponseEntity<Response<?>> getAllExamCategory() {
         try {
             List<ExamCategoryEntity> categories = repositoryManager.getExamCreateRepository().findAll();
@@ -243,6 +206,7 @@ public class AdminServiceImpl implements AdminService {
                 modelList.add(
                         ExamCategoryEntity.builder()
                                 .examId(examCategory.getExamId())
+                                .admin(examCategory.getAdmin())
                                 .examTitle(examCategory.getExamTitle())
                                 .description(examCategory.getDescription())
                                 .passingMarks(examCategory.getPassingMarks())
@@ -309,7 +273,7 @@ public class AdminServiceImpl implements AdminService {
             List<EvaluatorEntity> modelList = new ArrayList<>();
             evaluators.forEach(evaluatorEntity -> {
                 modelList.add(
-                        evaluatorEntity.builder()
+                        EvaluatorEntity.builder()
                                 .admin(evaluatorEntity.getAdmin())
                                 .user(evaluatorEntity.getUser())
                                 .evaluatorId(evaluatorEntity.getEvaluatorId())
@@ -334,4 +298,44 @@ public class AdminServiceImpl implements AdminService {
         }
 
     }
+
+    @Override
+    public ResponseEntity<Response<?>> getAllApplicant() {
+        try {
+            List<ApplicantEntity> applicants = repositoryManager.getApplicantRepository().findAll();
+            if (applicants.isEmpty()) {
+                throw new ApplicantServiceException("No applicant found");
+            }
+
+            List<ApplicantEntity> modelList = new ArrayList<>();
+            applicants.forEach(applicant -> {
+                modelList.add(
+                        ApplicantEntity.builder()
+                                .applicantId(applicant.getApplicantId())
+                                .user(applicant.getUser())
+                                .firstName(applicant.getFirstName())
+                                .lastName(applicant.getLastName())
+                                .dob(applicant.getDob())
+                                .cgpa(applicant.getCgpa())
+                                .address(applicant.getAddress())
+                                .contact(applicant.getContact())
+                                .degreeName(applicant.getDegreeName())
+                                .institute(applicant.getInstitute())
+                                .gender(applicant.getGender())
+                                .passingYear(applicant.getPassingYear())
+                                .build()
+                );
+            });
+            Response<List<ApplicantEntity>> response = new Response<>(modelList, null);
+            return ResponseEntity.ok(response);
+        }
+        catch (ApplicantServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(e.getMessage(), null));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
+        }
+    }
+
+
 }

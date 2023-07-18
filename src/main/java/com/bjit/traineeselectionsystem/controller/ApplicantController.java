@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 @RestController
 @RequestMapping("/applicant")
 @RequiredArgsConstructor
@@ -26,7 +26,7 @@ public class ApplicantController {
 
 
     @PutMapping(value = "/update")
-    public ResponseEntity<Response<?>> update(@RequestBody ApplicantUpdateRequest applicantUpdateRequest){
+    public ResponseEntity<String> update(@RequestBody ApplicantUpdateRequest applicantUpdateRequest){
         return serviceManager.getApplicantService().updateApplicant(applicantUpdateRequest);
     }
 

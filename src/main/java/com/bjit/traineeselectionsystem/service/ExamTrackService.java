@@ -1,6 +1,8 @@
 package com.bjit.traineeselectionsystem.service;
 
 
+import org.springframework.http.ResponseEntity;
+
 public interface ExamTrackService {
-    void createExamTracks(Long adminId, Long circularId, Long examId);
+    ResponseEntity<String> createExamTracks(Long adminId, Long circularId, Long examId);
 }

@@ -9,6 +9,8 @@ import com.bjit.traineeselectionsystem.service.ExamTrackService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import com.bjit.traineeselectionsystem.utils.UniqueCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +23,7 @@ public class ExamTrackServiceImpl implements ExamTrackService {
 
 
     @Override
-    public void createExamTracks(Long adminId, Long circularId, Long examId) {
+    public ResponseEntity<String> createExamTracks(Long adminId, Long circularId, Long examId) {
 
         try {
 
@@ -30,11 +32,11 @@ public class ExamTrackServiceImpl implements ExamTrackService {
 
 
             JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId)
-                    .orElseThrow(()-> new JobCircularServiceException("Circular not found"));
+                    .orElseThrow(() -> new JobCircularServiceException("Circular not found"));
 
 
             ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository().findById(examId)
-                    .orElseThrow(()->new ExamCreateServiceException("Exam not found"));
+                    .orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
 
 
             // Get the approved applicants for a specific circular and exam
@@ -53,19 +55,20 @@ public class ExamTrackServiceImpl implements ExamTrackService {
                 repositoryManager.getExamTrackRepository().save(examTrack);
             }
 
-        }catch (AdminServiceException e){
+            return ResponseEntity.ok("Successfully tracked");
 
-            throw new AdminServiceException(e.getMessage());
+        } catch (AdminServiceException e) {
 
-        }catch (JobCircularServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
-            throw new JobCircularServiceException(e.getMessage());
+        } catch (JobCircularServiceException e) {
 
-        }catch (ExamCreateServiceException e){
-            throw new ExamCreateServiceException(e.getMessage());
-        }
-        catch (Exception e){
-            throw  e;
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+
+        } catch (ExamCreateServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
     }

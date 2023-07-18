@@ -23,6 +23,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -44,7 +46,7 @@ public class AdmitCardServiceImpl implements AdmitCardService {
 
 
     @Override
-    public void generateAdmitCards(AdmitCardRequest admitCardRequest) {
+    public ResponseEntity<String> generateAdmitCards(AdmitCardRequest admitCardRequest) {
 
         try {
             AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(admitCardRequest.getAdminId())
@@ -76,18 +78,20 @@ public class AdmitCardServiceImpl implements AdmitCardService {
 
             // Save the generated AdmitCardEntity to the database or perform any other necessary actions
             repositoryManager.getAdmitCardRepository().saveAll(addAdmitCard);
+
+           return ResponseEntity.ok("admit card generated successfully");
         }catch (AdminServiceException e){
-            throw new AdminServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         catch (JobCircularServiceException e){
-            throw new JobCircularServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         catch (ExamCreateServiceException e){
-            throw new ExamCreateServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         catch (Exception e) {
             // Log the error or handle it as per your application's requirements
-            throw new IllegalArgumentException("Failed to generate admit cards: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -207,8 +211,7 @@ public class AdmitCardServiceImpl implements AdmitCardService {
             document.add(paragraph5);
             document.add(paragraph6);
 
-
-            String QRCODE_PATH = "E:\\BJIT Final Project\\YSD_B02_J2EE_FinalProject_Ullash\\QR_images\\";
+            String QRCODE_PATH = "C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
 
             String qrCodePath = QRCODE_PATH + qrCodeFilename;
 

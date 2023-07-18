@@ -31,7 +31,13 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/applicant/register"),
             new AntPathRequestMatcher("/applicant/login"),
             new AntPathRequestMatcher("/evaluator/login"),
-            new AntPathRequestMatcher("/admin/login")
+            new AntPathRequestMatcher("/admin/login"),
+            new AntPathRequestMatcher("/admin/getAllApplicant"),
+            new AntPathRequestMatcher("/admin/getAllCircular"),
+            new AntPathRequestMatcher("/admin/getAllEvaluator"),
+            new AntPathRequestMatcher("/admin/getAllExamCategory"),
+            new AntPathRequestMatcher("/admin/create/examCategory"),
+            new AntPathRequestMatcher("/admin/create/evaluator"),
     };
 
     RequestMatcher[] adminMatchers = new RequestMatcher[]{
@@ -40,20 +46,18 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/admin/approve/technical/{adminId}/{circularId}/{examId}"),
                     new AntPathRequestMatcher("/admin/upload-marks"),
                     new AntPathRequestMatcher("/admin/create/circular"),
-                    new AntPathRequestMatcher("/admin/create/evaluator"),
-                    new AntPathRequestMatcher("/admin/getAllEvaluator"),
-                    new AntPathRequestMatcher("/admin/create/examCategory"),
-                    new AntPathRequestMatcher("/admin/getAllCircular"),
+                   // new AntPathRequestMatcher("/admin/create/evaluator"),
+                    //new AntPathRequestMatcher("/admin/getAllEvaluator"),
+                   // new AntPathRequestMatcher("/admin/create/examCategory"),
+                    //new AntPathRequestMatcher("/admin/getAllCircular"),
                     new AntPathRequestMatcher("/admin/sendMail"),
                     new AntPathRequestMatcher("/admin/approve/written/{adminId}/{applicantId}/{circularId}/{examId}"),
                     new AntPathRequestMatcher("/admin/approve/technical/{adminId}/{circularId}/{examId}"),
                     new AntPathRequestMatcher("/admin/upload-marks"),
                     new AntPathRequestMatcher("/admin/create/circular"),
-                    new AntPathRequestMatcher("/admin/create/evaluator"),
-                    new AntPathRequestMatcher("/admin/getAllEvaluator"),
-                    new AntPathRequestMatcher("/admin/create/examCategory"),
-                    new AntPathRequestMatcher("/admin/getAllExamCategory"),
-                    new AntPathRequestMatcher("/admin/getAllApplicant")
+                    //new AntPathRequestMatcher("/admin/getAllExamCategory"),
+                   // new AntPathRequestMatcher("/admin/getAllApplicant"),
+                    new AntPathRequestMatcher("/admin/generateAdmitCard")
     };
 
     RequestMatcher[] applicantMatchers = new RequestMatcher[]{

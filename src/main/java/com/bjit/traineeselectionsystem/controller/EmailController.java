@@ -6,7 +6,7 @@ import com.bjit.traineeselectionsystem.service.impl.EmailSenderService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin")

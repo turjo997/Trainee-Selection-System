@@ -8,5 +8,5 @@ import org.springframework.http.ResponseEntity;
 public interface ApplicantService {
 
     ResponseEntity<String>  apply(ApplyRequest applyRequest);
-    ResponseEntity<Response<?>> updateApplicant(ApplicantUpdateRequest applicantUpdateRequest);
+    ResponseEntity<String> updateApplicant(ApplicantUpdateRequest applicantUpdateRequest);
 }

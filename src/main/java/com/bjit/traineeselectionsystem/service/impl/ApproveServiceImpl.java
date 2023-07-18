@@ -9,6 +9,8 @@ import com.bjit.traineeselectionsystem.utils.ApplicantRankComparator;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,7 @@ public class ApproveServiceImpl implements ApproveService {
     private final RepositoryManager repositoryManager;
 
     @Override
-    public void approveApplicant(Long adminId , Long applicantId , Long circularId , Long examId) {
+    public ResponseEntity<String> approveApplicant(Long adminId , Long applicantId , Long circularId , Long examId) {
 
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -76,26 +78,28 @@ public class ApproveServiceImpl implements ApproveService {
             // Save the job circular to the repository
             repositoryManager.getApproveRepository().save(approveEntity);
 
-        }catch (UserServiceException e){
+            return ResponseEntity.ok("Applicant approved successfully");
 
+        }catch (UserServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         catch (ApplicantServiceException e){
-            throw new ApplicantServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         catch (ApplyServiceException e){
-            throw new ApplyServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         catch (AdminServiceException e){
-            throw new AdminServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         catch (JobCircularServiceException e){
-            throw new JobCircularServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }catch (ExamCreateServiceException e){
-            throw new ExamCreateServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
         catch (IllegalArgumentException e) {
             // Log the error or handle it as per your application's requirements
-            throw new IllegalArgumentException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
     }

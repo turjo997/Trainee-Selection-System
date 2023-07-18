@@ -22,7 +22,7 @@ public class TraineeSelectionSystemApplication {
 		userService.addAdmin();
 
 		CodeGeneratorService codeGeneratorService = applicationContext.getBean(CodeGeneratorService.class);
-		codeGeneratorService.writeQRCode(1L , 1L);
+		codeGeneratorService.writeQRCode(4L , 1L);
 
 	}
 

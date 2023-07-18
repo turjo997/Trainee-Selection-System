@@ -1,5 +1,7 @@
 package com.bjit.traineeselectionsystem.service;
 
+import org.springframework.http.ResponseEntity;
+
 public interface CodeGeneratorService {
-     String writeQRCode(Long circularId, Long examId) throws Exception;
+     ResponseEntity<String> writeQRCode(Long circularId, Long examId) throws Exception;
 }

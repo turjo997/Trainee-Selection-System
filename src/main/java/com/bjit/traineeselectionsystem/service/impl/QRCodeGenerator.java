@@ -11,6 +11,8 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.FileSystems;
@@ -24,10 +26,11 @@ public class QRCodeGenerator implements CodeGeneratorService {
     private final RepositoryManager repositoryManager;
 
 
-    private static String QRCODE_PATH = "E:\\BJIT Final Project\\YSD_B02_J2EE_FinalProject_Ullash\\QR_images\\";
+    private static String QRCODE_PATH = "C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
+            //"E:\\BJIT Final Project\\YSD_B02_J2EE_FinalProject_Ullash\\QR_images\\";
             //"C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
 
-    public String writeQRCode(Long circularId, Long examId) throws Exception {
+    public ResponseEntity<String> writeQRCode(Long circularId, Long examId) throws Exception {
 
         try {
             repositoryManager.getJobCircularRepository().findById(circularId)
@@ -59,16 +62,15 @@ public class QRCodeGenerator implements CodeGeneratorService {
                 Path path = FileSystems.getDefault().getPath(qrcode);
                 MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
 
-
             }
 
-            return "QRCODE is generated successfully....";
+            return ResponseEntity.ok("QRCODE is generated successfully");
         }catch (JobCircularServiceException e){
-            throw new JobCircularServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }catch (ExamCreateServiceException e){
-            throw new ExamCreateServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }catch (Exception e){
-            throw e;
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 
     }

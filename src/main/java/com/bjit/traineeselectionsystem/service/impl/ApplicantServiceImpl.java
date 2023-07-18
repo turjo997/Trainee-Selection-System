@@ -81,7 +81,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
 
     @Override
-    public ResponseEntity<Response<?>> updateApplicant(ApplicantUpdateRequest applicantUpdateRequest) {
+    public ResponseEntity<String> updateApplicant(ApplicantUpdateRequest applicantUpdateRequest) {
         try {
             Optional<ApplicantEntity> optionalApplicant = repositoryManager.getApplicantRepository().findById(applicantUpdateRequest.getApplicantId());
 
@@ -117,16 +117,19 @@ public class ApplicantServiceImpl implements ApplicantService {
                         .passingYear(applicantUpdateRequest.getPassingYear())
                         .build();
 
-                Response<ApplicantUpdateRequest> apiResponse = new Response<>(model, null);
+                //Response<ApplicantUpdateRequest> apiResponse = new Response<>(model, null);
                 // Return the ResponseEntity with the APIResponse
-                return ResponseEntity.ok(apiResponse);
+                return ResponseEntity.ok("applicant updated successfully");
 
             } else {
                 throw new ApplicantServiceException("Applicant not found");
             }
-        } catch (Exception e) {
+        } catch (ApplicantServiceException e) {
 
-            throw new ApplicantServiceException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 }
