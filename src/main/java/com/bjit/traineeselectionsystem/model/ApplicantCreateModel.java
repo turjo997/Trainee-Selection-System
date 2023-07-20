@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ApplicantCreateRequest {
+public class ApplicantCreateModel {
 
     private String email;
     private String password;
@@ -29,13 +28,5 @@ public class ApplicantCreateRequest {
     private Double cgpa;
     private Integer passingYear;
     private String address;
-    //private String imageFileName;
-    //private String imageFileType;
-    //private byte[] imageFile;
-    //private MultipartFile imageFile;
 
-   // private byte[] cvFile;
-
-   // private MultipartFile imageFile;
-   // private MultipartFile cvFile;
 }

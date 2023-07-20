@@ -14,7 +14,6 @@ public class TraineeSelectionSystemApplication {
 
 	public static void main(String[] args) throws Exception {
 
-
 		ApplicationContext applicationContext = SpringApplication.run(TraineeSelectionSystemApplication.class, args);
 
 		UserService userService = applicationContext.getBean(UserService.class);

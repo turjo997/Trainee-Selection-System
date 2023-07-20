@@ -15,6 +15,4 @@ import java.time.LocalDate;
 public class ApplyRequest {
     private Long applicantId;
     private Long circularId;
-    //private LocalDate appliedDate;
-    //private boolean approved;
 }

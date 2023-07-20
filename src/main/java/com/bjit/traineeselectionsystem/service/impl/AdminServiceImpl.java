@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -221,6 +222,40 @@ public class AdminServiceImpl implements AdminService {
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
+        }
+    }
+
+
+
+    @Override
+    public ResponseEntity<Response<?>> getCircularById(Long circularId) {
+        try {
+            Optional<JobCircularEntity> optionalCircular = repositoryManager.getJobCircularRepository().findById(circularId);
+            if (optionalCircular.isPresent()) {
+
+                CircularCreateRequest jobModel = CircularCreateRequest.builder()
+                        .adminId(optionalCircular.get().getCircularId())
+                        .circularId(optionalCircular.get().getCircularId())
+                        .circularTitle(optionalCircular.get().getCircularTitle())
+                        .jobType(optionalCircular.get().getJobType())
+                        .openDate(optionalCircular.get().getOpenDate())
+                        .closeDate(optionalCircular.get().getCloseDate())
+                        .jobDescription(optionalCircular.get().getJobDescription())
+                        .build();
+                Response<CircularCreateRequest> apiResponse = new Response<>(jobModel, null);
+
+                // Return the ResponseEntity with the APIResponse
+                return ResponseEntity.ok(apiResponse);
+
+            } else {
+                throw new JobCircularServiceException("circular not found");
+            }
+        }
+        catch (JobCircularServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage()));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
         }
     }
 

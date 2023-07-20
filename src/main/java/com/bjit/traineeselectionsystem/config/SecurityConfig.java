@@ -38,6 +38,9 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/admin/getAllExamCategory"),
             new AntPathRequestMatcher("/admin/create/examCategory"),
             new AntPathRequestMatcher("/admin/create/evaluator"),
+            new AntPathRequestMatcher("/admin/create/circular"),
+            new AntPathRequestMatcher("/admin/getApplicants/{circularId}"),
+            new AntPathRequestMatcher("/getCircularById/{circularId}")
     };
 
     RequestMatcher[] adminMatchers = new RequestMatcher[]{
@@ -45,7 +48,7 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/admin/approve/written/{adminId}/{applicantId}/{circularId}/{examId}"),
                     new AntPathRequestMatcher("/admin/approve/technical/{adminId}/{circularId}/{examId}"),
                     new AntPathRequestMatcher("/admin/upload-marks"),
-                    new AntPathRequestMatcher("/admin/create/circular"),
+                    //new AntPathRequestMatcher("/admin/create/circular"),
                    // new AntPathRequestMatcher("/admin/create/evaluator"),
                     //new AntPathRequestMatcher("/admin/getAllEvaluator"),
                    // new AntPathRequestMatcher("/admin/create/examCategory"),
@@ -54,7 +57,6 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/admin/approve/written/{adminId}/{applicantId}/{circularId}/{examId}"),
                     new AntPathRequestMatcher("/admin/approve/technical/{adminId}/{circularId}/{examId}"),
                     new AntPathRequestMatcher("/admin/upload-marks"),
-                    new AntPathRequestMatcher("/admin/create/circular"),
                     //new AntPathRequestMatcher("/admin/getAllExamCategory"),
                    // new AntPathRequestMatcher("/admin/getAllApplicant"),
                     new AntPathRequestMatcher("/admin/generateAdmitCard")

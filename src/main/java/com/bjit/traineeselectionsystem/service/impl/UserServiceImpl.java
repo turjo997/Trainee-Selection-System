@@ -2,7 +2,7 @@ package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.exception.UserServiceException;
-import com.bjit.traineeselectionsystem.model.ApplicantCreateRequest;
+import com.bjit.traineeselectionsystem.model.ApplicantCreateModel;
 import com.bjit.traineeselectionsystem.model.AuthenticationResponse;
 import com.bjit.traineeselectionsystem.model.Response;
 import com.bjit.traineeselectionsystem.repository.AdminRepository;
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<Object> addApplicant(ApplicantCreateRequest applicantCreateRequest) {
+    public ResponseEntity<Object> addApplicant(ApplicantCreateModel applicantCreateRequest) {
         try {
             if (userRepository.existsByEmail(applicantCreateRequest.getEmail())) {
                 String errorMessage = "Applicant with the same email already exists";

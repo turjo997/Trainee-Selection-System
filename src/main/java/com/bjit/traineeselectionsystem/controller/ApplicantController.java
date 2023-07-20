@@ -18,7 +18,7 @@ public class ApplicantController {
 
 
     @PostMapping(value = "/register")
-    public ResponseEntity<Object> register(@RequestBody ApplicantCreateRequest applicantCreateRequest) {
+    public ResponseEntity<Object> register(@RequestBody ApplicantCreateModel applicantCreateRequest) {
 
         return serviceManager.getUserService().addApplicant(applicantCreateRequest);
         //return "Applicant registered successfully";

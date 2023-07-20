@@ -8,16 +8,9 @@ import com.bjit.traineeselectionsystem.exception.ApplicantServiceException;
 import com.bjit.traineeselectionsystem.exception.ApplyServiceException;
 import com.bjit.traineeselectionsystem.exception.JobCircularServiceException;
 import com.bjit.traineeselectionsystem.exception.UserServiceException;
-import com.bjit.traineeselectionsystem.model.ApplicantUpdateRequest;
-import com.bjit.traineeselectionsystem.model.ApplyRequest;
-import com.bjit.traineeselectionsystem.model.Response;
-import com.bjit.traineeselectionsystem.repository.ApplicantRepository;
-import com.bjit.traineeselectionsystem.repository.ApplyRepository;
-import com.bjit.traineeselectionsystem.repository.JobCircularRepository;
-import com.bjit.traineeselectionsystem.repository.UserRepository;
+import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.service.ApplicantService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
-import com.bjit.traineeselectionsystem.utils.ServiceManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +18,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -132,4 +127,58 @@ public class ApplicantServiceImpl implements ApplicantService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<?> getAppliedApplicantsByCircularId(Long circularId) {
+        System.out.println("circular id  : "+circularId);
+        try {
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId)
+                    .orElseThrow(() -> new JobCircularServiceException("Job circular not found"));
+
+            List<ApplyEntity> applyEntities = repositoryManager.getApplyRepository().findByJobCircular(jobCircularEntity);
+
+            List<ApplicantResponseModel> applicants = new ArrayList<>();
+
+            if (!applyEntities.isEmpty()) {
+                for (ApplyEntity applyEntity : applyEntities) {
+                    Long applicantId = applyEntity.getApplicant().getApplicantId();
+
+                    ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(applicantId)
+                            .orElseThrow(() -> new ApplyServiceException("Applicant not found with ID: " + applicantId));
+
+                    UserEntity user = repositoryManager.getUserRepository().findById(applicantEntity.getApplicantId())
+                            .orElseThrow(() -> new UserServiceException("User not found"));
+
+                    // Create the ApplicantResponseModel from the ApplicantEntity data
+                    ApplicantResponseModel applicantResponseModel = new ApplicantResponseModel();
+                    // Populate the ApplicantResponseModel fields from the applicantEntity
+                    // For example:
+                    applicantResponseModel.setApplicantId(applicantEntity.getApplicantId());
+                    applicantResponseModel.setFirstName(applicantEntity.getFirstName());
+                    applicantResponseModel.setLastName(applicantEntity.getLastName());
+                    applicantResponseModel.setAddress(applicantEntity.getAddress());
+                    applicantResponseModel.setDob(applicantEntity.getDob());
+                    applicantResponseModel.setCgpa(applicantEntity.getCgpa());
+                    applicantResponseModel.setEmail(user.getEmail());
+                    applicantResponseModel.setContact(applicantEntity.getContact());
+                    applicantResponseModel.setDegreeName(applicantEntity.getDegreeName());
+                    applicantResponseModel.setGender(applicantEntity.getGender());
+                    applicantResponseModel.setPassingYear(applicantEntity.getPassingYear());
+                    applicantResponseModel.setInstitute(applicantEntity.getInstitute());
+                    // Add other fields as required
+
+                    applicants.add(applicantResponseModel);
+                }
+            }
+
+            return ResponseEntity.ok(applicants);
+        } catch (ApplyServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (UserServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
 }

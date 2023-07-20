@@ -62,4 +62,9 @@ public class AdminController {
     public  ResponseEntity<Response<?>> getAllExamCategory(){
         return serviceManager.getAdminService().getAllExamCategory();
     }
+
+    @GetMapping("/getApplicants/{circularId}")
+    public ResponseEntity<?> getApplicantsByCircular(@PathVariable Long circularId){
+        return serviceManager.getApplicantService().getAppliedApplicantsByCircularId(circularId);
+    }
 }
