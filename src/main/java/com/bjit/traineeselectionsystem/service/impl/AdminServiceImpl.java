@@ -228,13 +228,13 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public ResponseEntity<Response<?>> getCircularById(Long circularId) {
+    public ResponseEntity<?> getCircularById(Long circularId) {
         try {
             Optional<JobCircularEntity> optionalCircular = repositoryManager.getJobCircularRepository().findById(circularId);
             if (optionalCircular.isPresent()) {
 
                 CircularCreateRequest jobModel = CircularCreateRequest.builder()
-                        .adminId(optionalCircular.get().getCircularId())
+                        .adminId(optionalCircular.get().getAdmin().getAdminId())
                         .circularId(optionalCircular.get().getCircularId())
                         .circularTitle(optionalCircular.get().getCircularTitle())
                         .jobType(optionalCircular.get().getJobType())
@@ -242,6 +242,7 @@ public class AdminServiceImpl implements AdminService {
                         .closeDate(optionalCircular.get().getCloseDate())
                         .jobDescription(optionalCircular.get().getJobDescription())
                         .build();
+
                 Response<CircularCreateRequest> apiResponse = new Response<>(jobModel, null);
 
                 // Return the ResponseEntity with the APIResponse

@@ -32,19 +32,23 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     public ResponseEntity<String> apply(ApplyRequest applyRequest) {
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
+//
+//            UserEntity user = repositoryManager.getUserRepository().findById(loggedInApplicantId)
+//                    .orElseThrow(() -> new UserServiceException("User not found"));
+//
+//            ApplicantEntity applicant = repositoryManager.getApplicantRepository().findByUser(user);
+//
+//            if (!applyRequest.getApplicantId().equals(applicant.getApplicantId())) {
+//                throw new IllegalArgumentException("Invalid applicant ID");
+//            }
 
-            UserEntity user = repositoryManager.getUserRepository().findById(loggedInApplicantId)
-                    .orElseThrow(() -> new UserServiceException("User not found"));
+            UserEntity user = repositoryManager.getUserRepository().findById(applyRequest.getUserId())
+                    .orElseThrow(()->new UserServiceException("User not found"));
 
-            ApplicantEntity applicant = repositoryManager.getApplicantRepository().findByUser(user);
 
-            if (!applyRequest.getApplicantId().equals(applicant.getApplicantId())) {
-                throw new IllegalArgumentException("Invalid applicant ID");
-            }
-
-            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(applyRequest.getApplicantId())
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(user)
                     .orElseThrow(() -> new ApplyServiceException("Applicant not found"));
 
             JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(applyRequest.getCircularId())

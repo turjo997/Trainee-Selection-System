@@ -17,7 +17,6 @@ public interface AdmitCardService {
 
     void export(HttpServletResponse response , Long applicantId) throws IOException;
 
-    //byte[] generateAdmitCardPDF(AdmitCardEntity admitCardEntity) throws IOException;
 
     AdmitCardEntity getAdmitCardByApplicantId(Long applicantId);
 

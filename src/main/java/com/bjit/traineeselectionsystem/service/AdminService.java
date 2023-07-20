@@ -19,6 +19,6 @@ public interface AdminService {
 
     ResponseEntity<Response<?>> getAllExamCategory();
 
-    ResponseEntity<Response<?>> getCircularById(Long bookId);
+    ResponseEntity<?> getCircularById(Long circularId);
 
 }

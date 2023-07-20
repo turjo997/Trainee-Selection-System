@@ -1,10 +1,13 @@
 package com.bjit.traineeselectionsystem.utils;
 
+import com.bjit.traineeselectionsystem.entity.UserEntity;
+import com.bjit.traineeselectionsystem.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +18,26 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
+@RequiredArgsConstructor
 public class JwtService {
+
+    private final UserRepository userRepository;
 
     private static final String SECRET_KEY = "26452948404D635166546A576E5A7234753778214125442A462D4A614E645267";
 
     public String generateToken(UserDetails userDetails){
+        System.out.println(userDetails);
         return generateToken(new HashMap<>(),userDetails);
     }
     public String generateToken(
             Map<String, Object> extraClaims, UserDetails userDetails
     ){
+
+        UserEntity user = userRepository.findByEmail(userDetails.getUsername());
+        extraClaims.put("userId" , user.getUserId());
         extraClaims.put("roles",userDetails.getAuthorities());
+
+        System.out.println(extraClaims);
         return Jwts
                 .builder().setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())

@@ -40,7 +40,8 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/admin/create/evaluator"),
             new AntPathRequestMatcher("/admin/create/circular"),
             new AntPathRequestMatcher("/admin/getApplicants/{circularId}"),
-            new AntPathRequestMatcher("/getCircularById/{circularId}")
+            new AntPathRequestMatcher("/get/{circularId}"),
+            new AntPathRequestMatcher("/applicant/apply")
     };
 
     RequestMatcher[] adminMatchers = new RequestMatcher[]{
@@ -66,7 +67,7 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/applicant/update"),
             new AntPathRequestMatcher("/applicant/admitCard/{applicantId}"),
             new AntPathRequestMatcher("/applicant/upload"),
-            new AntPathRequestMatcher("/applicant/apply")
+           // new AntPathRequestMatcher("/applicant/apply")
     };
 
     RequestMatcher[] evaluatorMatchers = new RequestMatcher[]{

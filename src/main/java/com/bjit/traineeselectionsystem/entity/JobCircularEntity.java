@@ -24,21 +24,21 @@ public class JobCircularEntity {
     @JoinColumn(name = "admin_id")
     private AdminEntity admin;
 
-    @Column(nullable = false)
+
     private String circularTitle;
 
-    @Column(nullable = false)
+
     private String jobType;
 
-    @Column(nullable = false)
+
     private LocalDate openDate;
 
-    @Column(nullable = false)
+
     private LocalDate closeDate;
 
-    @Column(nullable = false)
+
     private String jobDescription;
 
-    @Column(nullable = false)
+
     private String status;
 }

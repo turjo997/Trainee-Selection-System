@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ApplyRequest {
-    private Long applicantId;
+
+    private Long userId;
+
     private Long circularId;
 }

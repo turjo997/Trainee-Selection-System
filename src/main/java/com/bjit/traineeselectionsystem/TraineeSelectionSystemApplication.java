@@ -20,8 +20,8 @@ public class TraineeSelectionSystemApplication {
 
 		userService.addAdmin();
 
-		CodeGeneratorService codeGeneratorService = applicationContext.getBean(CodeGeneratorService.class);
-		codeGeneratorService.writeQRCode(4L , 1L);
+		//CodeGeneratorService codeGeneratorService = applicationContext.getBean(CodeGeneratorService.class);
+		//codeGeneratorService.writeQRCode(4L , 1L);
 
 	}
 
