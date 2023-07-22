@@ -21,12 +21,12 @@ public class AttachmentController {
         this.attachmentService = attachmentService;
     }
 
-    @PostMapping("applicant/upload")
+    @PostMapping("/applicant/upload/{userId}")
     public ResponseData uploadFile(@RequestParam("image") MultipartFile image ,
-                                   @RequestParam("cv") MultipartFile cv) throws Exception {
+                                   @RequestParam("cv") MultipartFile cv , @PathVariable Long userId) throws Exception {
 
-        AttachmentEntity imageAttachment = attachmentService.saveAttachment(image);
-        AttachmentEntity cvAttachment = attachmentService.saveAttachment(cv);
+        AttachmentEntity imageAttachment = attachmentService.saveAttachment(image , userId);
+        AttachmentEntity cvAttachment = attachmentService.saveAttachment(cv , userId);
 
         String imageDownloadUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("applicant/download/")

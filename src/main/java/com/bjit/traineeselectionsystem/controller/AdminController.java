@@ -17,10 +17,10 @@ public class AdminController {
     private final ServiceManager serviceManager;
     private final AuthenticationService authenticationService;
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
-        return new ResponseEntity<>(authenticationService.login(authenticationRequest), HttpStatus.OK);
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
+//        return new ResponseEntity<>(authenticationService.login(authenticationRequest), HttpStatus.OK);
+//    }
 
     @PostMapping("/create/circular")
     public ResponseEntity<String> createCircular(@RequestBody CircularCreateRequest circularCreateRequest) {
@@ -67,4 +67,7 @@ public class AdminController {
     public ResponseEntity<?> getApplicantsByCircular(@PathVariable Long circularId){
         return serviceManager.getApplicantService().getAppliedApplicantsByCircularId(circularId);
     }
+
+
+
 }

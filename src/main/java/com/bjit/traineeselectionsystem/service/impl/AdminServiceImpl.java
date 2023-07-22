@@ -3,7 +3,6 @@ package com.bjit.traineeselectionsystem.service.impl;
 import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.exception.*;
 import com.bjit.traineeselectionsystem.model.*;
-import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.AdminService;
 import com.bjit.traineeselectionsystem.utils.JwtService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -261,6 +259,70 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public ResponseEntity<String> sendNotice(NoticeModel noticeModel) {
+        try {
+            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(noticeModel.getAdminId())
+                    .orElseThrow(() -> new AdminServiceException("Admin not found"));
+
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(noticeModel.getCircularId())
+                    .orElseThrow(() -> new JobCircularServiceException("Circular not found"));
+
+            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository().findById(noticeModel.getExamId())
+                    .orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
+
+            // Get the approved applicants for a specific circular and exam
+            List<ApproveEntity> selectedApplicants = repositoryManager.getApproveRepository().findByJobCircularCircularIdAndExamCategoryExamId(noticeModel.getCircularId(), noticeModel.getExamId());
+
+            List<NotificationEntity> addNotice = new ArrayList<>();
+
+
+            System.out.println(selectedApplicants.size());
+
+            if(selectedApplicants.size() > 0){
+
+                for (ApproveEntity approve : selectedApplicants) {
+
+                    System.out.println(approve.getApplicant().getApplicantId());
+                    System.out.println(approve.getExamCategory().getExamId());
+                    System.out.println(approve.getJobCircular().getCircularId());
+
+
+                    NotificationEntity notificationEntity = NotificationEntity.builder()
+                            .admin(adminEntity)
+                            .applicant(approve.getApplicant())
+                            .description(noticeModel.getDescription())
+                            .title(noticeModel.getTitle())
+                            .build();
+                    addNotice.add(notificationEntity);
+                }
+                // Save the generated AdmitCardEntity to the database or perform any other necessary actions
+                repositoryManager.getNoticeBoardRepository().saveAll(addNotice);
+
+                return ResponseEntity.ok("applicant notified successfully");
+
+            }else{
+                throw new ApproveServiceException("No approval found for the given circular and exam");
+            }
+
+        }catch (AdminServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (JobCircularServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (ExamCreateServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (ApproveServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (Exception e) {
+            // Log the error or handle it as per your application's requirements
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @Override
     public ResponseEntity<Response<?>> getAllCircular() {
 
         try {
@@ -372,6 +434,5 @@ public class AdminServiceImpl implements AdminService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
         }
     }
-
 
 }

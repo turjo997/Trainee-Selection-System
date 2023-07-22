@@ -60,4 +60,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
     }
 
+
+    @ExceptionHandler({ApproveServiceException.class})
+    public ResponseEntity<Response> ApproveExceptionHandler(Exception ex) {
+        Response<ApproveEntity> apiResponse = new Response<>(null, ex.getMessage());
+        return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+    }
+
 }

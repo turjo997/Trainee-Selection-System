@@ -13,10 +13,6 @@ import org.hibernate.annotations.GenericGenerator;
 
 public class AttachmentEntity {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long assessmentId;
-
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")

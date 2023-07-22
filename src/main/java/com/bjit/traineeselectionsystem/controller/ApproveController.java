@@ -22,10 +22,4 @@ public class ApproveController {
 
     }
 
-
-    @PostMapping("/technical/{adminId}/{circularId}/{examId}")
-    public ResponseEntity<String> approveApplicantForTechnical(@PathVariable Long adminId , @PathVariable Long circularId , @PathVariable Long examId) {
-        return serviceManager.getExamTrackService().createExamTracks(adminId , circularId , examId);
-
-    }
 }

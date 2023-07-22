@@ -1,13 +1,15 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
-import com.bjit.traineeselectionsystem.entity.AdminEntity;
-import com.bjit.traineeselectionsystem.entity.ApplicantEntity;
-import com.bjit.traineeselectionsystem.entity.ApplyEntity;
-import com.bjit.traineeselectionsystem.entity.AttachmentEntity;
+import com.bjit.traineeselectionsystem.entity.*;
+import com.bjit.traineeselectionsystem.exception.ApplicantServiceException;
+import com.bjit.traineeselectionsystem.exception.ApplyServiceException;
+import com.bjit.traineeselectionsystem.exception.UserServiceException;
 import com.bjit.traineeselectionsystem.repository.AdminRepository;
 import com.bjit.traineeselectionsystem.repository.ApplicantRepository;
 import com.bjit.traineeselectionsystem.repository.AttachmentRepository;
+import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.service.AttachmentService;
+import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -17,16 +19,23 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class AttachmentServiceImpl implements AttachmentService {
 
+
     private final AttachmentRepository attachmentRepository;
+    private final UserRepository userRepository;
     private final ApplicantRepository applicantRepository;
 
     @Override
-    public AttachmentEntity saveAttachment(MultipartFile file) throws Exception {
+    public AttachmentEntity saveAttachment(MultipartFile file , Long userId) throws Exception {
 
-        Long id = 7L;
+       // Long userId = 10L;
 
-        ApplicantEntity applicantEntity = applicantRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Applicant not found"));
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(()->new UserServiceException("User not found"));
+
+
+        ApplicantEntity applicantEntity = applicantRepository.findByUser(user)
+                .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
 
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         try {

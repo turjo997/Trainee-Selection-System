@@ -1,9 +1,6 @@
 package com.bjit.traineeselectionsystem.service;
 
-import com.bjit.traineeselectionsystem.model.CircularCreateRequest;
-import com.bjit.traineeselectionsystem.model.EvaluatorCreateRequest;
-import com.bjit.traineeselectionsystem.model.ExamCreateRequest;
-import com.bjit.traineeselectionsystem.model.Response;
+import com.bjit.traineeselectionsystem.model.*;
 import org.springframework.http.ResponseEntity;
 
 public interface AdminService {
@@ -20,5 +17,7 @@ public interface AdminService {
     ResponseEntity<Response<?>> getAllExamCategory();
 
     ResponseEntity<?> getCircularById(Long circularId);
+
+    ResponseEntity<String> sendNotice(NoticeModel noticeModel);
 
 }

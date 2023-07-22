@@ -1,9 +1,6 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
-import com.bjit.traineeselectionsystem.entity.ApplicantEntity;
-import com.bjit.traineeselectionsystem.entity.ApplyEntity;
-import com.bjit.traineeselectionsystem.entity.JobCircularEntity;
-import com.bjit.traineeselectionsystem.entity.UserEntity;
+import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.exception.ApplicantServiceException;
 import com.bjit.traineeselectionsystem.exception.ApplyServiceException;
 import com.bjit.traineeselectionsystem.exception.JobCircularServiceException;
@@ -183,6 +180,127 @@ public class ApplicantServiceImpl implements ApplicantService {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
         }
+    }
+
+    @Override
+    public ResponseEntity<?> getApplicantById(Long userId) {
+        try {
+
+            UserEntity user = repositoryManager.getUserRepository().findById(userId)
+                    .orElseThrow(()->new UserServiceException("User not found"));
+
+
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(user)
+                    .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
+
+
+            Optional<ApplicantEntity> optionalApplicant = repositoryManager.getApplicantRepository().findById(applicantEntity.getApplicantId());
+            if (optionalApplicant.isPresent()) {
+
+                ApplicantCreateModel applicantModel = ApplicantCreateModel.builder()
+                        .email(optionalApplicant.get().getUser().getEmail())
+                        .firstName(optionalApplicant.get().getFirstName())
+                        .lastName(optionalApplicant.get().getLastName())
+                        .dob(optionalApplicant.get().getDob())
+                        .address(optionalApplicant.get().getAddress())
+                        .institute(optionalApplicant.get().getInstitute())
+                        .gender(optionalApplicant.get().getGender())
+                        .cgpa(optionalApplicant.get().getCgpa())
+                        .degreeName(optionalApplicant.get().getDegreeName())
+                        .passingYear(optionalApplicant.get().getPassingYear())
+                        .contact(optionalApplicant.get().getContact())
+                        .build();
+
+                Response<ApplicantCreateModel> apiResponse = new Response<>(applicantModel, null);
+
+                // Return the ResponseEntity with the APIResponse
+                return ResponseEntity.ok(apiResponse);
+
+            } else {
+                throw new ApplicantServiceException("applicant not found");
+            }
+        }
+        catch (ApplicantServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage()));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getNotificationsForApplicant(Long userId) {
+
+        try {
+
+            UserEntity user = repositoryManager.getUserRepository().findById(userId)
+                    .orElseThrow(()->new UserServiceException("User not found"));
+
+
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(user)
+                    .orElseThrow(() -> new ApplyServiceException("Applicant not found"));
+
+            Optional<NotificationEntity> optionalNotice = repositoryManager.getNoticeBoardRepository().findByApplicant(applicantEntity);
+
+            if (optionalNotice.isPresent()) {
+
+                NoticeModel noticeModel  = NoticeModel.builder()
+                        .title(optionalNotice.get().getTitle())
+                        .description(optionalNotice.get().getDescription())
+                        .build();
+
+                Response<NoticeModel> apiResponse = new Response<>(noticeModel, null);
+
+                // Return the ResponseEntity with the APIResponse
+                return ResponseEntity.ok(apiResponse);
+
+            } else {
+                throw new ApplicantServiceException("applicant not found");
+            }
+        }
+        catch (ApplicantServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage()));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        }
+    }
+
+    @Override
+    public boolean isApplied(Long circularId, Long userId) {
+
+        try{
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId)
+                            .orElseThrow(()->new JobCircularServiceException("Circular not found"));
+
+            UserEntity userEntity = repositoryManager.getUserRepository().findById(userId)
+                            .orElseThrow(()->new UserServiceException("User not found"));
+
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(userEntity)
+                    .orElseThrow(()->new ApplicantServiceException("Applicant not found"));
+
+            boolean flag = repositoryManager.getApplyRepository().existsByApplicantAndJobCircular(applicantEntity , jobCircularEntity);
+            if (flag) {
+                // The user has applied for the job circular
+                return flag;
+            } else {
+                // The user has not applied for the job circular
+                return flag;
+            }
+
+        }
+        catch (JobCircularServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage())).hasBody();
+        }catch (UserServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage())).hasBody();
+        }catch (ApplicantServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage())).hasBody();
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(null ,e.getMessage())).hasBody();
+        }
+
     }
 
 }

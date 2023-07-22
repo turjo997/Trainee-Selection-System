@@ -23,6 +23,65 @@ public class UploadMarksServiceImpl implements UploadMarksService {
 
     private final RepositoryManager repositoryManager;
 
+//
+//    @Override
+//    public ResponseEntity<String> uploadMarksByEvaluator(UploadMarksRequest uploadMarksRequest) {
+//        try {
+//            // Get the Evaluator, Applicant, Job Circular, and Exam Categories based on the provided IDs
+//            EvaluatorEntity evaluator = repositoryManager.getEvaluatorRepository().findById(uploadMarksRequest.getEvaluatorId())
+//                    .orElseThrow(() -> new EvaluatorServiceException("Evaluator not found"));
+//
+//            ApplicantEntity applicant = repositoryManager.getApplicantRepository().findById(uploadMarksRequest.getApplicantId())
+//                    .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+//
+//            JobCircularEntity jobCircular = repositoryManager.getJobCircularRepository().findById(uploadMarksRequest.getJobCircularId())
+//                    .orElseThrow(() -> new JobCircularServiceException("Job Circular not found"));
+//
+//            List<UploadMarksEntity> uploadMarksList = new ArrayList<>();
+//
+//            // Iterate over the provided exams and marks to create UploadMarksEntities
+//            for (ExamMarksRequest exam : uploadMarksRequest.getExams()) {
+//
+//                ExamCategoryEntity examCategory = repositoryManager.getExamCreateRepository().findById(exam.getExamId())
+//                        .orElseThrow(() -> new ExamCreateServiceException("Exam Category not found"));
+//
+//                UploadMarksEntity uploadMarks = UploadMarksEntity.builder()
+//                        .evaluator(evaluator)
+//                        .applicant(applicant)
+//                        .jobCircular(jobCircular)
+//                        .examCategory(examCategory)
+//                        .marks(exam.getMarks())
+//                        .build();
+//
+//                uploadMarksList.add(uploadMarks);
+//            }
+//
+//            // Save the UploadMarksEntities to the repository
+//            repositoryManager.getUploadMarksRepository().saveAll(uploadMarksList);
+//
+//
+//            return ResponseEntity.ok("Marks added successfully");
+//
+//        }catch (EvaluatorServiceException e){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }catch (ApplicantServiceException e){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }catch (JobCircularServiceException e){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }catch (ExamCreateServiceException e){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//        }
+//        catch (Exception e){
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+//        }
+//    }
+
+
+
+
+
+
+
 
     @Override
     public ResponseEntity<String> uploadMarksByEvaluator(UploadMarksRequest uploadMarksRequest) {
@@ -37,10 +96,18 @@ public class UploadMarksServiceImpl implements UploadMarksService {
             JobCircularEntity jobCircular = repositoryManager.getJobCircularRepository().findById(uploadMarksRequest.getJobCircularId())
                     .orElseThrow(() -> new JobCircularServiceException("Job Circular not found"));
 
+
+//            ApproveEntity approveEntity = repositoryManager.getApproveRepository()
+//                    .findByApplicantIdAndJobCircularIdAndExamCategoryId(uploadMarksRequest.getApplicantId() ,
+//                            uploadMarksRequest.getJobCircularId());
+
+
+
             List<UploadMarksEntity> uploadMarksList = new ArrayList<>();
 
             // Iterate over the provided exams and marks to create UploadMarksEntities
             for (ExamMarksRequest exam : uploadMarksRequest.getExams()) {
+
                 ExamCategoryEntity examCategory = repositoryManager.getExamCreateRepository().findById(exam.getExamId())
                         .orElseThrow(() -> new ExamCreateServiceException("Exam Category not found"));
 
@@ -74,6 +141,17 @@ public class UploadMarksServiceImpl implements UploadMarksService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
     @Override

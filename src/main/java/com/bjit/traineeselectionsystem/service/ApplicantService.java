@@ -13,4 +13,13 @@ public interface ApplicantService {
     ResponseEntity<String> updateApplicant(ApplicantUpdateRequest applicantUpdateRequest);
 
     ResponseEntity<?> getAppliedApplicantsByCircularId(Long circularId);
+
+    ResponseEntity<?> getApplicantById(Long userId);
+
+
+    ResponseEntity<?> getNotificationsForApplicant(Long userId);
+
+    boolean isApplied(Long circularId , Long userId);
+
+
 }

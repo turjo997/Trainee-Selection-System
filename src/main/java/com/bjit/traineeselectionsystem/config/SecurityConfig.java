@@ -29,9 +29,9 @@ public class SecurityConfig {
     RequestMatcher[] publicMatchers = new RequestMatcher[]{
             new AntPathRequestMatcher("/download/{applicantId}"),
             new AntPathRequestMatcher("/applicant/register"),
-            new AntPathRequestMatcher("/applicant/login"),
-            new AntPathRequestMatcher("/evaluator/login"),
-            new AntPathRequestMatcher("/admin/login"),
+            new AntPathRequestMatcher("/user/login"),
+            //new AntPathRequestMatcher("/evaluator/login"),
+            //new AntPathRequestMatcher("/admin/login"),
             new AntPathRequestMatcher("/admin/getAllApplicant"),
             new AntPathRequestMatcher("/admin/getAllCircular"),
             new AntPathRequestMatcher("/admin/getAllEvaluator"),
@@ -41,7 +41,12 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/admin/create/circular"),
             new AntPathRequestMatcher("/admin/getApplicants/{circularId}"),
             new AntPathRequestMatcher("/get/{circularId}"),
-            new AntPathRequestMatcher("/applicant/apply")
+            new AntPathRequestMatcher("/applicant/apply"),
+            new AntPathRequestMatcher("/applicant/get/{userId}"),
+            new AntPathRequestMatcher("/admin/send/notice"),
+            new AntPathRequestMatcher("/applicant/notifications/{userId}"),
+            new AntPathRequestMatcher("/applicant/upload/{userId}"),
+            new AntPathRequestMatcher("/applicant/get/{circularId}/{userId}")
     };
 
     RequestMatcher[] adminMatchers = new RequestMatcher[]{
@@ -66,8 +71,11 @@ public class SecurityConfig {
     RequestMatcher[] applicantMatchers = new RequestMatcher[]{
             new AntPathRequestMatcher("/applicant/update"),
             new AntPathRequestMatcher("/applicant/admitCard/{applicantId}"),
-            new AntPathRequestMatcher("/applicant/upload"),
-           // new AntPathRequestMatcher("/applicant/apply")
+            //new AntPathRequestMatcher("/applicant/upload"),
+           // new AntPathRequestMatcher("/applicant/apply"),
+//            new AntPathRequestMatcher("/applicant/get/{applicantId}"),
+           // new AntPathRequestMatcher("/applicant/notifications/{userId}"),
+            new AntPathRequestMatcher("/applicant/get/{circularId}/{userId}")
     };
 
     RequestMatcher[] evaluatorMatchers = new RequestMatcher[]{

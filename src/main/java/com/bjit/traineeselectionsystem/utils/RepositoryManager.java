@@ -22,9 +22,13 @@ public class RepositoryManager {
     private final MailingStatusRepository mailingStatusRepository;
     private final UploadMarksHrRepository uploadMarksHrRepository;
     private final UploadMarksRepository uploadMarksRepository;
+    private final NoticeBoardRepository noticeBoardRepository;
 
 
 
+    public NoticeBoardRepository getNoticeBoardRepository(){
+        return noticeBoardRepository;
+    }
     public MailingStatusRepository getMailingStatusRepository() {
         return mailingStatusRepository;
     }

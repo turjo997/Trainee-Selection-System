@@ -34,4 +34,22 @@ public class ApplicantController {
     public ResponseEntity<String> apply(@RequestBody ApplyRequest applyRequest) {
         return serviceManager.getApplicantService().apply(applyRequest);
     }
+
+    @GetMapping("/get/{userId}")
+    public ResponseEntity<?> getApplicantById(@PathVariable Long userId) {
+        return serviceManager.getApplicantService().getApplicantById(userId);
+    }
+
+
+    @GetMapping("/notifications/{userId}")
+    public ResponseEntity<?> getNotificationsForApplicant(@PathVariable Long userId) {
+        return serviceManager.getApplicantService().getNotificationsForApplicant(userId);
+    }
+
+
+    @GetMapping("/get/{circularId}/{userId}")
+    public boolean isAppliedForJob(@PathVariable Long circularId , @PathVariable Long userId) {
+        return serviceManager.getApplicantService().isApplied(circularId , userId);
+    }
+
 }

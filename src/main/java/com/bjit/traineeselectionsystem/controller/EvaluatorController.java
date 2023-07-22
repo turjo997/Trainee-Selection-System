@@ -20,10 +20,12 @@ public class EvaluatorController {
 
     private final AuthenticationService authenticationService;
     private final ServiceManager serviceManager;
-    @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
-        return new ResponseEntity<>(authenticationService.login(authenticationRequest), HttpStatus.OK);
-    }
+
+
+//    @PostMapping("/login")
+//    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
+//        return new ResponseEntity<>(authenticationService.login(authenticationRequest), HttpStatus.OK);
+//    }
 
     @PostMapping("/upload-marks")
     public ResponseEntity<String> uploadMarks(@RequestBody UploadMarksRequest uploadMarksRequest) {

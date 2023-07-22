@@ -11,4 +11,7 @@ public interface ApplyRepository extends JpaRepository<ApplyEntity , Long> {
     Optional<ApplyEntity> findByApplicant(ApplicantEntity applicantEntity);
 
     List<ApplyEntity> findByJobCircular(JobCircularEntity jobCircular);
+
+    boolean existsByApplicantAndJobCircular(ApplicantEntity applicant, JobCircularEntity jobCircular);
+
 }
