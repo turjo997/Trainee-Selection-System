@@ -4,7 +4,6 @@ import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.service.impl.AuthenticationService;
 import com.bjit.traineeselectionsystem.utils.ServiceManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,8 +42,8 @@ public class AdminController {
 
 
     @PostMapping("/upload-marks")
-    public ResponseEntity<String> uploadMarks(@RequestBody UploadMarksHrRequest uploadMarksHrRequest) {
-        return serviceManager.getUploadMarksService().uploadMarksByAdmin(uploadMarksHrRequest);
+    public ResponseEntity<String> uploadMarks(@RequestBody UploadMarksByAdminRequest uploadMarksByAdminRequest) {
+        return serviceManager.getUploadMarksService().uploadMarksByAdmin(uploadMarksByAdminRequest);
     }
 
 

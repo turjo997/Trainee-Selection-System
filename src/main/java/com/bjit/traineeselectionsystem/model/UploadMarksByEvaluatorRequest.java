@@ -6,16 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UploadMarksHrRequest {
-
-    private Long adminId;
+public class UploadMarksByEvaluatorRequest {
+    private Long evaluatorId;
     private Long applicantId;
     private Long jobCircularId;
-    private List<ExamMarksRequest> exams;
+    private Long examId;
+    private Double marks;
+    //private List<ExamMarksRequest> exams;
 }
