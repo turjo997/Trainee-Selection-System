@@ -81,12 +81,11 @@ public class AdminServiceImpl implements AdminService {
             repositoryManager.getJobCircularRepository().save(jobCircularEntity);
 
             return ResponseEntity.ok("Job circular created successfully");
-        } catch (UserServiceException e){
+        } catch (UserServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (AdminServiceException e){
+        } catch (AdminServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
@@ -214,15 +213,12 @@ public class AdminServiceImpl implements AdminService {
             });
             Response<List<ExamCategoryEntity>> response = new Response<>(modelList, null);
             return ResponseEntity.ok(response);
-        }
-        catch (ExamCreateServiceException e){
+        } catch (ExamCreateServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(e.getMessage(), null));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
         }
     }
-
 
 
     @Override
@@ -249,12 +245,10 @@ public class AdminServiceImpl implements AdminService {
             } else {
                 throw new JobCircularServiceException("circular not found");
             }
-        }
-        catch (JobCircularServiceException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage()));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        } catch (JobCircularServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage()));
         }
     }
 
@@ -278,7 +272,7 @@ public class AdminServiceImpl implements AdminService {
 
             System.out.println(selectedApplicants.size());
 
-            if(selectedApplicants.size() > 0){
+            if (selectedApplicants.size() > 0) {
 
                 for (ApproveEntity approve : selectedApplicants) {
 
@@ -300,23 +294,19 @@ public class AdminServiceImpl implements AdminService {
 
                 return ResponseEntity.ok("applicant notified successfully");
 
-            }else{
+            } else {
                 throw new ApproveServiceException("No approval found for the given circular and exam");
             }
 
-        }catch (AdminServiceException e){
+        } catch (AdminServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (JobCircularServiceException e){
+        } catch (JobCircularServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (ExamCreateServiceException e){
+        } catch (ExamCreateServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (ApproveServiceException e){
+        } catch (ApproveServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // Log the error or handle it as per your application's requirements
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -347,11 +337,9 @@ public class AdminServiceImpl implements AdminService {
             });
             Response<List<JobCircularEntity>> response = new Response<List<JobCircularEntity>>(modelList, null);
             return ResponseEntity.ok(response);
-        }
-        catch (JobCircularServiceException e){
+        } catch (JobCircularServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(e.getMessage(), null));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
         }
 
@@ -387,11 +375,9 @@ public class AdminServiceImpl implements AdminService {
 
             Response<List<EvaluatorEntity>> response = new Response<List<EvaluatorEntity>>(modelList, null);
             return ResponseEntity.ok(response);
-        }
-        catch (EvaluatorServiceException e){
+        } catch (EvaluatorServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(e.getMessage(), null));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
         }
 
@@ -426,11 +412,9 @@ public class AdminServiceImpl implements AdminService {
             });
             Response<List<ApplicantEntity>> response = new Response<>(modelList, null);
             return ResponseEntity.ok(response);
-        }
-        catch (ApplicantServiceException e){
+        } catch (ApplicantServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(e.getMessage(), null));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(e.getMessage(), null));
         }
     }

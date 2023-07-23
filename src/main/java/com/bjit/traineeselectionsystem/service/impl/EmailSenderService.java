@@ -34,14 +34,14 @@ public class EmailSenderService implements MailingStatusService {
 
         try {
             AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(emailRequest.getAdminId())
-                    .orElseThrow(()-> new AdminServiceException("Admin not found"));
+                    .orElseThrow(() -> new AdminServiceException("Admin not found"));
 
             JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(emailRequest.getCircularId())
-                    .orElseThrow(()-> new JobCircularServiceException("Circular not found"));
+                    .orElseThrow(() -> new JobCircularServiceException("Circular not found"));
 
 
             ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository().findById(emailRequest.getExamId())
-                    .orElseThrow(()->new ExamCreateServiceException("Exam not found"));
+                    .orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
 
 
             // Get the approved applicants for a specific circular and exam
@@ -53,11 +53,11 @@ public class EmailSenderService implements MailingStatusService {
             for (ApproveEntity approve : approvedApplicants) {
 
                 ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(approve.getApplicant().getApplicantId())
-                        .orElseThrow(()-> new ApplicantServiceException("Applicant not found"));
+                        .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
 
-                if(approve.getApplicant().getApplicantId() == 12L){
+                if (approve.getApplicant().getApplicantId() == 12L) {
                     UserEntity userEntity = repositoryManager.getUserRepository().findById(applicantEntity.getUser().getUserId())
-                            .orElseThrow(()->new UserServiceException("User not found"));
+                            .orElseThrow(() -> new UserServiceException("User not found"));
 
                     String toEmail = userEntity.getEmail();
 
@@ -89,23 +89,17 @@ public class EmailSenderService implements MailingStatusService {
             }
 
             repositoryManager.getMailingStatusRepository().saveAll(emailList);
-        }
-        catch (AdminServiceException e){
+        } catch (AdminServiceException e) {
             throw new AdminServiceException(e.getMessage());
-        }
-        catch (JobCircularServiceException e){
+        } catch (JobCircularServiceException e) {
             throw new JobCircularServiceException(e.getMessage());
-        }
-        catch (ExamCreateServiceException e){
+        } catch (ExamCreateServiceException e) {
             throw new ExamCreateServiceException(e.getMessage());
-        }
-        catch (ApplicantServiceException e){
+        } catch (ApplicantServiceException e) {
             throw new ApplicantServiceException(e.getMessage());
-        }
-        catch (UserServiceException e){
+        } catch (UserServiceException e) {
             throw new UserServiceException(e.getMessage());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
 

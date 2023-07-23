@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name = "upload_marks")
+@Table(name = "upload_marks_evaluator")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UploadMarksEntity {
+public class UploadMarksByEvaluatorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uploadId;

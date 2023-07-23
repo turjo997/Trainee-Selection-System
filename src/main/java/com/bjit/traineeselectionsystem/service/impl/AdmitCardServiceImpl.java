@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Optional;
 
 
-
 @Service
 @RequiredArgsConstructor
 public class AdmitCardServiceImpl implements AdmitCardService {
@@ -79,17 +78,14 @@ public class AdmitCardServiceImpl implements AdmitCardService {
             // Save the generated AdmitCardEntity to the database or perform any other necessary actions
             repositoryManager.getAdmitCardRepository().saveAll(addAdmitCard);
 
-           return ResponseEntity.ok("admit card generated successfully");
-        }catch (AdminServiceException e){
+            return ResponseEntity.ok("admit card generated successfully");
+        } catch (AdminServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (JobCircularServiceException e){
+        } catch (JobCircularServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (ExamCreateServiceException e){
+        } catch (ExamCreateServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // Log the error or handle it as per your application's requirements
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
@@ -157,8 +153,8 @@ public class AdmitCardServiceImpl implements AdmitCardService {
             //String instructions = admitCardEntity.getInstructions();
 
             String instructions = "1. Each candidate must bring printed copy of this admit card into the exam hall"
-                    +"\n"+"2. Candidate should be present in the concerned center 30(thirty) minute before the exam starts"+
-                    "\n"+"3. Carrying any kind of electronic device like mobile is strongly prohibited.";
+                    + "\n" + "2. Candidate should be present in the concerned center 30(thirty) minute before the exam starts" +
+                    "\n" + "3. Carrying any kind of electronic device like mobile is strongly prohibited.";
 
             String circular = admitCardEntity.getJobCircular().getCircularTitle();
             // Add more details as needed
@@ -178,9 +174,9 @@ public class AdmitCardServiceImpl implements AdmitCardService {
 
             Paragraph paragraph6 = new Paragraph("Exam Venue           : " + examVenue, fontParagraph);
 
-            Paragraph paragraph7 = new Paragraph("General Instructions  : " , fontParagraph);
+            Paragraph paragraph7 = new Paragraph("General Instructions  : ", fontParagraph);
 
-            Paragraph paragraph8 = new Paragraph(instructions , fontParagraph);
+            Paragraph paragraph8 = new Paragraph(instructions, fontParagraph);
 
             //Paragraph paragraph1 = new Paragraph("Applicant ID        : " + Id, fontParagraph);
             paragraph1.setAlignment(Paragraph.ALIGN_LEFT);
@@ -230,12 +226,9 @@ public class AdmitCardServiceImpl implements AdmitCardService {
 
             document.close();
 
-        }
-        catch (ApplicantServiceException e){
+        } catch (ApplicantServiceException e) {
             throw new ApplicantServiceException(e.getMessage());
-        }
-
-        catch (EntityNotFoundException e) {
+        } catch (EntityNotFoundException e) {
             // Log the error or handle it as per your application's requirements
             throw new EntityNotFoundException(e.getMessage());
         }

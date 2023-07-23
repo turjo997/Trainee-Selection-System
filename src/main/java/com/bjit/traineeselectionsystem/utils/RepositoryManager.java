@@ -20,8 +20,8 @@ public class RepositoryManager {
     private final ExamTrackRepository examTrackRepository;
     private final JobCircularRepository jobCircularRepository;
     private final MailingStatusRepository mailingStatusRepository;
-    private final UploadMarksHrRepository uploadMarksHrRepository;
-    private final UploadMarksRepository uploadMarksRepository;
+    private final UploadMarksByAdminRepository uploadMarksByAdminRepository;
+    private final UploadMarksByEvaluatorRepository uploadMarksByEvaluatorRepository;
     private final NoticeBoardRepository noticeBoardRepository;
 
 
@@ -61,8 +61,8 @@ public class RepositoryManager {
         return evaluatorRepository;
     }
 
-    public UploadMarksHrRepository getUploadMarksHrRepository(){
-        return uploadMarksHrRepository;
+    public UploadMarksByAdminRepository getUploadMarksByAdminRepository(){
+        return uploadMarksByAdminRepository;
     }
 
     public ExamTrackRepository getExamTrackRepository(){
@@ -76,8 +76,8 @@ public class RepositoryManager {
     public AdminRepository getAdminRepository() {
         return adminRepository;
     }
-    public UploadMarksRepository getUploadMarksRepository(){
-        return uploadMarksRepository;
+    public UploadMarksByEvaluatorRepository getUploadMarksByEvaluatorRepository(){
+        return uploadMarksByEvaluatorRepository;
     }
 
     public UserRepository getUserRepository() {

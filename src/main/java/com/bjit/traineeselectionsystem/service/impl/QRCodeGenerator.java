@@ -27,18 +27,16 @@ public class QRCodeGenerator implements CodeGeneratorService {
 
 
     private static String QRCODE_PATH = "C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
-            //"E:\\BJIT Final Project\\YSD_B02_J2EE_FinalProject_Ullash\\QR_images\\";
-            //"C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
+    //"E:\\BJIT Final Project\\YSD_B02_J2EE_FinalProject_Ullash\\QR_images\\";
+    //"C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
 
     public ResponseEntity<String> writeQRCode(Long circularId, Long examId) throws Exception {
 
         try {
-            repositoryManager.getJobCircularRepository().findById(circularId)
-                    .orElseThrow(()-> new JobCircularServiceException("Circular not found"));
+            repositoryManager.getJobCircularRepository().findById(circularId).orElseThrow(() -> new JobCircularServiceException("Circular not found"));
 
 
-            repositoryManager.getExamCreateRepository().findById(examId)
-                    .orElseThrow(()->new ExamCreateServiceException("Exam not found"));
+            repositoryManager.getExamCreateRepository().findById(examId).orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
 
 
             // Get the approved applicants for a specific circular and exam
@@ -46,15 +44,9 @@ public class QRCodeGenerator implements CodeGeneratorService {
 
 
             for (ApproveEntity approve : approvedApplicants) {
-                String qrcode = QRCODE_PATH + approve.getApplicant().getApplicantId()+"_"+ approve.getApplicant().getFirstName()+
-                        "_"+approve.getApplicant().getLastName()+"-QRCODE.png";
+                String qrcode = QRCODE_PATH + approve.getApplicant().getApplicantId() + "_" + approve.getApplicant().getFirstName() + "_" + approve.getApplicant().getLastName() + "-QRCODE.png";
 
-                String contents = "Id: " + approve.getApplicant().getApplicantId() + "\n"+
-                        "Name : "+ approve.getApplicant().getFirstName() + " "
-                        + approve.getApplicant().getLastName() + "\n"+
-                        "Address: "+ approve.getApplicant().getAddress() + "\n"+
-                        "Date of Birth : "+ approve.getApplicant().getDob() + "\n"
-                        + "Gender : " + approve.getApplicant().getGender();
+                String contents = "Id: " + approve.getApplicant().getApplicantId() + "\n" + "Name : " + approve.getApplicant().getFirstName() + " " + approve.getApplicant().getLastName() + "\n" + "Address: " + approve.getApplicant().getAddress() + "\n" + "Date of Birth : " + approve.getApplicant().getDob() + "\n" + "Gender : " + approve.getApplicant().getGender();
 
                 QRCodeWriter writer = new QRCodeWriter();
                 BitMatrix bitMatrix = writer.encode(contents, BarcodeFormat.QR_CODE, 350, 350);
@@ -65,11 +57,11 @@ public class QRCodeGenerator implements CodeGeneratorService {
             }
 
             return ResponseEntity.ok("QRCODE is generated successfully");
-        }catch (JobCircularServiceException e){
+        } catch (JobCircularServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (ExamCreateServiceException e){
+        } catch (ExamCreateServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
 

@@ -41,12 +41,8 @@ public class UserServiceImpl implements UserService {
             String errorMessage = "Admin with the same email already exists";
             System.out.println(errorMessage);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
-        }else {
-            UserEntity userEntity = UserEntity.builder()
-                    .role(Role.ADMIN)
-                    .email(email)
-                    .password(passwordEncoder.encode(password))
-                    .build();
+        } else {
+            UserEntity userEntity = UserEntity.builder().role(Role.ADMIN).email(email).password(passwordEncoder.encode(password)).build();
 
 
             // Save the user to the UserRepository
@@ -67,9 +63,7 @@ public class UserServiceImpl implements UserService {
 
             System.out.println("Account created");
 
-            AuthenticationResponse authRes = AuthenticationResponse.builder()
-                    .token(jwtService.generateToken(savedUser))
-                    .build();
+            AuthenticationResponse authRes = AuthenticationResponse.builder().token(jwtService.generateToken(savedUser)).build();
 
             System.out.println(authRes);
             return new ResponseEntity<>(authRes, HttpStatus.CREATED);
@@ -85,36 +79,18 @@ public class UserServiceImpl implements UserService {
                 throw new UserServiceException(errorMessage);
             } else {
                 // Create a new UserEntity
-                UserEntity user = UserEntity.builder()
-                        .role(Role.APPLICANT)
-                        .email(applicantCreateRequest.getEmail())
-                        .password(passwordEncoder.encode(applicantCreateRequest.getPassword()))
-                        .build();
+                UserEntity user = UserEntity.builder().role(Role.APPLICANT).email(applicantCreateRequest.getEmail()).password(passwordEncoder.encode(applicantCreateRequest.getPassword())).build();
 
                 // Save the user to the UserRepository
                 UserEntity savedUser = userRepository.save(user);
 
                 // Create a new ApplicantEntity with the saved user
-                ApplicantEntity applicant = ApplicantEntity.builder()
-                        .user(savedUser)
-                        .firstName(applicantCreateRequest.getFirstName())
-                        .lastName(applicantCreateRequest.getLastName())
-                        .gender(applicantCreateRequest.getGender())
-                        .dob(applicantCreateRequest.getDob())
-                        .contact(applicantCreateRequest.getContact())
-                        .degreeName(applicantCreateRequest.getDegreeName())
-                        .institute(applicantCreateRequest.getInstitute())
-                        .cgpa(applicantCreateRequest.getCgpa())
-                        .passingYear(applicantCreateRequest.getPassingYear())
-                        .address(applicantCreateRequest.getAddress())
-                        .build();
+                ApplicantEntity applicant = ApplicantEntity.builder().user(savedUser).firstName(applicantCreateRequest.getFirstName()).lastName(applicantCreateRequest.getLastName()).gender(applicantCreateRequest.getGender()).dob(applicantCreateRequest.getDob()).contact(applicantCreateRequest.getContact()).degreeName(applicantCreateRequest.getDegreeName()).institute(applicantCreateRequest.getInstitute()).cgpa(applicantCreateRequest.getCgpa()).passingYear(applicantCreateRequest.getPassingYear()).address(applicantCreateRequest.getAddress()).build();
 
                 // Save the applicant to the ApplicantRepository
                 applicantRepository.save(applicant);
 
-                AuthenticationResponse authRes = AuthenticationResponse.builder()
-                        .token(jwtService.generateToken(user))
-                        .build();
+                AuthenticationResponse authRes = AuthenticationResponse.builder().token(jwtService.generateToken(user)).build();
                 return new ResponseEntity<>(authRes, HttpStatus.CREATED);
             }
         } catch (UserServiceException e) {

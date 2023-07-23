@@ -25,12 +25,12 @@ public class AttachmentServiceImpl implements AttachmentService {
     private final ApplicantRepository applicantRepository;
 
     @Override
-    public AttachmentEntity saveAttachment(MultipartFile file , Long userId) throws Exception {
+    public AttachmentEntity saveAttachment(MultipartFile file, Long userId) throws Exception {
 
-       // Long userId = 10L;
+        // Long userId = 10L;
 
         UserEntity user = userRepository.findById(userId)
-                .orElseThrow(()->new UserServiceException("User not found"));
+                .orElseThrow(() -> new UserServiceException("User not found"));
 
 
         ApplicantEntity applicantEntity = applicantRepository.findByUser(user)
@@ -39,13 +39,13 @@ public class AttachmentServiceImpl implements AttachmentService {
 
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
         try {
-            if(fileName.contains("..")) {
-                throw  new Exception("Filename contains invalid path sequence "
+            if (fileName.contains("..")) {
+                throw new Exception("Filename contains invalid path sequence "
                         + fileName);
             }
 
             AttachmentEntity attachment
-                    = new AttachmentEntity(applicantEntity ,fileName,
+                    = new AttachmentEntity(applicantEntity, fileName,
                     file.getContentType(),
                     file.getBytes());
 

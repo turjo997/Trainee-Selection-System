@@ -16,5 +16,7 @@ public class UploadMarksRequest {
     private Long evaluatorId;
     private Long applicantId;
     private Long jobCircularId;
-    private List<ExamMarksRequest> exams;
+    private Long examId;
+    private Double marks;
+    //private List<ExamMarksRequest> exams;
 }

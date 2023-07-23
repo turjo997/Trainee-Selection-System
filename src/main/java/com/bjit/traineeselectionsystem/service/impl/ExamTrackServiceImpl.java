@@ -27,16 +27,13 @@ public class ExamTrackServiceImpl implements ExamTrackService {
 
         try {
 
-            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(adminId)
-                    .orElseThrow(() -> new AdminServiceException("Admin not found"));
+            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(adminId).orElseThrow(() -> new AdminServiceException("Admin not found"));
 
 
-            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId)
-                    .orElseThrow(() -> new JobCircularServiceException("Circular not found"));
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId).orElseThrow(() -> new JobCircularServiceException("Circular not found"));
 
 
-            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository().findById(examId)
-                    .orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
+            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository().findById(examId).orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
 
 
             // Get the approved applicants for a specific circular and exam
@@ -45,12 +42,7 @@ public class ExamTrackServiceImpl implements ExamTrackService {
 
             for (ApproveEntity approve : approvedApplicants) {
                 String answerSheetCode = UniqueCode.generateUniqueCode();
-                ExamTrackEntity examTrack = ExamTrackEntity.builder()
-                        .admin(adminEntity)
-                        .applicant(approve.getApplicant())
-                        .jobCircular(jobCircularEntity)
-                        .answerSheetCode(answerSheetCode)
-                        .build();
+                ExamTrackEntity examTrack = ExamTrackEntity.builder().admin(adminEntity).applicant(approve.getApplicant()).jobCircular(jobCircularEntity).answerSheetCode(answerSheetCode).build();
 
                 repositoryManager.getExamTrackRepository().save(examTrack);
             }

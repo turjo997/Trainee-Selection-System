@@ -19,7 +19,13 @@ public class ApproveController {
     @PostMapping("/written/{adminId}/{applicantId}/{circularId}/{examId}")
     public ResponseEntity<String> approveApplicantForWritten(@PathVariable Long adminId , @PathVariable Long applicantId , @PathVariable Long circularId , @PathVariable Long examId) {
         return serviceManager.getApproveService().approveApplicant(adminId , applicantId, circularId , examId);
-
     }
+
+
+    @PostMapping("/{adminId}/{circularId}/{examId}")
+    public ResponseEntity<String> approveApplicant(@PathVariable Long adminId , @PathVariable Long circularId , @PathVariable Long examId) {
+        return serviceManager.getApproveService().selectTopApplicants(adminId , circularId , examId);
+    }
+
 
 }

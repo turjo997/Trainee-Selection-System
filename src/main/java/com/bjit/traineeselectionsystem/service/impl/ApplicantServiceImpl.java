@@ -42,7 +42,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 //            }
 
             UserEntity user = repositoryManager.getUserRepository().findById(applyRequest.getUserId())
-                    .orElseThrow(()->new UserServiceException("User not found"));
+                    .orElseThrow(() -> new UserServiceException("User not found"));
 
 
             ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(user)
@@ -123,15 +123,14 @@ public class ApplicantServiceImpl implements ApplicantService {
         } catch (ApplicantServiceException e) {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
     @Override
     public ResponseEntity<?> getAppliedApplicantsByCircularId(Long circularId) {
-        System.out.println("circular id  : "+circularId);
+        System.out.println("circular id  : " + circularId);
         try {
             JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId)
                     .orElseThrow(() -> new JobCircularServiceException("Job circular not found"));
@@ -187,12 +186,11 @@ public class ApplicantServiceImpl implements ApplicantService {
         try {
 
             UserEntity user = repositoryManager.getUserRepository().findById(userId)
-                    .orElseThrow(()->new UserServiceException("User not found"));
+                    .orElseThrow(() -> new UserServiceException("User not found"));
 
 
             ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(user)
                     .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
-
 
 
             Optional<ApplicantEntity> optionalApplicant = repositoryManager.getApplicantRepository().findById(applicantEntity.getApplicantId());
@@ -220,12 +218,10 @@ public class ApplicantServiceImpl implements ApplicantService {
             } else {
                 throw new ApplicantServiceException("applicant not found");
             }
-        }
-        catch (ApplicantServiceException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage()));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        } catch (ApplicantServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage()));
         }
     }
 
@@ -235,7 +231,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         try {
 
             UserEntity user = repositoryManager.getUserRepository().findById(userId)
-                    .orElseThrow(()->new UserServiceException("User not found"));
+                    .orElseThrow(() -> new UserServiceException("User not found"));
 
 
             ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(user)
@@ -245,7 +241,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
             if (optionalNotice.isPresent()) {
 
-                NoticeModel noticeModel  = NoticeModel.builder()
+                NoticeModel noticeModel = NoticeModel.builder()
                         .title(optionalNotice.get().getTitle())
                         .description(optionalNotice.get().getDescription())
                         .build();
@@ -258,29 +254,27 @@ public class ApplicantServiceImpl implements ApplicantService {
             } else {
                 throw new ApplicantServiceException("applicant not found");
             }
-        }
-        catch (ApplicantServiceException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage()));
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        } catch (ApplicantServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage()));
         }
     }
 
     @Override
     public boolean isApplied(Long circularId, Long userId) {
 
-        try{
+        try {
             JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId)
-                            .orElseThrow(()->new JobCircularServiceException("Circular not found"));
+                    .orElseThrow(() -> new JobCircularServiceException("Circular not found"));
 
             UserEntity userEntity = repositoryManager.getUserRepository().findById(userId)
-                            .orElseThrow(()->new UserServiceException("User not found"));
+                    .orElseThrow(() -> new UserServiceException("User not found"));
 
             ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(userEntity)
-                    .orElseThrow(()->new ApplicantServiceException("Applicant not found"));
+                    .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
 
-            boolean flag = repositoryManager.getApplyRepository().existsByApplicantAndJobCircular(applicantEntity , jobCircularEntity);
+            boolean flag = repositoryManager.getApplyRepository().existsByApplicantAndJobCircular(applicantEntity, jobCircularEntity);
             if (flag) {
                 // The user has applied for the job circular
                 return flag;
@@ -289,16 +283,14 @@ public class ApplicantServiceImpl implements ApplicantService {
                 return flag;
             }
 
-        }
-        catch (JobCircularServiceException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage())).hasBody();
-        }catch (UserServiceException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage())).hasBody();
-        }catch (ApplicantServiceException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null ,e.getMessage())).hasBody();
-        }
-        catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(null ,e.getMessage())).hasBody();
+        } catch (JobCircularServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage())).hasBody();
+        } catch (UserServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage())).hasBody();
+        } catch (ApplicantServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage())).hasBody();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(null, e.getMessage())).hasBody();
         }
 
     }
