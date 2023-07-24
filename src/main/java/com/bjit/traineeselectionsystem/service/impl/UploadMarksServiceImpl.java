@@ -8,6 +8,7 @@ import com.bjit.traineeselectionsystem.model.UploadMarksByEvaluatorRequest;
 import com.bjit.traineeselectionsystem.service.UploadMarksService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,15 @@ public class UploadMarksServiceImpl implements UploadMarksService {
     @Override
     public ResponseEntity<String> uploadMarksByEvaluator(UploadMarksByEvaluatorRequest uploadMarksByEvaluatorRequest) {
         try {
+
+            UserEntity user = repositoryManager.getUserRepository().findById(uploadMarksByEvaluatorRequest.getUserId())
+                    .orElseThrow(()-> new UserServiceException("User not found"));
+
+
+
             // Get the Evaluator, Applicant, Job Circular, and Exam Categories based on the provided IDs
             EvaluatorEntity evaluator = repositoryManager.getEvaluatorRepository()
-                    .findById(uploadMarksByEvaluatorRequest.getEvaluatorId())
+                    .findByUser(user)
                     .orElseThrow(() -> new EvaluatorServiceException("Evaluator not found"));
 
 //            UserEntity user = repositoryManager.getUserRepository()

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UploadMarksByEvaluatorRequest {
-    private Long evaluatorId;
+    private Long userId;
     private Long applicantId;
     private Long jobCircularId;
     private Long examId;

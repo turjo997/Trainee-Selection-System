@@ -23,10 +23,15 @@ public class EvaluatorController {
 //        return new ResponseEntity<>(authenticationService.login(authenticationRequest), HttpStatus.OK);
 //    }
 
-    @PostMapping("/upload-marks")
+    @PostMapping("/uploadMarks")
     public ResponseEntity<String> uploadMarks(@RequestBody UploadMarksByEvaluatorRequest uploadMarksByEvaluatorRequest) {
         return serviceManager.getUploadMarksService().uploadMarksByEvaluator(uploadMarksByEvaluatorRequest);
     }
 
+
+    @GetMapping("/get/{applicantId}/{circularId}")
+    public boolean isMarkUploaded(@PathVariable Long applicantId , @PathVariable Long circularId){
+        return serviceManager.getApproveService().isMarksUploadedByApplicantId(applicantId , circularId);
+    }
 
 }

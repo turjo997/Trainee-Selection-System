@@ -3,6 +3,8 @@ package com.bjit.traineeselectionsystem.service.impl;
 import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.exception.*;
 import com.bjit.traineeselectionsystem.model.ApplicantRank;
+import com.bjit.traineeselectionsystem.model.ApprovalModel;
+import com.bjit.traineeselectionsystem.model.Response;
 import com.bjit.traineeselectionsystem.service.ApproveService;
 import com.bjit.traineeselectionsystem.utils.ApplicantRankComparator;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
@@ -25,40 +27,60 @@ public class ApproveServiceImpl implements ApproveService {
     private final RepositoryManager repositoryManager;
 
     @Override
-    public ResponseEntity<String> approveApplicant(Long adminId, Long applicantId, Long circularId, Long examId) {
+    public ResponseEntity<String> approveApplicant(ApprovalModel approvalModel) {
 
         try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId(); // 23
+//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId(); // 23
+//
+//            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId).orElseThrow(() -> new UserServiceException("User not found"));
+//
+//            // Applicant --> user(23) -- > email
+//            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin)
+//                    .orElseThrow(()-> new AdminServiceException("Admin not found"));
+//
+//            // Check if the applicantId from the ApplyRequest matches the logged-in user's applicantId
+//            if (adminId != admin.getAdminId()) {
+//                throw new AdminServiceException("Invalid admin ID");
+//                // or return an error response indicating that the applicant ID does not match the logged-in user
+//            }
 
-            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId).orElseThrow(() -> new UserServiceException("User not found"));
+            Long examId = 1l;
 
-            // Applicant --> user(23) -- > email
-            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin);
+            UserEntity userEntity= repositoryManager.getUserRepository().findById(approvalModel.getUserId())
+                    .orElseThrow(()->new UserServiceException("User not found"));
 
-            // Check if the applicantId from the ApplyRequest matches the logged-in user's applicantId
-            if (adminId != admin.getAdminId()) {
-                throw new AdminServiceException("Invalid admin ID");
-                // or return an error response indicating that the applicant ID does not match the logged-in user
-            }
+            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userEntity)
+                    .orElseThrow(()-> new AdminServiceException("Admin not found"));
 
-            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(applicantId).orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository()
+                    .findById(approvalModel.getApplicantId()).orElseThrow(()
+                            -> new ApplicantServiceException("Applicant not found"));
 
             Optional<ApplyEntity> applyOptional = repositoryManager.getApplyRepository().findByApplicant(applicantEntity);
 
-            ApplyEntity applyEntity = applyOptional.orElseThrow(() -> new ApplyServiceException("ApplyEntity not found for the given applicant"));
+            applyOptional.orElseThrow(()
+                    -> new ApplyServiceException("ApplyEntity not found for the given applicant"));
             //.orElseThrow(()-> new IllegalArgumentException("No Application found"));
 
             // Retrieve the admin entity from the authenticated context
-            // Get the admin by adminId from the circularCreateRequest
-            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(adminId).orElseThrow(() -> new AdminServiceException("Admin not found"));
 
-            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId).orElseThrow(() -> new JobCircularServiceException("Circular not found"));
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository()
+                    .findById(approvalModel.getCircularId()).orElseThrow(()
+                            -> new JobCircularServiceException("Circular not found"));
 
-            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository().findById(examId).orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
+            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository()
+                    .findById(examId).orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
 
             // Create a new JobCircularEntity
-            ApproveEntity approveEntity = ApproveEntity.builder().admin(adminEntity).applicant(applicantEntity).jobCircular(jobCircularEntity).examCategory(examCategoryEntity).approve(true).build();
+            ApproveEntity approveEntity = ApproveEntity
+                    .builder()
+                    .admin(admin)
+                    .applicant(applicantEntity)
+                    .jobCircular(jobCircularEntity)
+                    .examCategory(examCategoryEntity)
+                    .approve(true).build();
 
             // Save the job circular to the repository
             repositoryManager.getApproveRepository().save(approveEntity);
@@ -152,7 +174,6 @@ public class ApproveServiceImpl implements ApproveService {
 
                     }
 
-
                 }
                 return ResponseEntity.ok("Applicants are approved successfully");
 
@@ -230,5 +251,62 @@ public class ApproveServiceImpl implements ApproveService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
+    }
+
+
+
+    @Override
+    public boolean getApproveByApplicantId(Long applicantId, Long circularId) {
+        try {
+            Long examId = 1l;
+
+
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(applicantId)
+                    .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
+            boolean flag = repositoryManager.getApproveRepository()
+                    .isApplicantApproved(applicantId, examId,  circularId);
+
+            if (flag) {
+                // The user has applied for the job circular
+                return flag;
+            } else {
+                // The user has not applied for the job circular
+                return flag;
+            }
+
+        }  catch (ApplicantServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage())).hasBody();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(null, e.getMessage())).hasBody();
+        }
+    }
+
+    @Override
+    public boolean isMarksUploadedByApplicantId(Long applicantId, Long circularId) {
+        try {
+            Long examId = 1l;
+
+            repositoryManager.getApplicantRepository()
+                    .findById(applicantId)
+                    .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
+            boolean flag = repositoryManager.getUploadMarksByEvaluatorRepository()
+                    .isMarksUploaded(applicantId,  circularId);
+
+
+            if (flag) {
+                // The user has applied for the job circular
+                return flag;
+            } else {
+                // The user has not applied for the job circular
+                return flag;
+            }
+
+        }  catch (ApplicantServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage())).hasBody();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(null, e.getMessage())).hasBody();
+        }
     }
 }

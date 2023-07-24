@@ -1,5 +1,6 @@
 package com.bjit.traineeselectionsystem.controller;
 
+import com.bjit.traineeselectionsystem.model.ApprovalModel;
 import com.bjit.traineeselectionsystem.service.ApproveService;
 import com.bjit.traineeselectionsystem.service.ExamTrackService;
 import com.bjit.traineeselectionsystem.utils.ServiceManager;
@@ -16,15 +17,20 @@ public class ApproveController {
     private final ServiceManager serviceManager;
 
 
-    @PostMapping("/written/{adminId}/{applicantId}/{circularId}/{examId}")
-    public ResponseEntity<String> approveApplicantForWritten(@PathVariable Long adminId , @PathVariable Long applicantId , @PathVariable Long circularId , @PathVariable Long examId) {
-        return serviceManager.getApproveService().approveApplicant(adminId , applicantId, circularId , examId);
+    @PostMapping
+    public ResponseEntity<String> approveApplicantForWritten(@RequestBody ApprovalModel approvalModel) {
+        return serviceManager.getApproveService().approveApplicant(approvalModel);
     }
 
 
     @PostMapping("/{adminId}/{circularId}/{examId}")
     public ResponseEntity<String> approveApplicant(@PathVariable Long adminId , @PathVariable Long circularId , @PathVariable Long examId) {
         return serviceManager.getApproveService().selectTopApplicants(adminId , circularId , examId);
+    }
+
+    @GetMapping("/get/{applicantId}/{circularId}")
+    public boolean getApplicantsByApproval(@PathVariable Long applicantId , @PathVariable Long circularId){
+        return serviceManager.getApproveService().getApproveByApplicantId(applicantId , circularId);
     }
 
 

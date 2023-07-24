@@ -47,8 +47,13 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/applicant/notifications/{userId}"),
             new AntPathRequestMatcher("/applicant/upload/{userId}"),
             new AntPathRequestMatcher("/applicant/get/{circularId}/{userId}"),
-            new AntPathRequestMatcher("/evaluator/upload-marks"),
-            new AntPathRequestMatcher("/admin/approve/{adminId}/{circularId}/{examId}")
+            new AntPathRequestMatcher("/evaluator/uploadMarks"),
+            new AntPathRequestMatcher("/admin/approve/{adminId}/{circularId}/{examId}"),
+            new AntPathRequestMatcher("/admin/track"),
+            new AntPathRequestMatcher("/admin/approve/get/{applicantId}/{circularId}"),
+            new AntPathRequestMatcher("/admin/approve"),
+            new AntPathRequestMatcher("/evaluator/get/{applicantId}/{circularId}")
+
     };
 
     RequestMatcher[] adminMatchers = new RequestMatcher[]{
@@ -67,7 +72,9 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/admin/upload-marks"),
                     //new AntPathRequestMatcher("/admin/getAllExamCategory"),
                    // new AntPathRequestMatcher("/admin/getAllApplicant"),
-                    new AntPathRequestMatcher("/admin/generateAdmitCard")
+                    new AntPathRequestMatcher("/admin/generateAdmitCard"),
+                   // new AntPathRequestMatcher("/admin/track"),
+                   //new AntPathRequestMatcher("/admin/approve")
     };
 
     RequestMatcher[] applicantMatchers = new RequestMatcher[]{
@@ -81,7 +88,7 @@ public class SecurityConfig {
     };
 
     RequestMatcher[] evaluatorMatchers = new RequestMatcher[]{
-//            new AntPathRequestMatcher("/evaluator/upload-marks")
+//            new AntPathRequestMatcher("/evaluator/uploadMarks")
     };
 
 

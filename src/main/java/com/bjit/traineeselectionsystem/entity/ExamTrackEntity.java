@@ -31,7 +31,7 @@ public class ExamTrackEntity {
     @JoinColumn(name = "circular_id")
     private JobCircularEntity jobCircular;
 
-    @Column(nullable = false)
+
     private String answerSheetCode;
 
 }

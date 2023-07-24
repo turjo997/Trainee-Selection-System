@@ -5,6 +5,8 @@ import com.bjit.traineeselectionsystem.entity.EvaluatorEntity;
 import com.bjit.traineeselectionsystem.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface EvaluatorRepository extends JpaRepository<EvaluatorEntity, Long> {
-    EvaluatorEntity findByUser(UserEntity userEntity);
+    Optional<EvaluatorEntity> findByUser(UserEntity userEntity);
 }

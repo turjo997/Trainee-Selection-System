@@ -22,4 +22,5 @@ public interface ApplicantService {
     boolean isApplied(Long circularId , Long userId);
 
 
+
 }

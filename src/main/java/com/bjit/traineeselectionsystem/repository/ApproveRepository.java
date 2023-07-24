@@ -23,6 +23,18 @@ public interface ApproveRepository extends JpaRepository<ApproveEntity , Long> {
                                                               @Param("categoryId") Long categoryId);
 
 
+
+    @Query("SELECT CASE WHEN COUNT(a) > 0 THEN true ELSE false END " +
+            "FROM ApproveEntity a " +
+            "WHERE a.applicant.applicantId = :applicantId " +
+            "AND a.examCategory.examId = :examId " +
+            "AND a.jobCircular.circularId = :circularId " +
+            "AND a.approve = true")
+    boolean isApplicantApproved(Long applicantId, Long examId, Long circularId);
+
+
+
+
 //    Optional <ApproveEntity> findByApplicantIdAndJobCircularIdAndExamCategoryId
 //            (Long applicantId, Long circularId, Long examId);
 

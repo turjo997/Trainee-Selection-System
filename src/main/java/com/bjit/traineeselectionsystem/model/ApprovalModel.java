@@ -10,12 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NoticeModel {
-
+public class ApprovalModel {
     private Long userId;
-    private Long examId;
     private Long circularId;
-    private String title;
-    private String description;
-
+    private Long applicantId;
 }

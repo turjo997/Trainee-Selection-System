@@ -4,7 +4,8 @@ import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.exception.AdminServiceException;
 import com.bjit.traineeselectionsystem.exception.ExamCreateServiceException;
 import com.bjit.traineeselectionsystem.exception.JobCircularServiceException;
-import com.bjit.traineeselectionsystem.repository.*;
+import com.bjit.traineeselectionsystem.exception.UserServiceException;
+import com.bjit.traineeselectionsystem.model.ExamTrackModel;
 import com.bjit.traineeselectionsystem.service.ExamTrackService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import com.bjit.traineeselectionsystem.utils.UniqueCode;
@@ -15,53 +16,75 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+
 @RequiredArgsConstructor
+@Service
 public class ExamTrackServiceImpl implements ExamTrackService {
 
     private final RepositoryManager repositoryManager;
 
 
     @Override
-    public ResponseEntity<String> createExamTracks(Long adminId, Long circularId, Long examId) {
+    public ResponseEntity<String> createExamTracks(ExamTrackModel examTrackModel) {
 
         try {
 
-            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(adminId).orElseThrow(() -> new AdminServiceException("Admin not found"));
 
+            Long examId = 1L;
+            UserEntity user = repositoryManager.getUserRepository().findById(examTrackModel.getUserId())
+                    .orElseThrow(() -> new UserServiceException("User not found"));
+            System.out.println(user);
+            AdminEntity adminEntity = repositoryManager.getAdminRepository().findByUser(user)
+                    .orElseThrow(() -> new AdminServiceException("Admin not found"));
 
-            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId).orElseThrow(() -> new JobCircularServiceException("Circular not found"));
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository()
+                    .findById(examTrackModel.getCircularId())
+                    .orElseThrow(() -> new JobCircularServiceException("Circular not found"));
 
-
-            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository().findById(examId).orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
-
+            repositoryManager.getExamCreateRepository()
+                    .findById(examId)
+                    .orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
 
             // Get the approved applicants for a specific circular and exam
-            List<ApproveEntity> approvedApplicants = repositoryManager.getApproveRepository().findByJobCircularCircularIdAndExamCategoryExamId(circularId, examId);
+            List<ApproveEntity> approvedApplicants = repositoryManager.getApproveRepository()
+                    .findByJobCircularCircularIdAndExamCategoryExamId(examTrackModel.getCircularId(), examId);
+//
+//            if(){
+//
+//            }
 
-
+            // Check if an entry already exists for each approved applicant
             for (ApproveEntity approve : approvedApplicants) {
+                if (repositoryManager.getExamTrackRepository().existsByApplicantAndJobCircular(
+                        approve.getApplicant(), jobCircularEntity)) {
+                    // Entry already exists, skip creating a new one
+                    continue;
+                }
+
                 String answerSheetCode = UniqueCode.generateUniqueCode();
-                ExamTrackEntity examTrack = ExamTrackEntity.builder().admin(adminEntity).applicant(approve.getApplicant()).jobCircular(jobCircularEntity).answerSheetCode(answerSheetCode).build();
+                ExamTrackEntity examTrack = ExamTrackEntity.builder()
+                        .admin(adminEntity)
+                        .applicant(approve.getApplicant())
+                        .jobCircular(jobCircularEntity)
+                        .answerSheetCode(answerSheetCode)
+                        .build();
 
                 repositoryManager.getExamTrackRepository().save(examTrack);
             }
 
             return ResponseEntity.ok("Successfully tracked");
 
-        } catch (AdminServiceException e) {
-
+        }catch (UserServiceException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
+        }
+        catch (AdminServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (JobCircularServiceException e) {
-
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-
         } catch (ExamCreateServiceException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-
     }
 }

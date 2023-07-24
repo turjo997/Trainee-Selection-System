@@ -10,12 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class NoticeModel {
-
+public class ExamTrackModel {
     private Long userId;
-    private Long examId;
     private Long circularId;
-    private String title;
-    private String description;
-
 }

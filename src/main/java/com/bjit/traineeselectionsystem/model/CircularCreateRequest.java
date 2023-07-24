@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Builder
 public class CircularCreateRequest {
     private Long circularId;
-    private Long adminId;
+    private Long userId;
     private String circularTitle;
     private String jobType;
     private LocalDate openDate;
