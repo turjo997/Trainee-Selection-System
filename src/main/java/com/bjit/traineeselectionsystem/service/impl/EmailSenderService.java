@@ -60,6 +60,10 @@ public class EmailSenderService implements MailingStatusService {
                             (applicantEntity , jobCircularEntity, examCategoryEntity);
 
 
+            String body = "This is a sample body";
+            String subject = "This is a sample subject";
+
+
             if(approveEntity.isApprove()){
                 UserEntity userEntity = repositoryManager.getUserRepository()
                         .findById(applicantEntity.getUser().getUserId())
@@ -71,18 +75,19 @@ public class EmailSenderService implements MailingStatusService {
 
                 message.setFrom("97.bhattacharjee.ullash@gmail.com");
                 message.setTo(toEmail);
-                message.setText(emailRequest.getBody());
-                message.setSubject(emailRequest.getSubject());
+                message.setText(body);
+                message.setSubject(subject);
 
 
                 mailSender.send(message);
 
                 MailingStatusEntity mailingStatusEntity = MailingStatusEntity.builder()
                         .admin(adminEntity)
+                        .applicant(applicantEntity)
                         .fromEmail("97.bhattacharjee.ullash@gmail.com")
                         .toEmail(toEmail)
-                        .body(emailRequest.getBody())
-                        .subject(emailRequest.getSubject())
+                        .body(body)
+                        .subject(subject)
                         .build();
 
                 repositoryManager.getMailingStatusRepository().save(mailingStatusEntity);

@@ -14,6 +14,6 @@ public class EmailRequest {
     private Long circularId;
     private Long examId;
     private Long applicantId;
-    private String subject;
-    private String body;
+//    private String subject;
+//    private String body;
 }
