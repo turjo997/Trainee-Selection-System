@@ -436,4 +436,53 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+
+
+
+    @Override
+    public boolean isMarksUploadedByApplicantId(Long applicantId, Long circularId , Long examId) {
+        try {
+            if(examId == 3){
+                repositoryManager.getApplicantRepository()
+                        .findById(applicantId)
+                        .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
+                boolean flag = repositoryManager.getUploadMarksByAdminRepository()
+                        .isMarksUploaded(applicantId,  circularId , examId);
+
+
+                if (flag) {
+                    // The user has applied for the job circular
+                    return flag;
+                } else {
+                    // The user has not applied for the job circular
+                    return flag;
+                }
+            }
+
+            else {
+                repositoryManager.getApplicantRepository()
+                        .findById(applicantId)
+                        .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
+                boolean flag = repositoryManager.getUploadMarksByAdminRepository()
+                        .isMarksUploaded(applicantId,  circularId , examId);
+
+
+                if (flag) {
+                    // The user has applied for the job circular
+                    return flag;
+                } else {
+                    // The user has not applied for the job circular
+                    return flag;
+                }
+            }
+
+        }  catch (ApplicantServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null, e.getMessage())).hasBody();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(null, e.getMessage())).hasBody();
+        }
+    }
+
 }

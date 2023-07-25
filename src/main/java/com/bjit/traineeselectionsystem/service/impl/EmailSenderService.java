@@ -33,62 +33,61 @@ public class EmailSenderService implements MailingStatusService {
     public void sendSimpleEmail(EmailRequest emailRequest) {
 
         try {
-            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(emailRequest.getAdminId())
+
+            UserEntity user = repositoryManager.getUserRepository().findById(emailRequest.getUserId())
+                    .orElseThrow(()-> new UserServiceException("User not found"));
+
+            AdminEntity adminEntity = repositoryManager.getAdminRepository().findByUser(user)
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));
 
-            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(emailRequest.getCircularId())
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository()
+                    .findById(emailRequest.getCircularId())
                     .orElseThrow(() -> new JobCircularServiceException("Circular not found"));
 
 
-            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository().findById(emailRequest.getExamId())
+            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository()
+                    .findById(emailRequest.getExamId())
                     .orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
 
 
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository()
+                    .findById(emailRequest.getApplicantId())
+                    .orElseThrow(()->new ApplicantServiceException("Applicant not found"));
+
             // Get the approved applicants for a specific circular and exam
-            List<ApproveEntity> approvedApplicants = repositoryManager.getApproveRepository().findByJobCircularCircularIdAndExamCategoryExamId(emailRequest.getCircularId(), emailRequest.getExamId());
-
-            List<MailingStatusEntity> emailList = new ArrayList<>();
-
-
-            for (ApproveEntity approve : approvedApplicants) {
-
-                ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(approve.getApplicant().getApplicantId())
-                        .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
-
-                if (approve.getApplicant().getApplicantId() == 12L) {
-                    UserEntity userEntity = repositoryManager.getUserRepository().findById(applicantEntity.getUser().getUserId())
-                            .orElseThrow(() -> new UserServiceException("User not found"));
-
-                    String toEmail = userEntity.getEmail();
-
-                    SimpleMailMessage message = new SimpleMailMessage();
-
-                    message.setFrom("97.bhattacharjee.ullash@gmail.com");
-                    message.setTo(toEmail);
-                    message.setText(emailRequest.getBody());
-                    message.setSubject(emailRequest.getSubject());
+            ApproveEntity approveEntity = repositoryManager.getApproveRepository()
+                    .findByApplicantAndJobCircularAndExamCategory
+                            (applicantEntity , jobCircularEntity, examCategoryEntity);
 
 
-                    mailSender.send(message);
+            if(approveEntity.isApprove()){
+                UserEntity userEntity = repositoryManager.getUserRepository()
+                        .findById(applicantEntity.getUser().getUserId())
+                        .orElseThrow(() -> new UserServiceException("User not found"));
+
+                String toEmail = userEntity.getEmail();
+
+                SimpleMailMessage message = new SimpleMailMessage();
+
+                message.setFrom("97.bhattacharjee.ullash@gmail.com");
+                message.setTo(toEmail);
+                message.setText(emailRequest.getBody());
+                message.setSubject(emailRequest.getSubject());
 
 
-                    MailingStatusEntity mailingStatusEntity = MailingStatusEntity.builder()
-                            .admin(adminEntity)
-                            .fromEmail("97.bhattacharjee.ullash@gmail.com")
-                            .toEmail(toEmail)
-                            .body(emailRequest.getBody())
-                            .subject(emailRequest.getSubject())
-                            .build();
+                mailSender.send(message);
 
-                    emailList.add(mailingStatusEntity);
+                MailingStatusEntity mailingStatusEntity = MailingStatusEntity.builder()
+                        .admin(adminEntity)
+                        .fromEmail("97.bhattacharjee.ullash@gmail.com")
+                        .toEmail(toEmail)
+                        .body(emailRequest.getBody())
+                        .subject(emailRequest.getSubject())
+                        .build();
 
-                    System.out.println("Mail Send...");
-                }
-
-
+                repositoryManager.getMailingStatusRepository().save(mailingStatusEntity);
             }
 
-            repositoryManager.getMailingStatusRepository().saveAll(emailList);
         } catch (AdminServiceException e) {
             throw new AdminServiceException(e.getMessage());
         } catch (JobCircularServiceException e) {

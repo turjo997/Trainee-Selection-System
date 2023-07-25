@@ -23,15 +23,17 @@ public class ApproveController {
     }
 
 
-    @PostMapping("/{adminId}/{circularId}/{examId}")
-    public ResponseEntity<String> approveApplicant(@PathVariable Long adminId , @PathVariable Long circularId , @PathVariable Long examId) {
-        return serviceManager.getApproveService().selectTopApplicants(adminId , circularId , examId);
+    @PostMapping("/exam/{userId}/{circularId}/{examId}")
+    public ResponseEntity<String> approveApplicant(@PathVariable Long userId , @PathVariable Long circularId , @PathVariable Long examId) {
+        return serviceManager.getApproveService().selectTopApplicants(userId , circularId , examId);
     }
 
     @GetMapping("/get/{applicantId}/{circularId}")
     public boolean getApplicantsByApproval(@PathVariable Long applicantId , @PathVariable Long circularId){
         return serviceManager.getApproveService().getApproveByApplicantId(applicantId , circularId);
     }
+
+
 
 
 }

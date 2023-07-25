@@ -14,12 +14,18 @@ public interface ApplicantService {
 
     ResponseEntity<?> getAppliedApplicantsByCircularId(Long circularId);
 
+    ResponseEntity<?> getApplicantsByTechnicalAndHr(Long circularId , Long examId);
+
+
     ResponseEntity<?> getApplicantById(Long userId);
 
 
     ResponseEntity<?> getNotificationsForApplicant(Long userId);
 
     boolean isApplied(Long circularId , Long userId);
+
+
+    ResponseEntity<?> getApprovedApplicantsForWrittenTest(Long circularId);
 
 
 

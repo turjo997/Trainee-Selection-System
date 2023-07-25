@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class EmailRequest {
-    private Long adminId;
+    private Long userId;
     private Long circularId;
     private Long examId;
+    private Long applicantId;
     private String subject;
     private String body;
 }

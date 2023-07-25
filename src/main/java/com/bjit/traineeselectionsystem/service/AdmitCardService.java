@@ -15,7 +15,7 @@ public interface AdmitCardService {
 
     ResponseEntity<String> generateAdmitCards(AdmitCardRequest admitCardRequest);
 
-    void export(HttpServletResponse response , Long applicantId) throws IOException;
+    void export(HttpServletResponse response , Long userId) throws IOException;
 
 
     AdmitCardEntity getAdmitCardByApplicantId(Long applicantId);

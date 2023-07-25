@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 public class UploadMarksByEvaluatorRequest {
     private Long userId;
     private Long applicantId;
-    private Long jobCircularId;
+    private Long circularId;
     private Long examId;
     private Double marks;
-    //private List<ExamMarksRequest> exams;
+
 }

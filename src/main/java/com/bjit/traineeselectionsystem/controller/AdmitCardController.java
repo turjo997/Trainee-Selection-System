@@ -29,10 +29,10 @@ public class AdmitCardController {
     }
 
 
-    @GetMapping("/download/{applicantId}")
-    public void generatePDF(HttpServletResponse response , @PathVariable Long applicantId) throws IOException {
+    @GetMapping("/download/{userId}")
+    public void generatePDF(HttpServletResponse response , @PathVariable Long userId) throws IOException {
 
-        AdmitCardEntity admitCardEntity = admitCardService.getAdmitCardByApplicantId(applicantId);
+        AdmitCardEntity admitCardEntity = admitCardService.getAdmitCardByApplicantId(userId);
 
         if (admitCardEntity == null) {
             throw new EntityNotFoundException("AdmitCard not found for the given applicant");
@@ -47,7 +47,7 @@ public class AdmitCardController {
         String headerValue = "attachment; filename=pdf_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
 
-        this.admitCardService.export(response , applicantId);
+        this.admitCardService.export(response , userId);
     }
 
 

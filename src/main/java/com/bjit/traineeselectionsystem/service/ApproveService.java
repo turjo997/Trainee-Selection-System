@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 public interface ApproveService {
     ResponseEntity<String> approveApplicant(ApprovalModel approvalModel);
 
-    ResponseEntity<String> selectTopApplicants(Long adminId ,Long circularId , Long examId);
+    ResponseEntity<String> selectTopApplicants(Long userId , Long circularId , Long examId);
 
 
     boolean getApproveByApplicantId(Long applicantId, Long circularId);

@@ -42,7 +42,7 @@ public class UploadMarksServiceImpl implements UploadMarksService {
 //                    .orElseThrow(() -> new UserServiceException("User not found"));
 
             JobCircularEntity jobCircular = repositoryManager.getJobCircularRepository()
-                    .findById(uploadMarksByEvaluatorRequest.getJobCircularId())
+                    .findById(uploadMarksByEvaluatorRequest.getCircularId())
                     .orElseThrow(() -> new JobCircularServiceException("Job Circular not found"));
 
             ApplicantEntity applicant = repositoryManager.getApplicantRepository()
@@ -52,7 +52,7 @@ public class UploadMarksServiceImpl implements UploadMarksService {
 
             ApproveEntity approveEntity = repositoryManager.getApproveRepository()
                     .findByApplicantIdAndCircularIdAndCategoryId
-                            (applicant.getApplicantId(), uploadMarksByEvaluatorRequest.getJobCircularId(),
+                            (applicant.getApplicantId(), uploadMarksByEvaluatorRequest.getCircularId(),
                                     uploadMarksByEvaluatorRequest.getExamId()).orElseThrow(()
                             -> new ApproveServiceException("Approval not found"));
 
@@ -111,9 +111,12 @@ public class UploadMarksServiceImpl implements UploadMarksService {
     public ResponseEntity<String> uploadMarksByAdmin(UploadMarksByAdminRequest uploadMarksByAdminRequest) {
         try {
 
+            UserEntity user = repositoryManager.getUserRepository().findById(uploadMarksByAdminRequest.getUserId())
+                    .orElseThrow(()-> new UserServiceException("User not found"));
+
             // Get the Evaluator, Applicant, Job Circular, and Exam Categories based on the provided IDs
             AdminEntity admin = repositoryManager.getAdminRepository()
-                    .findById(uploadMarksByAdminRequest.getAdminId())
+                    .findByUser(user)
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));
 
             ApplicantEntity applicant = repositoryManager.getApplicantRepository()
@@ -121,17 +124,16 @@ public class UploadMarksServiceImpl implements UploadMarksService {
                     .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
 
             JobCircularEntity jobCircular = repositoryManager.getJobCircularRepository()
-                    .findById(uploadMarksByAdminRequest.getJobCircularId())
+                    .findById(uploadMarksByAdminRequest.getCircularId())
                     .orElseThrow(() -> new JobCircularServiceException("Job Circular not found"));
 
             ApproveEntity approveEntity = repositoryManager.getApproveRepository()
                     .findByApplicantIdAndCircularIdAndCategoryId
-                            (applicant.getApplicantId(), uploadMarksByAdminRequest.getJobCircularId(),
+                            (applicant.getApplicantId(), uploadMarksByAdminRequest.getCircularId(),
                                     uploadMarksByAdminRequest.getExamId()).orElseThrow(()
                             -> new ApproveServiceException("Approval not found"));
 
 
-            List<UploadMarksByAdminEntity> uploadMarksList = new ArrayList<>();
 
             ExamCategoryEntity examCategory = repositoryManager.getExamCreateRepository()
                     .findById(uploadMarksByAdminRequest.getExamId()).orElseThrow(()
@@ -159,7 +161,7 @@ public class UploadMarksServiceImpl implements UploadMarksService {
 
 
             // Save the UploadMarksEntities to the repository
-            repositoryManager.getUploadMarksByAdminRepository().saveAll(uploadMarksList);
+            repositoryManager.getUploadMarksByAdminRepository().save(uploadMarks);
             return ResponseEntity.ok("Marks added successfully");
 
         } catch (AdminServiceException e) {

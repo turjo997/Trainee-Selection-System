@@ -1,6 +1,6 @@
 package com.bjit.traineeselectionsystem.repository;
 
-import com.bjit.traineeselectionsystem.entity.ApproveEntity;
+import com.bjit.traineeselectionsystem.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,6 +32,21 @@ public interface ApproveRepository extends JpaRepository<ApproveEntity , Long> {
             "AND a.approve = true")
     boolean isApplicantApproved(Long applicantId, Long examId, Long circularId);
 
+
+    List<ApproveEntity> findByJobCircularAndExamCategory
+            (JobCircularEntity jobCircular , ExamCategoryEntity examCategoryEntity);
+
+
+    ApproveEntity findByApplicantAndJobCircularAndExamCategory
+            (ApplicantEntity applicantEntity ,
+             JobCircularEntity jobCircular , ExamCategoryEntity examCategoryEntity);
+
+
+
+
+    boolean existsByApplicantAndJobCircularAndExamCategory(ApplicantEntity applicant,
+                                                           JobCircularEntity jobCircular ,
+                                                           ExamCategoryEntity examCategoryEntity);
 
 
 

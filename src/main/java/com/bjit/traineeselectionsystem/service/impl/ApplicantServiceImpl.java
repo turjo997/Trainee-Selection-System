@@ -1,10 +1,7 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.*;
-import com.bjit.traineeselectionsystem.exception.ApplicantServiceException;
-import com.bjit.traineeselectionsystem.exception.ApplyServiceException;
-import com.bjit.traineeselectionsystem.exception.JobCircularServiceException;
-import com.bjit.traineeselectionsystem.exception.UserServiceException;
+import com.bjit.traineeselectionsystem.exception.*;
 import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.service.ApplicantService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
@@ -132,21 +129,35 @@ public class ApplicantServiceImpl implements ApplicantService {
     public ResponseEntity<?> getAppliedApplicantsByCircularId(Long circularId) {
         System.out.println("circular id  : " + circularId);
         try {
-            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId)
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository()
+                    .findById(circularId)
                     .orElseThrow(() -> new JobCircularServiceException("Job circular not found"));
 
-            List<ApplyEntity> applyEntities = repositoryManager.getApplyRepository().findByJobCircular(jobCircularEntity);
+            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository()
+                    .findById(1l).orElseThrow(()->new ExamCreateServiceException("Exam not found"));
+
+
+
+            List<ApproveEntity> approveEntities = repositoryManager.getApproveRepository()
+                    .findByJobCircularAndExamCategory(jobCircularEntity , examCategoryEntity);
+
+
+            List<ApplyEntity> applyEntities = repositoryManager.getApplyRepository()
+                    .findByJobCircular(jobCircularEntity);
+
 
             List<ApplicantResponseModel> applicants = new ArrayList<>();
 
-            if (!applyEntities.isEmpty()) {
+           // if (!approveEntities.isEmpty()) {
                 for (ApplyEntity applyEntity : applyEntities) {
                     Long applicantId = applyEntity.getApplicant().getApplicantId();
 
-                    ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(applicantId)
-                            .orElseThrow(() -> new ApplyServiceException("Applicant not found with ID: " + applicantId));
+                    ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository()
+                            .findById(applicantId)
+                            .orElseThrow(() ->
+                                    new ApplyServiceException("Applicant not found with ID: " + applicantId));
 
-                    UserEntity user = repositoryManager.getUserRepository().findById(applicantEntity.getApplicantId())
+                    UserEntity user = repositoryManager.getUserRepository().findById(applicantEntity.getUser().getUserId())
                             .orElseThrow(() -> new UserServiceException("User not found"));
 
                     // Create the ApplicantResponseModel from the ApplicantEntity data
@@ -169,7 +180,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 
                     applicants.add(applicantResponseModel);
                 }
-            }
+          //  }
 
             return ResponseEntity.ok(applicants);
         } catch (ApplyServiceException e) {
@@ -180,6 +191,164 @@ public class ApplicantServiceImpl implements ApplicantService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
         }
     }
+
+
+
+    @Override
+    public ResponseEntity<?> getApprovedApplicantsForWrittenTest(Long circularId) {
+        System.out.println("circular id  : " + circularId);
+        try {
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository()
+                    .findById(circularId)
+                    .orElseThrow(() -> new JobCircularServiceException("Job circular not found"));
+
+            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository()
+                    .findById(1l).orElseThrow(()->new ExamCreateServiceException("Exam not found"));
+
+
+
+            List<ApproveEntity> approveEntities = repositoryManager.getApproveRepository()
+                    .findByJobCircularAndExamCategory(jobCircularEntity , examCategoryEntity);
+
+
+            List<ApplicantResponseModel> applicants = new ArrayList<>();
+
+            if (!approveEntities.isEmpty()) {
+            for (ApproveEntity approveEntity : approveEntities) {
+                Long applicantId = approveEntity.getApplicant().getApplicantId();
+
+                ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository()
+                        .findById(applicantId)
+                        .orElseThrow(() ->
+                                new ApplyServiceException("Applicant not found with ID: " + applicantId));
+
+                UserEntity user = repositoryManager.getUserRepository().findById(applicantEntity.getUser().getUserId())
+                        .orElseThrow(() -> new UserServiceException("User not found"));
+
+                // Create the ApplicantResponseModel from the ApplicantEntity data
+                ApplicantResponseModel applicantResponseModel = new ApplicantResponseModel();
+                // Populate the ApplicantResponseModel fields from the applicantEntity
+                // For example:
+                applicantResponseModel.setApplicantId(applicantEntity.getApplicantId());
+                applicantResponseModel.setFirstName(applicantEntity.getFirstName());
+                applicantResponseModel.setLastName(applicantEntity.getLastName());
+                applicantResponseModel.setAddress(applicantEntity.getAddress());
+                applicantResponseModel.setDob(applicantEntity.getDob());
+                applicantResponseModel.setCgpa(applicantEntity.getCgpa());
+                applicantResponseModel.setEmail(user.getEmail());
+                applicantResponseModel.setContact(applicantEntity.getContact());
+                applicantResponseModel.setDegreeName(applicantEntity.getDegreeName());
+                applicantResponseModel.setGender(applicantEntity.getGender());
+                applicantResponseModel.setPassingYear(applicantEntity.getPassingYear());
+                applicantResponseModel.setInstitute(applicantEntity.getInstitute());
+                // Add other fields as required
+
+                applicants.add(applicantResponseModel);
+            }
+              }
+
+            return ResponseEntity.ok(applicants);
+        } catch (ApplyServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (UserServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+    @Override
+    public ResponseEntity<?> getApplicantsByTechnicalAndHr(Long circularId , Long examId) {
+        System.out.println("circular id  : " + circularId);
+
+        ExamCategoryEntity examCategoryEntity = new ExamCategoryEntity();
+        try {
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository()
+                    .findById(circularId)
+                    .orElseThrow(() -> new JobCircularServiceException("Job circular not found"));
+
+
+            if(examId == 3){
+                 examCategoryEntity = repositoryManager.getExamCreateRepository()
+                        .findById(examId).orElseThrow(()->new ExamCreateServiceException("Exam not found"));
+            }
+
+            if(examId == 4){
+                 examCategoryEntity = repositoryManager.getExamCreateRepository()
+                        .findById(examId).orElseThrow(()->new ExamCreateServiceException("Exam not found"));
+            }
+
+            List<ApproveEntity> approveEntities = repositoryManager.getApproveRepository()
+                    .findByJobCircularAndExamCategory(jobCircularEntity , examCategoryEntity);
+
+
+            List<ApplicantResponseModel> applicants = new ArrayList<>();
+
+            // if (!approveEntities.isEmpty()) {
+            for (ApproveEntity approveEntity : approveEntities) {
+                Long applicantId = approveEntity.getApplicant().getApplicantId();
+
+                ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository()
+                        .findById(applicantId)
+                        .orElseThrow(() ->
+                                new ApplyServiceException("Applicant not found with ID: " + applicantId));
+
+                UserEntity user = repositoryManager.getUserRepository().findById(applicantEntity.getUser().getUserId())
+                        .orElseThrow(() -> new UserServiceException("User not found"));
+
+                // Create the ApplicantResponseModel from the ApplicantEntity data
+                ApplicantResponseModel applicantResponseModel = new ApplicantResponseModel();
+                // Populate the ApplicantResponseModel fields from the applicantEntity
+                // For example:
+                applicantResponseModel.setApplicantId(applicantEntity.getApplicantId());
+                applicantResponseModel.setFirstName(applicantEntity.getFirstName());
+                applicantResponseModel.setLastName(applicantEntity.getLastName());
+                applicantResponseModel.setAddress(applicantEntity.getAddress());
+                applicantResponseModel.setDob(applicantEntity.getDob());
+                applicantResponseModel.setCgpa(applicantEntity.getCgpa());
+                applicantResponseModel.setEmail(user.getEmail());
+                applicantResponseModel.setContact(applicantEntity.getContact());
+                applicantResponseModel.setDegreeName(applicantEntity.getDegreeName());
+                applicantResponseModel.setGender(applicantEntity.getGender());
+                applicantResponseModel.setPassingYear(applicantEntity.getPassingYear());
+                applicantResponseModel.setInstitute(applicantEntity.getInstitute());
+                // Add other fields as required
+
+                applicants.add(applicantResponseModel);
+            }
+            //  }
+
+            return ResponseEntity.ok(applicants);
+        } catch (ApplyServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (UserServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public ResponseEntity<?> getApplicantById(Long userId) {
@@ -237,19 +406,36 @@ public class ApplicantServiceImpl implements ApplicantService {
             ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(user)
                     .orElseThrow(() -> new ApplyServiceException("Applicant not found"));
 
-            Optional<NotificationEntity> optionalNotice = repositoryManager.getNoticeBoardRepository().findByApplicant(applicantEntity);
+            List<NotificationEntity> optionalNotice = repositoryManager.getNoticeBoardRepository()
+                    .findByApplicant(applicantEntity);
 
-            if (optionalNotice.isPresent()) {
+            if (!optionalNotice.isEmpty()) {
 
-                NoticeModel noticeModel = NoticeModel.builder()
-                        .title(optionalNotice.get().getTitle())
-                        .description(optionalNotice.get().getDescription())
-                        .build();
+//                NoticeModel noticeModel = NoticeModel.builder()
+//                        .title(optionalNotice.get())
+//                        .description(optionalNotice.get().getDescription())
+//                        .build();
 
-                Response<NoticeModel> apiResponse = new Response<>(noticeModel, null);
 
-                // Return the ResponseEntity with the APIResponse
-                return ResponseEntity.ok(apiResponse);
+
+                List<NotificationEntity> modelList = new ArrayList<>();
+                optionalNotice.forEach(notice -> {
+                    modelList.add(
+                            NotificationEntity.builder()
+                                    .notificationId(notice.getNotificationId())
+                                    .title(notice.getTitle())
+                                    .description(notice.getDescription())
+                                    .build()
+                    );
+                });
+
+                Response<?> response = new Response<>(modelList, null);
+                return ResponseEntity.ok(response);
+
+//                Response<NoticeModel> apiResponse = new Response<>(modelList, null);
+//
+//                // Return the ResponseEntity with the APIResponse
+//                return ResponseEntity.ok(apiResponse);
 
             } else {
                 throw new ApplicantServiceException("applicant not found");

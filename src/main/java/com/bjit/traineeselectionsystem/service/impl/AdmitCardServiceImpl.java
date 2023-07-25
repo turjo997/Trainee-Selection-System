@@ -1,10 +1,7 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.*;
-import com.bjit.traineeselectionsystem.exception.AdminServiceException;
-import com.bjit.traineeselectionsystem.exception.ApplicantServiceException;
-import com.bjit.traineeselectionsystem.exception.ExamCreateServiceException;
-import com.bjit.traineeselectionsystem.exception.JobCircularServiceException;
+import com.bjit.traineeselectionsystem.exception.*;
 import com.bjit.traineeselectionsystem.model.AdmitCardRequest;
 import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.AdmitCardService;
@@ -92,15 +89,22 @@ public class AdmitCardServiceImpl implements AdmitCardService {
     }
 
     @Override
-    public AdmitCardEntity getAdmitCardByApplicantId(Long applicantId) {
+    public AdmitCardEntity getAdmitCardByApplicantId(Long userId) {
         try {
-            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(applicantId)
+
+            UserEntity user = repositoryManager.getUserRepository().findById(userId)
+                    .orElseThrow(()->new UserServiceException("User not found"));
+
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(user)
                     .orElseThrow(() -> new IllegalArgumentException("Applicant not found"));
 
             Optional<AdmitCardEntity> admitCardOptional = repositoryManager.getAdmitCardRepository().findByApplicant(applicantEntity);
 
             return admitCardOptional.orElseThrow(() -> new EntityNotFoundException("AdmitCard not found for the given applicant"));
-        } catch (IllegalArgumentException e) {
+        }catch (UserServiceException e){
+            throw new EntityNotFoundException(e.getMessage());
+        }
+        catch (IllegalArgumentException e) {
             // Log the error or handle it as per your application's requirements
             throw new EntityNotFoundException(e.getMessage());
         }
@@ -108,10 +112,14 @@ public class AdmitCardServiceImpl implements AdmitCardService {
 
 
     @Override
-    public void export(HttpServletResponse response, Long applicantId) throws IOException {
+    public void export(HttpServletResponse response, Long userId) throws IOException {
         try {
 
-            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findById(applicantId)
+            UserEntity user = repositoryManager.getUserRepository().findById(userId)
+                    .orElseThrow(()->new UserServiceException("User not found"));
+
+
+            ApplicantEntity applicantEntity = repositoryManager.getApplicantRepository().findByUser(user)
                     .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
 
             AdmitCardEntity admitCardEntity = repositoryManager.getAdmitCardRepository().findByApplicant(applicantEntity)

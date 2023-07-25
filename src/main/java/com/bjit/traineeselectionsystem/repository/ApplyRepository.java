@@ -14,4 +14,7 @@ public interface ApplyRepository extends JpaRepository<ApplyEntity , Long> {
 
     boolean existsByApplicantAndJobCircular(ApplicantEntity applicant, JobCircularEntity jobCircular);
 
+
+
+
 }

@@ -20,4 +20,7 @@ public interface AdminService {
 
     ResponseEntity<String> sendNotice(NoticeModel noticeModel);
 
+
+    boolean isMarksUploadedByApplicantId(Long applicantId, Long circularId , Long examId);
+
 }

@@ -41,7 +41,7 @@ public class AdminController {
     }
 
 
-    @PostMapping("/upload-marks")
+    @PostMapping("/uploadMarks")
     public ResponseEntity<String> uploadMarks(@RequestBody UploadMarksByAdminRequest uploadMarksByAdminRequest) {
         return serviceManager.getUploadMarksService().uploadMarksByAdmin(uploadMarksByAdminRequest);
     }
@@ -67,6 +67,42 @@ public class AdminController {
         return serviceManager.getApplicantService().getAppliedApplicantsByCircularId(circularId);
     }
 
+
+    @GetMapping("/getApplicants/{circularId}/{examId}")
+    public ResponseEntity<?> getApplicantsByTechnicalAndHr(@PathVariable Long circularId , @PathVariable Long examId){
+        return serviceManager.getApplicantService().getApplicantsByTechnicalAndHr(circularId ,  examId);
+    }
+
+
+
+   // ResponseEntity<?> getApprovedApplicantsForWrittenTest(Long circularId);
+
+    @GetMapping("/getApplicants/written/{circularId}")
+    public ResponseEntity<?> getApprovedApplicantsForWrittenTest(@PathVariable Long circularId){
+        return serviceManager.getApplicantService().getApprovedApplicantsForWrittenTest(circularId);
+    }
+
+
+//    @GetMapping("/getApplicants/written/{circularId}")
+//    public ResponseEntity<?> getApplicantsByWritten(@PathVariable Long circularId){
+//        return serviceManager.getApplicantService().getAppliedApplicantsByCircularId(circularId);
+//    }
+
+
+
+
+    @GetMapping("/get/{applicantId}/{circularId}/{examId}")
+    public boolean isMarkUploaded
+            (@PathVariable Long applicantId , @PathVariable Long circularId , @PathVariable Long examId) {
+        return serviceManager.getAdminService()
+                .isMarksUploadedByApplicantId(applicantId , circularId , examId);
+    }
+
+
+    @GetMapping("/generate/{circularId}")
+    public ResponseEntity<String>generateQRCode(@PathVariable Long circularId) throws Exception {
+        return serviceManager.getCodeGeneratorService().writeQRCode(circularId);
+    }
 
 
 }

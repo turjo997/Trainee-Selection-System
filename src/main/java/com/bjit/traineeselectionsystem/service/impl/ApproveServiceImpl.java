@@ -9,6 +9,7 @@ import com.bjit.traineeselectionsystem.service.ApproveService;
 import com.bjit.traineeselectionsystem.utils.ApplicantRankComparator;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import lombok.RequiredArgsConstructor;
+import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -58,7 +59,8 @@ public class ApproveServiceImpl implements ApproveService {
                     .findById(approvalModel.getApplicantId()).orElseThrow(()
                             -> new ApplicantServiceException("Applicant not found"));
 
-            Optional<ApplyEntity> applyOptional = repositoryManager.getApplyRepository().findByApplicant(applicantEntity);
+            Optional<ApplyEntity> applyOptional = repositoryManager.getApplyRepository()
+                    .findByApplicant(applicantEntity);
 
             applyOptional.orElseThrow(()
                     -> new ApplyServiceException("ApplyEntity not found for the given applicant"));
@@ -107,11 +109,16 @@ public class ApproveServiceImpl implements ApproveService {
     }
 
     @Override
-    public ResponseEntity<String> selectTopApplicants(Long adminId, Long circularId, Long examId) {
+    public ResponseEntity<String> selectTopApplicants(Long userId , Long circularId, Long examId) {
 
         try {
 
-            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(adminId)
+
+            UserEntity user = repositoryManager.getUserRepository().findById(userId)
+                    .orElseThrow(()->new UserServiceException("User not found"));
+
+
+            AdminEntity adminEntity = repositoryManager.getAdminRepository().findByUser(user)
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));
 
             JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId)
@@ -121,7 +128,7 @@ public class ApproveServiceImpl implements ApproveService {
                     .orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
 
 
-            if (examId == 2) {
+            if (examId == 3) {
 
                 // Fetch all upload marks entries
                 List<UploadMarksByEvaluatorEntity> uploadMarksListForWritten =
@@ -157,9 +164,18 @@ public class ApproveServiceImpl implements ApproveService {
 
                     // Approve top applicants
                     for (ApplicantRank applicantRank : topApplicantsForWritten) {
+
+
                         ApplicantEntity applicant = repositoryManager.getApplicantRepository()
                                 .findById(applicantRank.getApplicantId())
                                 .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
+
+                        if (repositoryManager.getApproveRepository()
+                                .existsByApplicantAndJobCircularAndExamCategory(applicant , jobCircularEntity , examCategoryEntity)) {
+                            // Entry already exists, skip creating a new one
+                            continue;
+                        }
 
                         ApproveEntity approval = ApproveEntity.builder()
                                 .admin(adminEntity)
@@ -179,7 +195,7 @@ public class ApproveServiceImpl implements ApproveService {
 
             }
 
-            if (examId == 3) {
+            if (examId == 4) {
 
                 // Approve applicant for exam --- > hr (3)
 
@@ -191,7 +207,7 @@ public class ApproveServiceImpl implements ApproveService {
                 // Fetch all upload marks entries
                 List<UploadMarksByAdminEntity> uploadMarksListForTechnical =
                         repositoryManager.getUploadMarksByAdminRepository()
-                                .findByJobCircularCircularIdAndExamCategoryExamId(circularId , 2L);
+                                .findByJobCircularCircularIdAndExamCategoryExamId(circularId , 3L);
 
 
                 if (uploadMarksListForTechnical.isEmpty()) {
@@ -224,6 +240,15 @@ public class ApproveServiceImpl implements ApproveService {
                                 .findById(applicantRank.getApplicantId())
                                 .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
 
+
+                        if (repositoryManager.getApproveRepository()
+                                .existsByApplicantAndJobCircularAndExamCategory(applicant , jobCircularEntity , examCategoryEntity)) {
+                            // Entry already exists, skip creating a new one
+                            continue;
+                        }
+
+
+
                         ApproveEntity approval = ApproveEntity.builder().admin(adminEntity)
                                 .jobCircular(jobCircularEntity).examCategory(examCategory)
                                 .applicant(applicant).approve(true).build();
@@ -236,7 +261,9 @@ public class ApproveServiceImpl implements ApproveService {
             }
             return ResponseEntity.ok("Applicants are approved successfully");
 
-        } catch (AdminServiceException e) {
+        } catch (UserServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (AdminServiceException e) {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (JobCircularServiceException e) {

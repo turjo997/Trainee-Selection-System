@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UploadMarksByAdminRequest {
 
-    private Long adminId;
+    private Long userId;
     private Long applicantId;
-    private Long jobCircularId;
+    private Long circularId;
     private Long examId;
     private Double marks;
 
