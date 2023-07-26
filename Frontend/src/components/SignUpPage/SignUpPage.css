@@ -2,7 +2,7 @@
 
 /* Container styles */
 .sign-up-page {
-    background: linear-gradient(135deg, #ff5f6d, #ffc371);
+    background: linear-gradient(to right, #7f53ac, #647dee);
     padding: 20px;
     height: 100vh;
 }

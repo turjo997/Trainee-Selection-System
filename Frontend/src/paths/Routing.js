@@ -30,9 +30,12 @@ import UploadMarksByHr from '../components/marks/UploadMarksByHr';
 import Qrcode from '../components/QrCode/Qrcode';
 import AdmitCardDownload from '../components/Applicant/AdmitCardDownload';
 import SendEmail from '../components/MailService/SendEmail';
+import FinalTraineeList from '../components/FinalTraineeList/FinalTraineeList';
 
 const Routing = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const token = localStorage.getItem('token');
+    const [isLoggedIn, setIsLoggedIn] = useState(token);
 
     return (
         <BrowserRouter>
@@ -91,8 +94,6 @@ const Routing = () => {
                         <ApproveByTechnical />
                     </ProtectedRoute>}></Route>
 
-
-
                 <Route path="/approve/hr"
                     element={<ProtectedRoute
                         isLoggedIn={isLoggedIn}
@@ -116,6 +117,12 @@ const Routing = () => {
                         <ViewEvaluator />
                     </ProtectedRoute>}></Route>
 
+                <Route path="/admin/final/trainees"
+                    element={<ProtectedRoute
+                        isLoggedIn={isLoggedIn}
+                        requiredRole="ADMIN">
+                        <FinalTraineeList />
+                    </ProtectedRoute>}></Route>
 
 
                 <Route path="/create/evaluator"
@@ -161,7 +168,7 @@ const Routing = () => {
                     element={<ProtectedRoute
                         isLoggedIn={isLoggedIn}
                         requiredRole="ADMIN">
-                        <SendEmail/>
+                        <SendEmail />
                     </ProtectedRoute>}>
 
                 </Route>
@@ -235,7 +242,7 @@ const Routing = () => {
                     element={<ProtectedRoute
                         isLoggedIn={isLoggedIn}
                         requiredRole="APPLICANT">
-                        <AdmitCardDownload/>
+                        <AdmitCardDownload />
                     </ProtectedRoute>}></Route>
 
 

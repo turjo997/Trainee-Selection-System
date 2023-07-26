@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './Navbar.css';
 
 const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     const userRole = localStorage.getItem('userRole');
 
     return (
-        <nav className="navbar navbar-expand-lg bg-dark">
+        <nav className="navbar navbar-expand-lg custom-navbar bg-dark">
             <div className="container-fluid">
 
                 <div className="navbar-collapse" id="navbarSupportedContent">
@@ -100,6 +101,13 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
                     {isLoggedIn && userRole === 'ADMIN' && (
                         <>
+                            
+                            <li className="nav-item">
+                                <Link className="nav-link text-white" to="/admin/final/trainees">
+                                    Final Trainees
+                                </Link>
+                            </li>
+
                             <li class="nav-item dropdown">
                                 <Link class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Upload Marks
@@ -180,11 +188,11 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                                     </li>
 
                                     <li className="nav-item">
-                                <Link className="nav-link text-black" to="categories">
-                                   
-                                    <span style={{ fontWeight: 'bold' }}> Exam Categories</span>
-                                </Link>
-                            </li>
+                                        <Link className="nav-link text-black" to="categories">
+
+                                            <span style={{ fontWeight: 'bold' }}> Exam Categories</span>
+                                        </Link>
+                                    </li>
 
                                 </ul>
                             </li>
@@ -236,7 +244,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                                 </Link>
                             </li>
 
-        
+
 
                             <li className="nav-item">
                                 <Link className="nav-link text-white" to="/admin/send/email">

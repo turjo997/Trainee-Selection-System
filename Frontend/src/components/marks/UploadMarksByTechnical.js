@@ -15,7 +15,7 @@ const UploadMarksByTechnical = () => {
 
   useEffect(() => {
     fetchCirculars();
-   
+
   }, []);
 
   const fetchCirculars = async () => {
@@ -64,6 +64,7 @@ const UploadMarksByTechnical = () => {
       const fetchedApplicants = response.data; // Assuming the API response provides an array of applicants
       if (fetchedApplicants.length === 0) {
         setErrorMessage('No applicants found for the selected Job Circular.');
+        return null;
       } else {
         setErrorMessage('');
 
@@ -72,20 +73,6 @@ const UploadMarksByTechnical = () => {
           fetchedApplicants.map(async (applicant) => {
             const statusResponse = await fetchStatusForApplicant(applicant.applicantId, selectedJobCircular);
             const status = statusResponse ? 'Submitted' : 'Not Submitted';
-
-            // Fetch marks for applicants whose status is 'Submitted'
-            // let marks = applicant.marks;
-            // if (status === 'Submitted') {
-            //   try {
-            //     const marksResponse = await axios.get(
-            //       `http://localhost:8082/evaluator/getMarks/${applicant.applicantId}/${selectedJobCircular}`
-            //     );
-            //     marks = marksResponse.data.marks;
-            //   } catch (error) {
-            //     console.error('Error fetching marks for applicant:', error);
-            //   }
-            // }
-
             return {
               ...applicant,
               status,
@@ -103,11 +90,42 @@ const UploadMarksByTechnical = () => {
   };
 
   const handleSaveMarks = async (applicant) => {
- 
+
     if (applicant.marks < 0 || applicant.marks > 100) {
       setErrorMessage('Please enter valid marks (0 to 100).');
       return;
     }
+
+    // const data = {
+    //   userId,
+    //   applicantId: applicant.applicantId,
+    //   circularId: selectedJobCircular,
+    //   examId: 3,
+    //   marks: applicant.marks,
+    // };
+
+    // axios
+    //   .post('http://localhost:8082/admin/uploadMarks', data)
+    //   .then((response) => {
+    //     const responseData = response.data.data;
+
+    //     if (responseData.error_message) {
+    //       setErrorMessage(responseData.error_message);
+    //       setApplicants([]); // Clear the applicants array if there is an error
+    //     } else {
+    //       setApplicants((prevApplicants) =>
+    //       prevApplicants.map((app) => (app.applicantId === applicant.applicantId ? { ...app, status: 'Submitted' } : app))
+    //     );
+    //     setSuccessMessage('Marks saved successfully!');
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error fetching applicants:', error);
+    //     setErrorMessage(error.response.data.error_message);
+    //     setApplicants([]); // Clear the applicants array if there is an error
+    //   });
+
+
 
     try {
       const data = {
@@ -132,9 +150,7 @@ const UploadMarksByTechnical = () => {
         );
         setSuccessMessage('Marks saved successfully!');
       }
-      // else {
-      //   setErrorMessage('Error uploading marks. Please try again later.');
-      // }
+
     } catch (error) {
       console.error('Error uploading marks:', error);
       setErrorMessage('Error uploading marks. Please try again later.');
@@ -155,7 +171,7 @@ const UploadMarksByTechnical = () => {
           ))}
         </select>
       </div>
-     
+
 
       <button className="fetch-applicants-button" onClick={handleFetchApplicants}>
         Fetch Applicants
@@ -222,7 +238,7 @@ const UploadMarksByTechnical = () => {
         </div>
       )}
 
-  
+
     </div>
   );
 };

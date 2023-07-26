@@ -1,6 +1,6 @@
 .sign-in-page {
     height: 100vh;
-    background: linear-gradient(135deg, #ff5f6d, #ffc371);
+    background: linear-gradient(to right, #7f53ac, #647dee);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -22,8 +22,8 @@
   }
   
   .sign-in-form .btn-primary {
-    background-color: #ff5f6d;
-    border-color: #ff5f6d;
+    background-color: linear-gradient(to right, #7f53ac, #647dee);
+    border-color: linear-gradient(to right, #7f53ac, #647dee);
   }
   
   .sign-in-form .btn-primary:hover {
