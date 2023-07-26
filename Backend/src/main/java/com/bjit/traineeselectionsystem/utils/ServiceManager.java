@@ -21,6 +21,12 @@ public class ServiceManager {
     private final UploadMarksService uploadMarksService;
     private final UserService userService;
     private final EmailSenderService emailSenderService;
+    private final EvaluatorService evaluatorService;
+
+
+    public EvaluatorService getEvaluatorService(){
+        return evaluatorService;
+    }
 
     public EmailSenderService getEmailSenderService() {
         return emailSenderService;

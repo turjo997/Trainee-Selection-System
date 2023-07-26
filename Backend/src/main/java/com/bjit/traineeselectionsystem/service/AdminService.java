@@ -7,7 +7,7 @@ public interface AdminService {
     ResponseEntity<String> createCircular(CircularCreateRequest circularCreateRequest);
     ResponseEntity<Response<?>> getAllCircular();
 
-    ResponseEntity<Object> createEvaluator(EvaluatorCreateRequest evaluatorCreateRequest);
+    ResponseEntity<Object> createEvaluator(EvaluatorModel evaluatorModel);
     ResponseEntity<Response<?>> getAllEvaluator();
 
     ResponseEntity<String> createExamCategory(ExamCreateRequest examCreateRequest);
@@ -22,5 +22,7 @@ public interface AdminService {
 
 
     boolean isMarksUploadedByApplicantId(Long applicantId, Long circularId , Long examId);
+
+    ResponseEntity<Response<?>> getTrainees( Long circularId);
 
 }

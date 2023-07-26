@@ -21,4 +21,11 @@ public interface UploadMarksByAdminRepository extends JpaRepository<UploadMarksB
             "AND a.jobCircular.circularId = :circularId " +
             "AND a.examCategory.examId = :examId ")
     boolean isMarksUploaded(Long applicantId, Long circularId , Long examId);
+
+
+
+    List<UploadMarksByAdminEntity> findAllByJobCircularCircularIdAndExamCategoryExamId(Long circularId, Long examId);
+
+
+
 }

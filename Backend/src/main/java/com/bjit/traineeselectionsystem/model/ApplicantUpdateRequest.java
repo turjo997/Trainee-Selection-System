@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class ApplicantUpdateRequest {
 
-    private Long applicantId;
+    private Long userId;
     private String firstName;
 
     private String lastName;

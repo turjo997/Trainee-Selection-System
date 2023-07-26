@@ -215,7 +215,7 @@ public class AdmitCardServiceImpl implements AdmitCardService {
             document.add(paragraph5);
             document.add(paragraph6);
 
-            String QRCODE_PATH = "C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
+            String QRCODE_PATH = "E:\\BJIT Final Project\\TSS-Server\\YSD_B02_J2EE_FinalProject_Ullash\\Backend\\QR_images\\";
 
             String qrCodePath = QRCODE_PATH + qrCodeFilename;
 

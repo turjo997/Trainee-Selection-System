@@ -38,6 +38,7 @@ public class ApplicantServiceImpl implements ApplicantService {
 //                throw new IllegalArgumentException("Invalid applicant ID");
 //            }
 
+
             UserEntity user = repositoryManager.getUserRepository().findById(applyRequest.getUserId())
                     .orElseThrow(() -> new UserServiceException("User not found"));
 
@@ -76,11 +77,14 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     public ResponseEntity<String> updateApplicant(ApplicantUpdateRequest applicantUpdateRequest) {
         try {
-            Optional<ApplicantEntity> optionalApplicant = repositoryManager.getApplicantRepository().findById(applicantUpdateRequest.getApplicantId());
+            UserEntity user = repositoryManager.getUserRepository().findById(applicantUpdateRequest.getUserId())
+                    .orElseThrow(()-> new UserServiceException("User not found"));
+
+            Optional<ApplicantEntity> optionalApplicant = repositoryManager.getApplicantRepository()
+                    .findByUser(user);
 
             if (optionalApplicant.isPresent()) {
                 ApplicantEntity applicant = optionalApplicant.get();
-
                 // Update the book entity with the new values from the request model
                 applicant.setFirstName(applicantUpdateRequest.getFirstName());
                 applicant.setLastName(applicantUpdateRequest.getLastName());
@@ -94,30 +98,18 @@ public class ApplicantServiceImpl implements ApplicantService {
                 applicant.setPassingYear(applicantUpdateRequest.getPassingYear());
 
                 // Save the updated book entity
-                ApplicantEntity updatedApplicant = repositoryManager.getApplicantRepository().save(applicant);
+                repositoryManager.getApplicantRepository()
+                        .save(applicant);
 
-                ApplicantUpdateRequest model = ApplicantUpdateRequest.builder()
-                        .applicantId(applicantUpdateRequest.getApplicantId())
-                        .firstName(applicantUpdateRequest.getFirstName())
-                        .lastName(applicantUpdateRequest.getLastName())
-                        .dob(applicantUpdateRequest.getDob())
-                        .cgpa(applicantUpdateRequest.getCgpa())
-                        .address(applicantUpdateRequest.getAddress())
-                        .contact(applicantUpdateRequest.getContact())
-                        .degreeName(applicantUpdateRequest.getDegreeName())
-                        .institute(applicant.getInstitute())
-                        .gender(applicantUpdateRequest.getGender())
-                        .passingYear(applicantUpdateRequest.getPassingYear())
-                        .build();
-
-                //Response<ApplicantUpdateRequest> apiResponse = new Response<>(model, null);
-                // Return the ResponseEntity with the APIResponse
                 return ResponseEntity.ok("applicant updated successfully");
 
             } else {
                 throw new ApplicantServiceException("Applicant not found");
             }
-        } catch (ApplicantServiceException e) {
+        } catch (UserServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+        catch (ApplicantServiceException e) {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -335,18 +327,6 @@ public class ApplicantServiceImpl implements ApplicantService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error: " + e.getMessage());
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

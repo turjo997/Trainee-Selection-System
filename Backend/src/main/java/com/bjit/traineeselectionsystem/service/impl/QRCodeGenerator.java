@@ -26,7 +26,7 @@ public class QRCodeGenerator implements CodeGeneratorService {
     private final RepositoryManager repositoryManager;
 
 
-    private static String QRCODE_PATH = "E:\\BJIT Final Project\\TSS-Server\\YSD_B02_J2EE_FinalProject_Ullash\\QR_images\\";
+    private static String QRCODE_PATH = "E:\\BJIT Final Project\\TSS-Server\\YSD_B02_J2EE_FinalProject_Ullash\\Backend\\QR_images\\";
     //"E:\\BJIT Final Project\\YSD_B02_J2EE_FinalProject_Ullash\\QR_images\\";
     //"C:\\Users\\BJIT\\Desktop\\New folder\\trainee-selection-system\\QR_images\\";
 

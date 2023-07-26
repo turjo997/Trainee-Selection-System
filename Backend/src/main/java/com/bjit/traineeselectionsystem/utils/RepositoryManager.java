@@ -23,8 +23,12 @@ public class RepositoryManager {
     private final UploadMarksByAdminRepository uploadMarksByAdminRepository;
     private final UploadMarksByEvaluatorRepository uploadMarksByEvaluatorRepository;
     private final NoticeBoardRepository noticeBoardRepository;
+    private final FinalTraineesRepository finalTraineesRepository;
 
 
+   public FinalTraineesRepository getFinalTraineesRepository(){
+       return finalTraineesRepository;
+    }
 
     public NoticeBoardRepository getNoticeBoardRepository(){
         return noticeBoardRepository;

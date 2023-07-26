@@ -16,10 +16,6 @@ public class AdminController {
     private final ServiceManager serviceManager;
     private final AuthenticationService authenticationService;
 
-//    @PostMapping("/login")
-//    public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest authenticationRequest){
-//        return new ResponseEntity<>(authenticationService.login(authenticationRequest), HttpStatus.OK);
-//    }
 
     @PostMapping("/create/circular")
     public ResponseEntity<String> createCircular(@RequestBody CircularCreateRequest circularCreateRequest) {
@@ -31,8 +27,8 @@ public class AdminController {
     }
 
     @PostMapping("/create/evaluator")
-    public ResponseEntity<Object> createEvaluator(@RequestBody EvaluatorCreateRequest evaluatorCreateRequest) {
-        return serviceManager.getAdminService().createEvaluator(evaluatorCreateRequest);
+    public ResponseEntity<Object> createEvaluator(@RequestBody EvaluatorModel evaluatorModel) {
+        return serviceManager.getAdminService().createEvaluator(evaluatorModel);
     }
 
     @GetMapping("/getAllEvaluator")
@@ -74,9 +70,6 @@ public class AdminController {
     }
 
 
-
-   // ResponseEntity<?> getApprovedApplicantsForWrittenTest(Long circularId);
-
     @GetMapping("/getApplicants/written/{circularId}")
     public ResponseEntity<?> getApprovedApplicantsForWrittenTest(@PathVariable Long circularId){
         return serviceManager.getApplicantService().getApprovedApplicantsForWrittenTest(circularId);
@@ -103,6 +96,15 @@ public class AdminController {
     public ResponseEntity<String>generateQRCode(@PathVariable Long circularId) throws Exception {
         return serviceManager.getCodeGeneratorService().writeQRCode(circularId);
     }
+
+
+    @PostMapping("/get/trainees/{circularId}")
+    public  ResponseEntity<Response<?>> getFinalTrainees(@PathVariable Long circularId){
+        return serviceManager.getAdminService().getTrainees(circularId);
+    }
+
+
+
 
 
 }

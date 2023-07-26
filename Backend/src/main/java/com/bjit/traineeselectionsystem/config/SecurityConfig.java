@@ -1,6 +1,6 @@
 package com.bjit.traineeselectionsystem.config;
 
-import com.bjit.traineeselectionsystem.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import java.util.Arrays;
@@ -30,8 +29,6 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/download/{userId}"),
             new AntPathRequestMatcher("/applicant/register"),
             new AntPathRequestMatcher("/user/login"),
-            //new AntPathRequestMatcher("/evaluator/login"),
-            //new AntPathRequestMatcher("/admin/login"),
             new AntPathRequestMatcher("/admin/getAllApplicant"),
             new AntPathRequestMatcher("/admin/getAllCircular"),
             new AntPathRequestMatcher("/admin/getAllEvaluator"),
@@ -59,12 +56,16 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/admin/getApplicants/{circularId}/{examId}"),
             new AntPathRequestMatcher("/admin/get/{applicantId}/{circularId}/{examId}"),
             new AntPathRequestMatcher("/admin/generate/{circularId}"),
-            new AntPathRequestMatcher("/admin/sendMail")
+            new AntPathRequestMatcher("/admin/sendMail"),
+            new AntPathRequestMatcher("/admin/get/trainees/{circularId}"),
+            new AntPathRequestMatcher("/evaluator/get/{userId}"),
+            new AntPathRequestMatcher("/applicant/update"),
+            new AntPathRequestMatcher("/evaluator/update")
 
     };
 
     RequestMatcher[] adminMatchers = new RequestMatcher[]{
-                    //new AntPathRequestMatcher("/admin/sendMail"),
+                  //  new AntPathRequestMatcher("/admin/sendMail"),
                    // new AntPathRequestMatcher("/admin/approve/written/{adminId}/{applicantId}/{circularId}/{examId}"),
                   //  new AntPathRequestMatcher("/admin/approve/technical/{adminId}/{circularId}/{examId}"),
                    // new AntPathRequestMatcher("/admin/upload-marks"),
@@ -95,13 +96,16 @@ public class SecurityConfig {
     };
 
     RequestMatcher[] evaluatorMatchers = new RequestMatcher[]{
-//            new AntPathRequestMatcher("/evaluator/uploadMarks")
+//            new AntPathRequestMatcher("/evaluator/uploadMarks"),
+            //new AntPathRequestMatcher("/evaluator/get/{userId}"),
+          //  new AntPathRequestMatcher("/evaluator/update")
     };
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()

@@ -14,6 +14,9 @@ public interface ApproveRepository extends JpaRepository<ApproveEntity , Long> {
 //    List<ApplicantEntity> findApplicantsByCircularAndExam(Long circularId, Long examId);
     List<ApproveEntity> findByJobCircularCircularIdAndExamCategoryExamId(Long circularId, Long examId);
 
+
+
+
     @Query("SELECT a FROM ApproveEntity a " +
             "WHERE a.applicant.applicantId = :applicantId " +
             "AND a.jobCircular.circularId = :circularId " +
@@ -47,6 +50,7 @@ public interface ApproveRepository extends JpaRepository<ApproveEntity , Long> {
     boolean existsByApplicantAndJobCircularAndExamCategory(ApplicantEntity applicant,
                                                            JobCircularEntity jobCircular ,
                                                            ExamCategoryEntity examCategoryEntity);
+
 
 
 

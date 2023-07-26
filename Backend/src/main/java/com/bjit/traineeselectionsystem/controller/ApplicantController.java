@@ -24,8 +24,7 @@ public class ApplicantController {
         //return "Applicant registered successfully";
     }
 
-
-    @PutMapping(value = "/update")
+    @PutMapping("/update")
     public ResponseEntity<String> update(@RequestBody ApplicantUpdateRequest applicantUpdateRequest){
         return serviceManager.getApplicantService().updateApplicant(applicantUpdateRequest);
     }

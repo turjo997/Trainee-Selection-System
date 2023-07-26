@@ -4,14 +4,12 @@ import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.exception.*;
 import com.bjit.traineeselectionsystem.model.*;
 import com.bjit.traineeselectionsystem.service.AdminService;
+import com.bjit.traineeselectionsystem.utils.ApplicantRankComparator;
 import com.bjit.traineeselectionsystem.utils.JwtService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -99,7 +97,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public ResponseEntity<Object> createEvaluator(EvaluatorCreateRequest evaluatorCreateRequest) {
+    public ResponseEntity<Object> createEvaluator(EvaluatorModel evaluatorModel) {
         try {
 //            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 //            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
@@ -114,20 +112,20 @@ public class AdminServiceImpl implements AdminService {
 //            }
 
             UserEntity userEntity = repositoryManager.getUserRepository()
-                    .findById(evaluatorCreateRequest.getUserId())
+                    .findById(evaluatorModel.getUserId())
                     .orElseThrow(() -> new UserServiceException("User not found"));
 
             AdminEntity adminEntity = repositoryManager.getAdminRepository().findByUser(userEntity)
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));
 
-            if (repositoryManager.getUserRepository().existsByEmail(evaluatorCreateRequest.getEmail())) {
+            if (repositoryManager.getUserRepository().existsByEmail(evaluatorModel.getEmail())) {
                 String errorMessage = "Evaluator with the same email already exists";
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorMessage);
             }
 
             UserEntity user = UserEntity.builder()
-                    .email(evaluatorCreateRequest.getEmail())
-                    .password(passwordEncoder.encode(evaluatorCreateRequest.getPassword()))
+                    .email(evaluatorModel.getEmail())
+                    .password(passwordEncoder.encode(evaluatorModel.getPassword()))
                     .role(Role.EVALUATOR)
                     .build();
 
@@ -136,12 +134,12 @@ public class AdminServiceImpl implements AdminService {
             EvaluatorEntity evaluatorEntity = EvaluatorEntity.builder()
                     .admin(adminEntity)
                     .user(savedUser)
-                    .evaluatorName(evaluatorCreateRequest.getEvaluatorName())
-                    .designation(evaluatorCreateRequest.getDesignation())
-                    .contactNumber(evaluatorCreateRequest.getContactNumber())
-                    .qualification(evaluatorCreateRequest.getQualification())
-                    .specialization(evaluatorCreateRequest.getSpecialization())
-                    .active(evaluatorCreateRequest.isActive())
+                    .evaluatorName(evaluatorModel.getEvaluatorName())
+                    .designation(evaluatorModel.getDesignation())
+                    .contactNumber(evaluatorModel.getContactNumber())
+                    .qualification(evaluatorModel.getQualification())
+                    .specialization(evaluatorModel.getSpecialization())
+                    .active(evaluatorModel.isActive())
                     .build();
 
             repositoryManager.getEvaluatorRepository().save(evaluatorEntity);
@@ -484,5 +482,123 @@ public class AdminServiceImpl implements AdminService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response<>(null, e.getMessage())).hasBody();
         }
     }
+
+    @Override
+    public ResponseEntity<Response<?>> getTrainees(Long circularId) {
+
+        try {
+
+            Long examId = 4l;
+            Long adminId = 5l;
+
+            AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(adminId)
+                    .orElseThrow(()->new AdminServiceException("Admin not found"));
+
+            JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository().findById(circularId)
+                    .orElseThrow(() -> new JobCircularServiceException("Circular not found"));
+            ExamCategoryEntity examCategoryEntity = repositoryManager.getExamCreateRepository().findById(examId)
+                    .orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
+
+
+            List<UploadMarksByAdminEntity> uploadMarksListForHR = repositoryManager.getUploadMarksByAdminRepository()
+                    .findAllByJobCircularCircularIdAndExamCategoryExamId(circularId , examId);
+
+            // Calculate applicant ranks based on marks
+            List<ApplicantRank> applicantRanksForHR = new ArrayList<>();
+
+
+            if (uploadMarksListForHR.isEmpty()) {
+                // The list is empty
+                System.out.println("The list is  empty");
+                throw new IllegalArgumentException("HR test has not been taken yet");
+
+            } else {
+                // The list is not empty
+
+                System.out.println("The list is not empty");
+
+                for (UploadMarksByAdminEntity uploadMarks : uploadMarksListForHR) {
+                    ApplicantRank applicantRank = new ApplicantRank();
+                    applicantRank.setApplicantId(uploadMarks.getApplicant().getApplicantId());
+                    applicantRank.setMarks(uploadMarks.getMarks());
+                    applicantRanksForHR.add(applicantRank);
+                }
+
+                // Sort applicant ranks in descending order of marks
+                applicantRanksForHR.sort(new ApplicantRankComparator());
+
+                // Select top 20 applicants
+                List<ApplicantRank> topApplicantsForWritten = applicantRanksForHR
+                        .subList(0, Math.min(applicantRanksForHR.size(), 20));
+
+
+                System.out.println(topApplicantsForWritten);
+
+                // Approve top applicants
+                for (ApplicantRank applicantRank : topApplicantsForWritten) {
+
+
+                    ApplicantEntity applicant = repositoryManager.getApplicantRepository()
+                            .findById(applicantRank.getApplicantId())
+                            .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
+                    if (repositoryManager.getFinalTraineesRepository()
+                            .existsByApplicantAndJobCircular
+                                    (applicant , jobCircularEntity)) {
+                        // Entry already exists, skip creating a new one
+                        continue;
+                    }
+
+                    FinalTraineesList finalTraineesList = FinalTraineesList.builder()
+                            .admin(adminEntity)
+                            .jobCircular(jobCircularEntity)
+                            .applicant(applicant)
+                            .build();
+
+                    repositoryManager.getFinalTraineesRepository().save(finalTraineesList);
+
+                }
+
+            }
+
+            List<FinalTraineesList> finalTrainees = repositoryManager.getFinalTraineesRepository().
+                    findAllByJobCircularCircularId(circularId);
+
+            List<ApplicantEntity> applicantEntities = new ArrayList<>();
+
+            // Fetch the applicants based on the applicantIds present in the finalTrainees list
+            for (FinalTraineesList finalTrainee : finalTrainees) {
+                Long applicantId = finalTrainee.getApplicant()
+                        .getApplicantId();
+                ApplicantEntity applicant = repositoryManager.getApplicantRepository()
+                        .findById(applicantId)
+                        .orElseThrow(() -> new ApplicantServiceException("Applicant not found"));
+
+                applicantEntities.add(applicant);
+            }
+
+            Response<List<ApplicantEntity>> response = new Response<>(applicantEntities, null);
+
+
+            return ResponseEntity.ok(response);
+
+        }catch (JobCircularServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        }
+        catch (AdminServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        }catch (ExamCreateServiceException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        }
+        catch (ApplicantServiceException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        }catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response<>(null , e.getMessage()));
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new Response<>(null , e.getMessage()));
+        }
+    }
+
 
 }

@@ -4,6 +4,7 @@ import com.bjit.traineeselectionsystem.model.ApprovalModel;
 import org.springframework.http.ResponseEntity;
 
 public interface ApproveService {
+
     ResponseEntity<String> approveApplicant(ApprovalModel approvalModel);
 
     ResponseEntity<String> selectTopApplicants(Long userId , Long circularId , Long examId);
