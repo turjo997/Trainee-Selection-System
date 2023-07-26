@@ -193,7 +193,7 @@ const UploadMarks = () => {
       )}
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
-
+      {successMessage && <p className="success-message">{successMessage}</p>}
       {applicants.length > 0 && (
         <div className="applicants-table-container">
           <h3>Applicants:</h3>
@@ -248,7 +248,7 @@ const UploadMarks = () => {
         </div>
       )}
 
-      {successMessage && <p className="success-message">{successMessage}</p>}
+    
     </div>
   );
 };

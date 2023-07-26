@@ -27,11 +27,12 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     return (
         <nav className="navbar navbar-expand-lg bg-dark">
             <div className="container-fluid">
+
                 <div className="navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
                             <Link className="navbar-brand text-white" to="/">
-                                Home
+                                TSS
                             </Link>
                         </li>
                     </ul>
@@ -40,7 +41,7 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                 <ul className="navbar-nav ms-auto">
                     {isLoggedIn && userRole === 'APPLICANT' && (
                         <>
-                        
+
                             <li className="nav-item">
                                 <Link className="nav-link text-white" to="applicant/admit/card">
                                     Download Admit Card
@@ -99,29 +100,121 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
 
                     {isLoggedIn && userRole === 'ADMIN' && (
                         <>
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="applicants">
-                                    Applicants
+                            <li class="nav-item dropdown">
+                                <Link class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Upload Marks
+                                </Link>
+                                <ul class="dropdown-menu">
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="/admin/marks/technical">
+                                            <span style={{ fontWeight: 'bold' }}>Upload Marks (Technical)</span>
+                                        </Link>
+                                    </li>
+
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="/admin/marks/hr">
+                                            <span style={{ fontWeight: 'bold' }}>Upload Marks (Hr)</span>
+                                        </Link>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+                            <li class="nav-item dropdown">
+                                <Link class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Approve Applicants
+                                </Link>
+                                <ul class="dropdown-menu">
+
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="/circulars/applicants">
+
+                                            <span style={{ fontWeight: 'bold' }}>Approve for written</span>
+                                        </Link>
+                                    </li>
+
+
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="/approve/technical">
+
+                                            <span style={{ fontWeight: 'bold' }}>Approve for Technical</span>
+                                        </Link>
+                                    </li>
+
+
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="/approve/hr">
+                                            <span style={{ fontWeight: 'bold' }}>Approve for HR</span>
+                                        </Link>
+                                    </li>
+
+                                </ul>
+                            </li>
+
+
+                            <li class="nav-item dropdown">
+                                <Link class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Views
+                                </Link>
+                                <ul class="dropdown-menu">
+
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="applicants">
+
+                                            <span style={{ fontWeight: 'bold' }}>Applicants</span>
+                                        </Link>
+                                    </li>
+
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="circulars">
+
+                                            <span style={{ fontWeight: 'bold' }}>Circulars</span>
+                                        </Link>
+                                    </li>
+
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="evaluators">
+
+                                            <span style={{ fontWeight: 'bold' }}>Evaluators</span>
+                                        </Link>
+                                    </li>
+
+                                    <li className="nav-item">
+                                <Link className="nav-link text-black" to="categories">
+                                   
+                                    <span style={{ fontWeight: 'bold' }}> Exam Categories</span>
                                 </Link>
                             </li>
 
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="circulars">
-                                    Circulars
-                                </Link>
+                                </ul>
                             </li>
 
 
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="/admin/marks/technical">
-                                    Upload Marks (Technical)
+                            <li class="nav-item dropdown">
+                                <Link class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Add
                                 </Link>
-                            </li>
+                                <ul class="dropdown-menu">
 
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="/admin/marks/hr">
-                                    Upload Marks (Hr)
-                                </Link>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="create/evaluator">
+
+                                            <span style={{ fontWeight: 'bold' }}>Add Evaluator</span>
+                                        </Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="create/circular">
+
+                                            <span style={{ fontWeight: 'bold' }}>Add Circular</span>
+                                        </Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-black" to="create/examCategory">
+
+                                            <span style={{ fontWeight: 'bold' }}>Add Exam Categories</span>
+                                        </Link>
+                                    </li>
+                                </ul>
                             </li>
 
                             <li className="nav-item">
@@ -143,66 +236,13 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                                 </Link>
                             </li>
 
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="categories">
-                                    Exam Categories
-                                </Link>
-                            </li>
-
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="evaluators">
-                                    Evaluators
-                                </Link>
-                            </li>
-
-
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="create/evaluator">
-                                    Add Evaluator
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="create/circular">
-                                    Add Circular
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="create/examCategory">
-                                    Add Exam Categories
-                                </Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="/circulars/applicants">
-                                    Approve for written
-                                </Link>
-                            </li>
-
-
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="/approve/technical">
-                                    Approve for Technical
-                                </Link>
-                            </li>
-
-
-                            <li className="nav-item">
-                                <Link className="nav-link text-white" to="/approve/hr">
-                                    Approve for HR
-                                </Link>
-                            </li>
-
-
-                            
-
+        
 
                             <li className="nav-item">
                                 <Link className="nav-link text-white" to="/admin/send/email">
-                                    Email
+                                    Send Email
                                 </Link>
                             </li>
-
-
-
 
                             {/* Add other links for ADMIN role */}
                         </>

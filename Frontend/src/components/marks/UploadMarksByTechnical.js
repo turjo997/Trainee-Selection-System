@@ -166,6 +166,7 @@ const UploadMarksByTechnical = () => {
       )}
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>}
 
       {applicants.length > 0 && (
         <div className="applicants-table-container">
@@ -221,7 +222,7 @@ const UploadMarksByTechnical = () => {
         </div>
       )}
 
-      {successMessage && <p className="success-message">{successMessage}</p>}
+  
     </div>
   );
 };
