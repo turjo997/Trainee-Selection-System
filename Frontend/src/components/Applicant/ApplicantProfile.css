@@ -1,0 +1,89 @@
+ 
+ .container {
+    padding: 20px;
+  }
+  
+  .profile-heading {
+    text-align: center;
+    font-size: 32px; 
+    margin-bottom: 20px;
+  }
+  
+  .applicant-card {
+    background-color: #f0f0f0;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .applicant-name {
+    color: #007bff;
+    margin-bottom: 10px;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .applicant-card p {
+    margin-bottom: 5px;
+    font-size: 18px; 
+  }
+
+ /* Add custom CSS for styling ApplicantProfile component */
+
+/* .applicant-profile-page {
+    height: 100vh;
+    background: linear-gradient(135deg, #ff5f6d, #ffc371);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .applicant-profile-form {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .applicant-profile-form h2 {
+    color: #333;
+  }
+  
+  .applicant-profile-form label {
+    color: #555;
+  }
+  
+  .applicant-profile-form .btn-primary {
+    background-color: #ff5f6d;
+    border-color: #ff5f6d;
+  }
+  
+  .applicant-profile-form .btn-primary:hover {
+    background-color: #ff4457;
+    border-color: #ff4457;
+  }
+  
+  .applicant-profile-form .errmsg {
+    color: #ff0000;
+    margin-bottom: 10px;
+  }
+  
+  .applicant-profile-form .offscreen {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+  
+  .applicant-profile-form .mb-3 {
+    margin-bottom: 20px;
+  }
+  
+  .applicant-profile-form .text-center {
+    text-align: center;
+  }
+  
+  .applicant-profile-form textarea.form-control {
+    resize: vertical;
+  }
+   */

@@ -1,0 +1,70 @@
+/* SignUpPage.css */
+
+/* Container styles */
+.sign-up-page {
+    background: linear-gradient(135deg, #ff5f6d, #ffc371);
+    padding: 20px;
+    height: 100vh;
+}
+
+/* Form styles */
+.sign-up-form {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form header styles */
+.sign-up-form h2 {
+    color: #444;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Form input styles */
+.sign-up-form input,
+.sign-up-form select,
+.sign-up-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+/* Form radio button styles */
+.sign-up-form .form-check-input {
+    margin-right: 5px;
+}
+
+/* Form button styles */
+.sign-up-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.sign-up-form button:hover {
+    background-color: #0056b3;
+}
+
+/* Form success message styles */
+.sign-up-form .success-msg {
+    color: green;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* Form error message styles */
+.sign-up-form .error-msg {
+    color: red;
+    text-align: center;
+    margin-top: 10px;
+}

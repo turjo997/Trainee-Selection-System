@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/YSD_B02_J2EE_FinalProject_Ullash.iml" filepath="$PROJECT_DIR$/.idea/YSD_B02_J2EE_FinalProject_Ullash.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/trainee-selection-system.main.iml" filepath="$PROJECT_DIR$/.idea/modules/trainee-selection-system.main.iml" />
+    </modules>
+  </component>
+</project>
