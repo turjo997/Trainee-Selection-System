@@ -2,14 +2,11 @@ package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.exception.ApplicantServiceException;
-import com.bjit.traineeselectionsystem.exception.ApplyServiceException;
 import com.bjit.traineeselectionsystem.exception.UserServiceException;
-import com.bjit.traineeselectionsystem.repository.AdminRepository;
 import com.bjit.traineeselectionsystem.repository.ApplicantRepository;
 import com.bjit.traineeselectionsystem.repository.AttachmentRepository;
 import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.service.AttachmentService;
-import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

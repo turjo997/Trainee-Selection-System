@@ -95,38 +95,6 @@ const UploadMarksByTechnical = () => {
       setErrorMessage('Please enter valid marks (0 to 100).');
       return;
     }
-
-    // const data = {
-    //   userId,
-    //   applicantId: applicant.applicantId,
-    //   circularId: selectedJobCircular,
-    //   examId: 3,
-    //   marks: applicant.marks,
-    // };
-
-    // axios
-    //   .post('http://localhost:8082/admin/uploadMarks', data)
-    //   .then((response) => {
-    //     const responseData = response.data.data;
-
-    //     if (responseData.error_message) {
-    //       setErrorMessage(responseData.error_message);
-    //       setApplicants([]); // Clear the applicants array if there is an error
-    //     } else {
-    //       setApplicants((prevApplicants) =>
-    //       prevApplicants.map((app) => (app.applicantId === applicant.applicantId ? { ...app, status: 'Submitted' } : app))
-    //     );
-    //     setSuccessMessage('Marks saved successfully!');
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error fetching applicants:', error);
-    //     setErrorMessage(error.response.data.error_message);
-    //     setApplicants([]); // Clear the applicants array if there is an error
-    //   });
-
-
-
     try {
       const data = {
         userId,

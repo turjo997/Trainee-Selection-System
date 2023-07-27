@@ -19,12 +19,8 @@ const CreateCircular = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      // Form is not valid, display an error message or take appropriate action
       return;
     }
-
-
-    // Create a data object with the form values
     const data = {
       userId: userId,
       circularTitle,
@@ -37,7 +33,7 @@ const CreateCircular = () => {
 
     console.log(data);
 
-    // Send the form data to your backend API using Axios
+
     axios.post(API_BASE_URL + '/create/circular', data)
       .then((response) => {
         // Handle the success response

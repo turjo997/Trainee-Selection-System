@@ -101,9 +101,9 @@ const SendEmail = () => {
                     ))}
                 </select>
             </div>
-            <br/>
+            <br />
             <div>
-               
+
                 <label>Select Exam Category:</label>
                 <select value={selectedExamCategory} onChange={handleExamCategoryChange}>
                     <option value="">Select Exam Category</option>
@@ -114,7 +114,7 @@ const SendEmail = () => {
                     ))}
                 </select>
             </div>
-            <br/>
+            <br />
 
             <button onClick={fetchApplicants}>Show Applicants</button>
 
@@ -134,8 +134,8 @@ const SendEmail = () => {
                     <tbody>
                         {applicants.map((applicant) => (
                             <tr key={applicant.applicantId}>
-                        
-                                <td>{applicant.firstName + ' '+applicant.lastName}</td>
+
+                                <td>{applicant.firstName + ' ' + applicant.lastName}</td>
                                 <td>{applicant.email}</td>
                                 <td>
                                     <button onClick={() => handleSendMail(applicant.applicantId)}>Send Mail</button>

@@ -1,11 +1,9 @@
 package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.entity.AdminEntity;
-import com.bjit.traineeselectionsystem.entity.ApplicantEntity;
 import com.bjit.traineeselectionsystem.entity.EvaluatorEntity;
 import com.bjit.traineeselectionsystem.entity.UserEntity;
 import com.bjit.traineeselectionsystem.exception.AdminServiceException;
-import com.bjit.traineeselectionsystem.exception.ApplicantServiceException;
 import com.bjit.traineeselectionsystem.exception.EvaluatorServiceException;
 import com.bjit.traineeselectionsystem.exception.UserServiceException;
 import com.bjit.traineeselectionsystem.model.EvaluatorModel;

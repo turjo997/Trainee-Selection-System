@@ -31,20 +31,6 @@ public class ApproveServiceImpl implements ApproveService {
     public ResponseEntity<String> approveApplicant(ApprovalModel approvalModel) {
 
         try {
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId(); // 23
-//
-//            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId).orElseThrow(() -> new UserServiceException("User not found"));
-//
-//            // Applicant --> user(23) -- > email
-//            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin)
-//                    .orElseThrow(()-> new AdminServiceException("Admin not found"));
-//
-//            // Check if the applicantId from the ApplyRequest matches the logged-in user's applicantId
-//            if (adminId != admin.getAdminId()) {
-//                throw new AdminServiceException("Invalid admin ID");
-//                // or return an error response indicating that the applicant ID does not match the logged-in user
-//            }
 
             Long examId = 1l;
 
@@ -64,9 +50,6 @@ public class ApproveServiceImpl implements ApproveService {
 
             applyOptional.orElseThrow(()
                     -> new ApplyServiceException("ApplyEntity not found for the given applicant"));
-            //.orElseThrow(()-> new IllegalArgumentException("No Application found"));
-
-            // Retrieve the admin entity from the authenticated context
 
             JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository()
                     .findById(approvalModel.getCircularId()).orElseThrow(()

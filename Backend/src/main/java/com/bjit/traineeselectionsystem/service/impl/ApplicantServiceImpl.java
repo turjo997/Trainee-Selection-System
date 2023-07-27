@@ -26,18 +26,6 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     public ResponseEntity<String> apply(ApplyRequest applyRequest) {
         try {
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
-//
-//            UserEntity user = repositoryManager.getUserRepository().findById(loggedInApplicantId)
-//                    .orElseThrow(() -> new UserServiceException("User not found"));
-//
-//            ApplicantEntity applicant = repositoryManager.getApplicantRepository().findByUser(user);
-//
-//            if (!applyRequest.getApplicantId().equals(applicant.getApplicantId())) {
-//                throw new IllegalArgumentException("Invalid applicant ID");
-//            }
-
 
             UserEntity user = repositoryManager.getUserRepository().findById(applyRequest.getUserId())
                     .orElseThrow(() -> new UserServiceException("User not found"));
@@ -54,10 +42,7 @@ public class ApplicantServiceImpl implements ApplicantService {
                     .jobCircular(jobCircularEntity)
                     .build();
 
-            ApplyEntity savedApplication = repositoryManager.getApplyRepository().save(applyEntity);
-
-//            Response<ApplyEntity> response = new Response<>();
-//            response.setData(savedApplication);
+            repositoryManager.getApplyRepository().save(applyEntity);
 
             return ResponseEntity.ok("Your application has been recorded");
         } catch (UserServiceException e) {
@@ -251,12 +236,6 @@ public class ApplicantServiceImpl implements ApplicantService {
 
 
 
-
-
-
-
-
-
     @Override
     public ResponseEntity<?> getApplicantsByTechnicalAndHr(Long circularId , Long examId) {
         System.out.println("circular id  : " + circularId);
@@ -391,13 +370,6 @@ public class ApplicantServiceImpl implements ApplicantService {
 
             if (!optionalNotice.isEmpty()) {
 
-//                NoticeModel noticeModel = NoticeModel.builder()
-//                        .title(optionalNotice.get())
-//                        .description(optionalNotice.get().getDescription())
-//                        .build();
-
-
-
                 List<NotificationEntity> modelList = new ArrayList<>();
                 optionalNotice.forEach(notice -> {
                     modelList.add(
@@ -411,11 +383,6 @@ public class ApplicantServiceImpl implements ApplicantService {
 
                 Response<?> response = new Response<>(modelList, null);
                 return ResponseEntity.ok(response);
-
-//                Response<NoticeModel> apiResponse = new Response<>(modelList, null);
-//
-//                // Return the ResponseEntity with the APIResponse
-//                return ResponseEntity.ok(apiResponse);
 
             } else {
                 throw new ApplicantServiceException("applicant not found");

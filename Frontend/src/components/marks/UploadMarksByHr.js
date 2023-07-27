@@ -15,7 +15,7 @@ const UploadMarksByHr = () => {
 
   useEffect(() => {
     fetchCirculars();
-   
+
   }, []);
 
   const fetchCirculars = async () => {
@@ -73,23 +73,9 @@ const UploadMarksByHr = () => {
             const statusResponse = await fetchStatusForApplicant(applicant.applicantId, selectedJobCircular);
             const status = statusResponse ? 'Submitted' : 'Not Submitted';
 
-            // Fetch marks for applicants whose status is 'Submitted'
-            // let marks = applicant.marks;
-            // if (status === 'Submitted') {
-            //   try {
-            //     const marksResponse = await axios.get(
-            //       `http://localhost:8082/evaluator/getMarks/${applicant.applicantId}/${selectedJobCircular}`
-            //     );
-            //     marks = marksResponse.data.marks;
-            //   } catch (error) {
-            //     console.error('Error fetching marks for applicant:', error);
-            //   }
-            // }
-
             return {
               ...applicant,
               status,
-              //marks,
             };
           })
         );
@@ -103,7 +89,7 @@ const UploadMarksByHr = () => {
   };
 
   const handleSaveMarks = async (applicant) => {
- 
+
     if (applicant.marks < 0 || applicant.marks > 100) {
       setErrorMessage('Please enter valid marks (0 to 100).');
       return;
@@ -155,7 +141,7 @@ const UploadMarksByHr = () => {
           ))}
         </select>
       </div>
-     
+
 
       <button className="fetch-applicants-button" onClick={handleFetchApplicants}>
         Fetch Applicants
@@ -221,7 +207,7 @@ const UploadMarksByHr = () => {
         </div>
       )}
 
-  
+
     </div>
   );
 };

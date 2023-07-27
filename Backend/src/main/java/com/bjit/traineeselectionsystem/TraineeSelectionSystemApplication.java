@@ -1,6 +1,5 @@
 package com.bjit.traineeselectionsystem;
 
-import com.bjit.traineeselectionsystem.service.CodeGeneratorService;
 import com.bjit.traineeselectionsystem.service.UserService;
 
 import org.springframework.boot.SpringApplication;
@@ -22,7 +21,6 @@ public class TraineeSelectionSystemApplication {
 
 //		CodeGeneratorService codeGeneratorService = applicationContext.getBean(CodeGeneratorService.class);
 //		codeGeneratorService.writeQRCode(4L);
-
 	}
 
 }

@@ -25,10 +25,6 @@ public class ApproveEntity {
     @JoinColumn(name = "applicant_id")
     private ApplicantEntity applicant;
 
-//    @ManyToOne
-//    @JoinColumn(name = "apply_id")
-//    private ApplyEntity applyEntity;
-
     @ManyToOne
     @JoinColumn(name = "circular_id")
     private JobCircularEntity jobCircular;

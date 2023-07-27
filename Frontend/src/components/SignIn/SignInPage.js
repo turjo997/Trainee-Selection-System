@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import jwtDecode from 'jwt-decode'; // Import the jwt-decode library
-import './SignInPage.css'; // Add custom CSS file for styling
+import jwtDecode from 'jwt-decode';
+import './SignInPage.css';
 
 const SignInPage = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
@@ -12,8 +12,6 @@ const SignInPage = ({ setIsLoggedIn }) => {
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-
-    // Add your sign-in logic here
     try {
       const data = {
         email,

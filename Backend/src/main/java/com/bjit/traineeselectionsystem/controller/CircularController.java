@@ -1,7 +1,5 @@
 package com.bjit.traineeselectionsystem.controller;
 
-
-
 import com.bjit.traineeselectionsystem.utils.ServiceManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

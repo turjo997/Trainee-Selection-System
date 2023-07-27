@@ -11,10 +11,8 @@ const Qrcode = () => {
 
   const API_BASE_URL = 'http://localhost:8082/admin';
 
-  // Fetch the list of job circulars from the API on component mount
   useEffect(() => {
     fetchJobCirculars();
-    // Fetch the userId from local storage
     const storedUserId = localStorage.getItem('userId');
     setUserId(storedUserId);
   }, []);
@@ -62,17 +60,17 @@ const Qrcode = () => {
     console.log(circularId);
 
     axios
-    .get(`http://localhost:8082/admin/generate/${circularId}`)
-    .then((response) => {
+      .get(`http://localhost:8082/admin/generate/${circularId}`)
+      .then((response) => {
         setSuccessMessage('Code generated successfully');
         setErrorMessage('');
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         setErrorMessage('Error generating code. Please try again later.');
         setSuccessMessage('');
         console.error('Error generating code:', error);
-    });
-};
+      });
+  };
   return (
     <div className="exam-container">
       <h2 className="title">Generate QR code</h2>

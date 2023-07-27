@@ -48,10 +48,6 @@ public class ExamTrackServiceImpl implements ExamTrackService {
             // Get the approved applicants for a specific circular and exam
             List<ApproveEntity> approvedApplicants = repositoryManager.getApproveRepository()
                     .findByJobCircularCircularIdAndExamCategoryExamId(examTrackModel.getCircularId(), examId);
-//
-//            if(){
-//
-//            }
 
             // Check if an entry already exists for each approved applicant
             for (ApproveEntity approve : approvedApplicants) {

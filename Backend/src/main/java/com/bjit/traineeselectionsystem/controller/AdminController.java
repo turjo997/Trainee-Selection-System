@@ -75,15 +75,6 @@ public class AdminController {
         return serviceManager.getApplicantService().getApprovedApplicantsForWrittenTest(circularId);
     }
 
-
-//    @GetMapping("/getApplicants/written/{circularId}")
-//    public ResponseEntity<?> getApplicantsByWritten(@PathVariable Long circularId){
-//        return serviceManager.getApplicantService().getAppliedApplicantsByCircularId(circularId);
-//    }
-
-
-
-
     @GetMapping("/get/{applicantId}/{circularId}/{examId}")
     public boolean isMarkUploaded
             (@PathVariable Long applicantId , @PathVariable Long circularId , @PathVariable Long examId) {
@@ -102,9 +93,6 @@ public class AdminController {
     public  ResponseEntity<Response<?>> getFinalTrainees(@PathVariable Long circularId){
         return serviceManager.getAdminService().getTrainees(circularId);
     }
-
-
-
 
 
 }

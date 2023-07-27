@@ -3,7 +3,6 @@ package com.bjit.traineeselectionsystem.service.impl;
 import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.exception.ExamCreateServiceException;
 import com.bjit.traineeselectionsystem.exception.JobCircularServiceException;
-import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.CodeGeneratorService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import com.google.zxing.BarcodeFormat;

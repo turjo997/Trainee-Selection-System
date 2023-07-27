@@ -37,25 +37,17 @@ const CreateCategory = () => {
     };
 
     const validateForm = () => {
-        // Perform validation for each form field
         if (examTitle.trim() === '') {
-            // Exam Title is required
             return false;
         }
 
         if (description.trim() === '') {
-            // Description is required
             return false;
         }
 
         if (passingMarks.trim() === '' || isNaN(parseInt(passingMarks))) {
-            // Passing Marks is required and should be a number
             return false;
         }
-
-        // Perform additional validations for each field if necessary
-
-        // Form is valid
         return true;
     };
 

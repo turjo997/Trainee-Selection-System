@@ -1,7 +1,5 @@
-/* Add your custom styles in a separate CSS file or style block */
-
 .exam-container {
- 
+
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -12,6 +10,7 @@
 
     margin: 0 auto;
 }
+
 .title {
     text-align: center;
 }

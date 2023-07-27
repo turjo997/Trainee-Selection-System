@@ -99,18 +99,6 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseEntity<Object> createEvaluator(EvaluatorModel evaluatorModel) {
         try {
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
-//
-//            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId)
-//                    .orElseThrow(() -> new UserServiceException("User not found"));
-//
-//            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin);
-//
-//            if (!evaluatorCreateRequest.getAdminId().equals(admin.getAdminId())) {
-//                throw new IllegalArgumentException("Invalid admin ID");
-//            }
-
             UserEntity userEntity = repositoryManager.getUserRepository()
                     .findById(evaluatorModel.getUserId())
                     .orElseThrow(() -> new UserServiceException("User not found"));
@@ -163,17 +151,6 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseEntity<String> createExamCategory(ExamCreateRequest examCreateRequest) {
         try {
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            Long loggedInApplicantId = ((UserEntity) authentication.getPrincipal()).getUserId();
-//
-//            UserEntity userAdmin = repositoryManager.getUserRepository().findById(loggedInApplicantId)
-//                    .orElseThrow(() -> new UserServiceException("User not found"));
-//
-//            AdminEntity admin = repositoryManager.getAdminRepository().findByUser(userAdmin);
-//
-//            if (!examCreateRequest.getAdminId().equals(admin.getAdminId())) {
-//                throw new IllegalArgumentException("Invalid admin ID");
-//            }
 
             AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(examCreateRequest.getAdminId())
                     .orElseThrow(() -> new AdminServiceException("Admin not found"));

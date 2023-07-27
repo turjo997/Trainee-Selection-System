@@ -3,7 +3,6 @@ package com.bjit.traineeselectionsystem.service.impl;
 import com.bjit.traineeselectionsystem.entity.*;
 import com.bjit.traineeselectionsystem.exception.*;
 import com.bjit.traineeselectionsystem.model.AdmitCardRequest;
-import com.bjit.traineeselectionsystem.repository.*;
 import com.bjit.traineeselectionsystem.service.AdmitCardService;
 import com.bjit.traineeselectionsystem.service.AttachmentService;
 

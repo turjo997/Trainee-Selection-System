@@ -27,5 +27,4 @@ public interface UploadMarksByAdminRepository extends JpaRepository<UploadMarksB
     List<UploadMarksByAdminEntity> findAllByJobCircularCircularIdAndExamCategoryExamId(Long circularId, Long examId);
 
 
-
 }

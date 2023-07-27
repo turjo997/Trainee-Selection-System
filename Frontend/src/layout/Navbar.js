@@ -5,10 +5,8 @@ import './Navbar.css';
 const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
     const navigate = useNavigate();
 
+    const [userId, setUserId] = useState(0);
 
-    // Assuming you have the user ID stored in state, you can update it like this
-    const [userId, setUserId] = useState(0); // Set initial value as per your requirement
-    // Fetch the user ID from the local storage or wherever you are storing it
     useEffect(() => {
         const storedUserId = parseInt(localStorage.getItem('userId'));
         if (!isNaN(storedUserId)) {
@@ -73,9 +71,6 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                                 </Link>
                             </li>
 
-
-
-                            {/* Add other links for APPLICANT role */}
                         </>
                     )}
 
@@ -94,14 +89,12 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                                 </Link>
                             </li>
 
-
-                            {/* Add other links for EVALUATOR role */}
                         </>
                     )}
 
                     {isLoggedIn && userRole === 'ADMIN' && (
                         <>
-                            
+
                             <li className="nav-item">
                                 <Link className="nav-link text-white" to="/admin/final/trainees">
                                     Final Trainees
@@ -251,8 +244,6 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
                                     Send Email
                                 </Link>
                             </li>
-
-                            {/* Add other links for ADMIN role */}
                         </>
                     )}
 

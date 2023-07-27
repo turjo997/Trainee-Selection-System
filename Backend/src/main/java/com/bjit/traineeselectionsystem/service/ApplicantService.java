@@ -1,6 +1,6 @@
 package com.bjit.traineeselectionsystem.service;
 
-import com.bjit.traineeselectionsystem.model.ApplicantResponseModel;
+
 import com.bjit.traineeselectionsystem.model.ApplyRequest;
 import com.bjit.traineeselectionsystem.model.ApplicantUpdateRequest;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,6 @@ public interface ApplicantService {
 
 
     ResponseEntity<?> getApprovedApplicantsForWrittenTest(Long circularId);
-
 
 
 }

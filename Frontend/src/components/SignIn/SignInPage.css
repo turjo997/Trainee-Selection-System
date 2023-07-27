@@ -1,33 +1,32 @@
 .sign-in-page {
-    height: 100vh;
-    background: linear-gradient(to right, #7f53ac, #647dee);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .sign-in-form {
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 30px;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .sign-in-form h2 {
-    color: #333;
-  }
-  
-  .sign-in-form label {
-    color: #555;
-  }
-  
-  .sign-in-form .btn-primary {
-    background-color: linear-gradient(to right, #7f53ac, #647dee);
-    border-color: linear-gradient(to right, #7f53ac, #647dee);
-  }
-  
-  .sign-in-form .btn-primary:hover {
-    background-color: #ff4457;
-    border-color: #ff4457;
-  }
-  
+  height: 100vh;
+  background: linear-gradient(to right, #7f53ac, #647dee);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sign-in-form {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sign-in-form h2 {
+  color: #333;
+}
+
+.sign-in-form label {
+  color: #555;
+}
+
+.sign-in-form .btn-primary {
+  background-color: linear-gradient(to right, #7f53ac, #647dee);
+  border-color: linear-gradient(to right, #7f53ac, #647dee);
+}
+
+.sign-in-form .btn-primary:hover {
+  background-color: #ff4457;
+  border-color: #ff4457;
+}

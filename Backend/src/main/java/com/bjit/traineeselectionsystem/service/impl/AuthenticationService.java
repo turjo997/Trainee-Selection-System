@@ -2,8 +2,6 @@ package com.bjit.traineeselectionsystem.service.impl;
 
 import com.bjit.traineeselectionsystem.model.AuthenticationRequest;
 import com.bjit.traineeselectionsystem.model.AuthenticationResponse;
-import com.bjit.traineeselectionsystem.repository.EvaluatorRepository;
-import com.bjit.traineeselectionsystem.repository.UserRepository;
 import com.bjit.traineeselectionsystem.utils.JwtService;
 import com.bjit.traineeselectionsystem.utils.RepositoryManager;
 import lombok.RequiredArgsConstructor;

@@ -85,20 +85,6 @@ const UploadMarks = () => {
           fetchedApplicants.map(async (applicant) => {
             const statusResponse = await fetchStatusForApplicant(applicant.applicantId, selectedJobCircular);
             const status = statusResponse ? 'Submitted' : 'Not Submitted';
-
-            // Fetch marks for applicants whose status is 'Submitted'
-            // let marks = applicant.marks;
-            // if (status === 'Submitted') {
-            //   try {
-            //     const marksResponse = await axios.get(
-            //       `http://localhost:8082/evaluator/getMarks/${applicant.applicantId}/${selectedJobCircular}`
-            //     );
-            //     marks = marksResponse.data.marks;
-            //   } catch (error) {
-            //     console.error('Error fetching marks for applicant:', error);
-            //   }
-            // }
-
             return {
               ...applicant,
               status,
@@ -107,7 +93,7 @@ const UploadMarks = () => {
           })
         );
 
-       setApplicants(applicantsWithStatusAndMarks);
+        setApplicants(applicantsWithStatusAndMarks);
       }
     } catch (error) {
       console.error('Error fetching applicants:', error);
@@ -116,10 +102,6 @@ const UploadMarks = () => {
   };
 
   const handleSaveMarks = async (applicant) => {
-    // if (!selectedExamCategory) {
-    //   setErrorMessage('Please select an Exam Category before saving marks.');
-    //   return;
-    // }
 
     if (applicant.marks < 0 || applicant.marks > 100) {
       setErrorMessage('Please enter valid marks (0 to 100).');
@@ -172,18 +154,6 @@ const UploadMarks = () => {
           ))}
         </select>
       </div>
-      {/* <div className="form-field">
-        <label>Select Exam Category:</label>
-        <select className="select-box" value={selectedExamCategory} onChange={handleExamCategoryChange}>
-          <option value="">Select Exam Category</option>
-          {examCategories.map((examCategory) => (
-            <option key={examCategory.examId} value={examCategory.examId}>
-              {examCategory.examTitle}
-            </option>
-          ))}
-        </select>
-      </div> */}
-
       <button className="fetch-applicants-button" onClick={handleFetchApplicants}>
         Fetch Applicants
       </button>
@@ -247,8 +217,6 @@ const UploadMarks = () => {
           </table>
         </div>
       )}
-
-    
     </div>
   );
 };

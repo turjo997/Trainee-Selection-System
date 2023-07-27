@@ -32,9 +32,6 @@ public class AdmitCardEntity {
     @JoinColumn(name = "circular_id")
     private JobCircularEntity jobCircular;
 
-//    @Column(nullable = true)
-//    private String qrCode;
-
     @Column(length = 1000)
     private String instructions;
 

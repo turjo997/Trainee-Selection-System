@@ -42,7 +42,7 @@ const Routing = () => {
             <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
 
             <Routes>
-                {/* ... Other unprotected routes ... */}
+
                 <Route path="/login" element={<SignInPage setIsLoggedIn={setIsLoggedIn} />} />
                 <Route path="/register" element={<SignUpPage />} />
 
@@ -245,10 +245,6 @@ const Routing = () => {
                         <AdmitCardDownload />
                     </ProtectedRoute>}></Route>
 
-
-
-
-                {/* ... Other protected routes ... */}
 
                 <Route path="/unauthorized" element={<UnAuthorized />} />
             </Routes>

@@ -1,45 +1,43 @@
-/* TraineesTable.css */
 .trainees-table-container {
-    margin: 20px;
-  }
-  
-  .select-circular {
-    margin-bottom: 10px;
-  }
-  
-  .trainees-table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-  
-  .trainees-table th,
-  .trainees-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
-  
-  .trainees-table th {
-    background-color: #f2f2f2;
-  }
-  
-  .error-message {
-    color: red;
-    font-weight: bold;
-  }
-  
-  .see-final-list-button {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
-    margin-left: 10px;
-  }
-  
-  .see-final-list-button:hover {
-    background-color: #45a049;
-  }
-  
+  margin: 20px;
+}
+
+.select-circular {
+  margin-bottom: 10px;
+}
+
+.trainees-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.trainees-table th,
+.trainees-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.trainees-table th {
+  background-color: #f2f2f2;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+.see-final-list-button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.see-final-list-button:hover {
+  background-color: #45a049;
+}

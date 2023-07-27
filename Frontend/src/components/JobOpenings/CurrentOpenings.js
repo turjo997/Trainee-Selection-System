@@ -6,7 +6,6 @@ const CurrentOpenings = () => {
     const [circulars, setCirculars] = useState([]);
     const [appliedStatus, setAppliedStatus] = useState({});
 
-    // Fetch the user ID from the local storage
     const userId = localStorage.getItem('userId');
 
     useEffect(() => {

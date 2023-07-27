@@ -1,8 +1,6 @@
 package com.bjit.traineeselectionsystem.controller;
 
 import com.bjit.traineeselectionsystem.model.ApprovalModel;
-import com.bjit.traineeselectionsystem.service.ApproveService;
-import com.bjit.traineeselectionsystem.service.ExamTrackService;
 import com.bjit.traineeselectionsystem.utils.ServiceManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +30,5 @@ public class ApproveController {
     public boolean getApplicantsByApproval(@PathVariable Long applicantId , @PathVariable Long circularId){
         return serviceManager.getApproveService().getApproveByApplicantId(applicantId , circularId);
     }
-
-
-
 
 }
