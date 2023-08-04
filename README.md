@@ -31,7 +31,7 @@
 -  Feature 01: Applicants Registration
  
      Applicants should be able to register themselves to our portal. For the registration purpose they have to insert below informations:
-   <br> 
+   <br> <br> 
     ● First name
    <br> 
     ● Last name
