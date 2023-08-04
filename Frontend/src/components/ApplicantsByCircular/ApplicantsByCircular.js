@@ -5,6 +5,7 @@ const ApplicantsByCircular = () => {
   const [circulars, setCirculars] = useState([]);
   const [selectedCircular, setSelectedCircular] = useState(null);
   const [applicants, setApplicants] = useState([]);
+  const token = localStorage.getItem('token');
   const examId = 1;
 
   useEffect(() => {
@@ -13,7 +14,12 @@ const ApplicantsByCircular = () => {
 
   const fetchCirculars = () => {
     axios
-      .get('http://localhost:8082/admin/getAllCircular')
+      .get('http://localhost:8082/admin/getAllCircular', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then((response) => {
         setCirculars(response.data.data);
       })
@@ -24,12 +30,22 @@ const ApplicantsByCircular = () => {
 
   const fetchApplicantsByCircular = (circularId) => {
     axios
-      .get(`http://localhost:8082/admin/getApplicants/${circularId}`)
+      .get(`http://localhost:8082/admin/getApplicants/${circularId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then(async (response) => {
         setSelectedCircular({ ...response.data, circularId }); // Set the selected circular with the circularId
         // Add status property to each applicant object
         const applicantsWithStatus = await Promise.all(response.data.map(async (applicant) => {
-          const res = await axios.get(`http://localhost:8082/admin/approve/get/${applicant.applicantId}/${circularId}`);
+          const res = await axios.get(`http://localhost:8082/admin/approve/get/${applicant.applicantId}/${circularId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            }
+          });
           return {
             ...applicant,
             status: res.data ? 'Approved' : 'Not Approved', // Set status based on API response
@@ -50,7 +66,14 @@ const ApplicantsByCircular = () => {
 
     // Call the API to check if the applicant is approved or not
     axios
-      .get(`http://localhost:8082/admin/approve/get/${applicantId}/${circularId}`)
+      .get((`http://localhost:8082/admin/approve/get/${applicantId}/${circularId}`)
+        , {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        })
+
       .then((response) => {
         const isApproved = response.data;
 
@@ -75,7 +98,12 @@ const ApplicantsByCircular = () => {
           };
 
           axios
-            .post('http://localhost:8082/admin/approve', data)
+            .post('http://localhost:8082/admin/approve', data, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+              }
+            })
             .then((response) => {
               // If the approval is successful, update the status to 'Approved'
               setApplicants((prevApplicants) =>
@@ -94,7 +122,8 @@ const ApplicantsByCircular = () => {
       })
       .catch((error) => {
         console.error('Error checking approval status:', error);
-      });
+      })
+
   };
 
   return (

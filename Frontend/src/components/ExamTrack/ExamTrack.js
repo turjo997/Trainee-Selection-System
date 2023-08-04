@@ -8,7 +8,7 @@ const ExamTrack = () => {
   const [userId, setUserId] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const token = localStorage.getItem('token');
   const API_BASE_URL = 'http://localhost:8082/admin';
 
   // Fetch the list of job circulars from the API on component mount
@@ -21,7 +21,12 @@ const ExamTrack = () => {
 
   const fetchJobCirculars = () => {
     axios
-      .get(API_BASE_URL + '/getAllCircular')
+      .get(API_BASE_URL + '/getAllCircular', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then((response) => {
 
         console.log(response.data.data);
@@ -63,7 +68,12 @@ const ExamTrack = () => {
 
     // Implement the logic to generate the code for the selected job circular
     axios
-      .post(API_BASE_URL + '/track', data)
+      .post(API_BASE_URL + '/track', data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then((response) => {
         setSuccessMessage('Code generated successfully');
         setErrorMessage('');

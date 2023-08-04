@@ -4,6 +4,7 @@ import './ApplicantProfile.css';
 
 const ApplicantInfo = () => {
     const [userId, setUserId] = useState('');
+    const token = localStorage.getItem('token');
     const [applicantInfo, setApplicantInfo] = useState({
         firstName: '',
         lastName: '',
@@ -28,7 +29,12 @@ const ApplicantInfo = () => {
 
     const fetchApplicantInfo = async (userId) => {
         try {
-            const response = await axios.get(`http://localhost:8082/applicant/get/${userId}`);
+            const response = await axios.get(`http://localhost:8082/applicant/get/${userId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
             setApplicantInfo(response.data.data);
         } catch (error) {
             console.error('Error fetching applicant information:', error);
@@ -53,8 +59,10 @@ const ApplicantInfo = () => {
 
             const response = await axios.put('http://localhost:8082/applicant/update', data, {
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
-                },
+                }
+
             });
             setSuccessMessage('Applicant information updated successfully!');
         } catch (error) {

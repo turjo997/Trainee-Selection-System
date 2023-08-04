@@ -4,41 +4,41 @@ import axios from 'axios';
 
 const UploadMarks = () => {
   const [jobCirculars, setJobCirculars] = useState([]);
-  const [examCategories, setExamCategories] = useState([]);
   const [selectedJobCircular, setSelectedJobCircular] = useState('');
-  const [selectedExamCategory, setSelectedExamCategory] = useState('');
+
   const [applicants, setApplicants] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [userId] = useState(localStorage.getItem('userId'));
   const [isFetchButtonClicked, setIsFetchButtonClicked] = useState(false);
 
+  // Get the token from local storage or wherever it's stored
+  const token = localStorage.getItem('token');
+
+  const apiConfig = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  };
   useEffect(() => {
     fetchCirculars();
-    fetchExamCategories();
+
   }, []);
 
   const fetchCirculars = async () => {
     try {
-      const response = await axios.get('http://localhost:8082/admin/getAllCircular');
+      const response = await axios.get('http://localhost:8082/admin/getAllCircular', apiConfig);
       setJobCirculars(response.data.data);
     } catch (error) {
       console.error('Error fetching circulars:', error);
     }
   };
 
-  const fetchExamCategories = async () => {
-    try {
-      const response = await axios.get('http://localhost:8082/admin/getAllExamCategory');
-      setExamCategories(response.data.data);
-    } catch (error) {
-      console.error('Error fetching exam categories:', error);
-    }
-  };
 
   const fetchStatusForApplicant = async (applicantId, circularId) => {
     try {
-      const response = await axios.get(`http://localhost:8082/evaluator/get/${applicantId}/${circularId}`);
+      const response = await axios.get(`http://localhost:8082/evaluator/get/${applicantId}/${circularId}`, apiConfig);
       console.log(response.data);
       return response.data; // Assuming the API response provides a boolean value
     } catch (error) {
@@ -73,7 +73,7 @@ const UploadMarks = () => {
     console.log(selectedJobCircular);
 
     try {
-      const response = await axios.get(`http://localhost:8082/admin/getApplicants/written/${selectedJobCircular}`);
+      const response = await axios.get(`http://localhost:8082/admin/get/written/${selectedJobCircular}`, apiConfig);
       const fetchedApplicants = response.data; // Assuming the API response provides an array of applicants
       if (fetchedApplicants.length === 0) {
         setErrorMessage('No applicants found for the selected Job Circular.');
@@ -119,7 +119,7 @@ const UploadMarks = () => {
 
       console.log(data);
 
-      const response = await axios.post('http://localhost:8082/evaluator/uploadMarks', data);
+      const response = await axios.post('http://localhost:8082/evaluator/uploadMarks', data, apiConfig);
 
       console.log(response.status);
 

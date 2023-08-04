@@ -70,7 +70,7 @@ public class AdminController {
     }
 
 
-    @GetMapping("/getApplicants/written/{circularId}")
+    @GetMapping("/get/written/{circularId}")
     public ResponseEntity<?> getApprovedApplicantsForWrittenTest(@PathVariable Long circularId){
         return serviceManager.getApplicantService().getApprovedApplicantsForWrittenTest(circularId);
     }

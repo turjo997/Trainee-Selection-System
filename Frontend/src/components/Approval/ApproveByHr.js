@@ -10,6 +10,7 @@ const ApproveByHr = () => {
   const [selectedExamCategory, setSelectedExamCategory] = useState(1); // Set the default examId to 1
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     fetchCirculars();
@@ -18,7 +19,12 @@ const ApproveByHr = () => {
 
   const fetchCirculars = async () => {
     try {
-      const response = await axios.get('http://localhost:8082/admin/getAllCircular');
+      const response = await axios.get('http://localhost:8082/admin/getAllCircular', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      });
       setJobCirculars(response.data.data);
     } catch (error) {
       console.error('Error fetching circulars:', error);
@@ -27,7 +33,13 @@ const ApproveByHr = () => {
 
   const fetchExamCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:8082/admin/getAllExamCategory');
+      const response = await axios.get('http://localhost:8082/admin/getAllExamCategory',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
       setExamCategories(response.data.data);
     } catch (error) {
       console.error('Error fetching exam categories:', error);
@@ -56,8 +68,14 @@ const ApproveByHr = () => {
       };
 
       const response = await axios.post(
-        `http://localhost:8082/admin/approve/exam/${data.userId}/${data.circularId}/${data.examId}`
-      );
+        `http://localhost:8082/admin/approve/exam/${data.userId}/${data.circularId}/${data.examId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        })
+
 
       if (response.status === 200) {
         setSuccessMessage('Approved successfully!');

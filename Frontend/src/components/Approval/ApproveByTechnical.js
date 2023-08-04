@@ -9,7 +9,7 @@ const ApproveByTechnical = () => {
   const [selectedExamCategory, setSelectedExamCategory] = useState(1); // Set the default examId to 1
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-
+  const token = localStorage.getItem('token');
   useEffect(() => {
     fetchCirculars();
     fetchExamCategories();
@@ -17,7 +17,13 @@ const ApproveByTechnical = () => {
 
   const fetchCirculars = async () => {
     try {
-      const response = await axios.get('http://localhost:8082/admin/getAllCircular');
+      const response = await axios.get('http://localhost:8082/admin/getAllCircular'
+        , {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
       setJobCirculars(response.data.data);
     } catch (error) {
       console.error('Error fetching circulars:', error);
@@ -26,7 +32,14 @@ const ApproveByTechnical = () => {
 
   const fetchExamCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:8082/admin/getAllExamCategory');
+      const response = await axios.get('http://localhost:8082/admin/getAllExamCategory'
+        , {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
+
       setExamCategories(response.data.data);
     } catch (error) {
       console.error('Error fetching exam categories:', error);
@@ -54,9 +67,17 @@ const ApproveByTechnical = () => {
         examId: selectedExamCategory,
       };
 
+      console.log(data);
+
       const response = await axios.post(
-        `http://localhost:8082/admin/approve/exam/${data.userId}/${data.circularId}/${data.examId}`
-      );
+        `http://localhost:8082/admin/approve/${data.userId}/${data.circularId}/${data.examId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
+
 
       if (response.status === 200) {
         setSuccessMessage('Approved successfully!');
@@ -75,6 +96,10 @@ const ApproveByTechnical = () => {
   return (
     <div className="approve-marks-container">
       <h2 className="title">Approve for Technical Test</h2>
+
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {successMessage && <p className="success-message">{successMessage}</p>}
+
       <div className="form-field">
         <label>Select Job Circular:</label>
         <select className="select-box" value={selectedJobCircular} onChange={handleJobCircularChange}>
@@ -90,7 +115,7 @@ const ApproveByTechnical = () => {
         <label>Select Exam Category:</label>
         <select className="select-box" value={selectedExamCategory} onChange={handleExamCategoryChange}>
           <option value="">Select Exam Category</option>
-          {examCategories.filter(examCategory => examCategory.examId === 3).map((examCategory) => (
+          {examCategories.filter(examCategory => examCategory.examId === 2).map((examCategory) => (
             <option key={examCategory.examId} value={examCategory.examId}>
               {examCategory.examTitle}
             </option>
@@ -101,10 +126,6 @@ const ApproveByTechnical = () => {
       <button className="approve-marks-button" onClick={handleApproveMarks}>
         Approve
       </button>
-
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-      {successMessage && <p className="success-message">{successMessage}</p>}
     </div>
   );
 };

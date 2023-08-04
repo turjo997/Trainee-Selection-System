@@ -465,7 +465,7 @@ public class AdminServiceImpl implements AdminService {
 
         try {
 
-            Long examId = 4l;
+            Long examId = 3l;
             Long adminId = 5l;
 
             AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(adminId)

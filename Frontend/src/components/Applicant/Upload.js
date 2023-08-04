@@ -8,6 +8,7 @@ const Upload = () => {
     const [errorMsg, setErrorMsg] = useState('');
     const [isUploaded, setIsUploaded] = useState(false);
     const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         // Reset the success message after 3 seconds
@@ -39,7 +40,12 @@ const Upload = () => {
             formData.append('image', imageFile);
             formData.append('cv', cvFile);
 
-            const response = await axios.post(`http://localhost:8082/applicant/upload/${userId}`, formData);
+            const response = await axios.post(`http://localhost:8082/applicant/upload/${userId}`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
             console.log("data saved");
             setSuccessMsg('File uploaded successfully');
             setErrorMsg('');

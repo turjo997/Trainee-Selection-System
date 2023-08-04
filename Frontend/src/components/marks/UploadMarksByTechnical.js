@@ -10,7 +10,7 @@ const UploadMarksByTechnical = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [userId] = useState(localStorage.getItem('userId'));
   const [isFetchButtonClicked, setIsFetchButtonClicked] = useState(false);
-
+  const token = localStorage.getItem('token');
   const examId = 3;
 
   useEffect(() => {
@@ -20,7 +20,13 @@ const UploadMarksByTechnical = () => {
 
   const fetchCirculars = async () => {
     try {
-      const response = await axios.get('http://localhost:8082/admin/getAllCircular');
+      const response = await axios.get('http://localhost:8082/admin/getAllCircular',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
       setJobCirculars(response.data.data);
     } catch (error) {
       console.error('Error fetching circulars:', error);
@@ -29,7 +35,13 @@ const UploadMarksByTechnical = () => {
 
   const fetchStatusForApplicant = async (applicantId, circularId) => {
     try {
-      const response = await axios.get(`http://localhost:8082/admin/get/${applicantId}/${circularId}/${examId}`);
+      const response = await axios.get(`http://localhost:8082/admin/get/${applicantId}/${circularId}/${examId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
       console.log(response.data);
       return response.data; // Assuming the API response provides a boolean value
     } catch (error) {
@@ -60,7 +72,13 @@ const UploadMarksByTechnical = () => {
     console.log(selectedJobCircular);
 
     try {
-      const response = await axios.get(`http://localhost:8082/admin/getApplicants/${selectedJobCircular}/${examId}`);
+      const response = await axios.get(`http://localhost:8082/admin/getApplicants/${selectedJobCircular}/${examId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
       const fetchedApplicants = response.data; // Assuming the API response provides an array of applicants
       if (fetchedApplicants.length === 0) {
         setErrorMessage('No applicants found for the selected Job Circular.');
@@ -106,7 +124,13 @@ const UploadMarksByTechnical = () => {
 
       console.log(data);
 
-      const response = await axios.post('http://localhost:8082/admin/uploadMarks', data);
+      const response = await axios.post('http://localhost:8082/admin/uploadMarks', data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
 
       console.log(response.status);
 

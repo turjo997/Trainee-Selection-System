@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const ViewApplicant = () => {
   const [applicants, setApplicants] = useState([]);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     fetchApplicans();
@@ -10,7 +11,12 @@ const ViewApplicant = () => {
 
   const fetchApplicans = () => {
     axios
-      .get('http://localhost:8082/admin/getAllApplicant')
+      .get('http://localhost:8082/admin/getAllApplicant', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then((response) => {
         setApplicants(response.data.data);
       })

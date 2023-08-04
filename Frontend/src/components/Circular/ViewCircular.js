@@ -3,14 +3,19 @@ import axios from 'axios';
 
 const ViewCircular = () => {
   const [circulars, setCirculars] = useState([]);
-
+  const token = localStorage.getItem('token');
   useEffect(() => {
     fetchCirculars();
   }, []);
 
   const fetchCirculars = () => {
     axios
-      .get('http://localhost:8082/admin/getAllCircular')
+      .get('http://localhost:8082/admin/getAllCircular', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then((response) => {
         setCirculars(response.data.data);
       })

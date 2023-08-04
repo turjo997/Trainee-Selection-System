@@ -10,6 +10,7 @@ const SendEmail = () => {
     const [applicants, setApplicants] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         fetchCirculars();
@@ -18,7 +19,12 @@ const SendEmail = () => {
 
     const fetchCirculars = async () => {
         try {
-            const response = await axios.get('http://localhost:8082/admin/getAllCircular');
+            const response = await axios.get('http://localhost:8082/admin/getAllCircular', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
             setJobCirculars(response.data.data);
         } catch (error) {
             console.error('Error fetching circulars:', error);
@@ -27,7 +33,12 @@ const SendEmail = () => {
 
     const fetchExamCategories = async () => {
         try {
-            const response = await axios.get('http://localhost:8082/admin/getAllExamCategory');
+            const response = await axios.get('http://localhost:8082/admin/getAllExamCategory', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
             setExamCategories(response.data.data);
         } catch (error) {
             console.error('Error fetching exam categories:', error);
@@ -41,7 +52,12 @@ const SendEmail = () => {
         }
 
         try {
-            const response = await axios.get(`http://localhost:8082/admin/getApplicants/written/${selectedJobCircular}`);
+            const response = await axios.get(`http://localhost:8082/admin/getApplicants/written/${selectedJobCircular}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
             setApplicants(response.data);
         } catch (error) {
             console.error('Error fetching applicants:', error);
@@ -75,8 +91,12 @@ const SendEmail = () => {
 
             console.log(data);
 
-            const response = await axios.post('http://localhost:8082/admin/sendMail', data);
-
+            const response = await axios.post('http://localhost:8082/admin/sendMail', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
             if (response.status === 200) {
                 setSuccessMessage('Email sent successfully!');
             } else {

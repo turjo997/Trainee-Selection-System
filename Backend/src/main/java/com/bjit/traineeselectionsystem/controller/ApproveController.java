@@ -21,7 +21,7 @@ public class ApproveController {
     }
 
 
-    @PostMapping("/exam/{userId}/{circularId}/{examId}")
+    @PostMapping("/{userId}/{circularId}/{examId}")
     public ResponseEntity<String> approveApplicant(@PathVariable Long userId , @PathVariable Long circularId , @PathVariable Long examId) {
         return serviceManager.getApproveService().selectTopApplicants(userId , circularId , examId);
     }

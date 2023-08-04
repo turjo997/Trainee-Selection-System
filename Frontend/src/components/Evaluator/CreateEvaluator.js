@@ -26,7 +26,7 @@ const CreateEvaluator = () => {
     const [errorMessage, setErrorMessage] = useState('');
 
     const API_BASE_URL = "http://localhost:8082/admin";
-
+    const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
 
     console.log(userId);
@@ -92,7 +92,13 @@ const CreateEvaluator = () => {
         };
 
         // Send the form data to your backend API using Axios
-        axios.post(API_BASE_URL + '/create/evaluator', data)
+        axios.post(API_BASE_URL + '/create/evaluator', data,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
             .then((response) => {
                 // Handle the success response
                 console.log('Data saved successfully:', response.data);

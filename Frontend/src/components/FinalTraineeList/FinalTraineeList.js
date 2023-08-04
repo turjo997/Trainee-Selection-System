@@ -7,6 +7,7 @@ const FinalTraineeList = () => {
     const [selectedCircular, setSelectedCircular] = useState('');
     const [applicants, setApplicants] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const token = localStorage.getItem('token');
 
     const API_BASE_URL = 'http://localhost:8082/admin';
 
@@ -16,7 +17,12 @@ const FinalTraineeList = () => {
 
     const fetchCirculars = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/getAllCircular`);
+            const response = await axios.get(`${API_BASE_URL}/getAllCircular`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
             setCirculars(response.data.data);
         } catch (error) {
             console.error('Error fetching circulars:', error);
@@ -30,7 +36,12 @@ const FinalTraineeList = () => {
             return;
         }
         axios
-            .post(`${API_BASE_URL}/get/trainees/${selectedCircular}`)
+            .post(`${API_BASE_URL}/get/trainees/${selectedCircular}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
             .then((response) => {
                 const responseData = response.data.data;
 

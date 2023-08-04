@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const ViewCategory = () => {
   const [categories, setCategories] = useState([]);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     fetchCategories();
@@ -10,7 +11,12 @@ const ViewCategory = () => {
 
   const fetchCategories = () => {
     axios
-      .get('http://localhost:8082/admin/getAllExamCategory')
+      .get('http://localhost:8082/admin/getAllExamCategory', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then((response) => {
         setCategories(response.data.data);
       })

@@ -111,7 +111,7 @@ public class ApproveServiceImpl implements ApproveService {
                     .orElseThrow(() -> new ExamCreateServiceException("Exam not found"));
 
 
-            if (examId == 3) {
+            if (examId == 2) {
 
                 // Fetch all upload marks entries
                 List<UploadMarksByEvaluatorEntity> uploadMarksListForWritten =
@@ -178,7 +178,7 @@ public class ApproveServiceImpl implements ApproveService {
 
             }
 
-            if (examId == 4) {
+            if (examId == 3) {
 
                 // Approve applicant for exam --- > hr (3)
 
@@ -190,7 +190,7 @@ public class ApproveServiceImpl implements ApproveService {
                 // Fetch all upload marks entries
                 List<UploadMarksByAdminEntity> uploadMarksListForTechnical =
                         repositoryManager.getUploadMarksByAdminRepository()
-                                .findByJobCircularCircularIdAndExamCategoryExamId(circularId , 3L);
+                                .findByJobCircularCircularIdAndExamCategoryExamId(circularId , 2L);
 
 
                 if (uploadMarksListForTechnical.isEmpty()) {

@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const ViewEvaluator = () => {
   const [evaluators, setEvaluators] = useState([]);
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
     fetchEvaluators();
@@ -10,7 +11,12 @@ const ViewEvaluator = () => {
 
   const fetchEvaluators = () => {
     axios
-      .get('http://localhost:8082/admin/getAllEvaluator')
+      .get('http://localhost:8082/admin/getAllEvaluator', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then((response) => {
         setEvaluators(response.data.data);
       })

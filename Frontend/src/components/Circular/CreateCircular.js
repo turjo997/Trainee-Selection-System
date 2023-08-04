@@ -12,7 +12,7 @@ const CreateCircular = () => {
   const [errors, setErrors] = useState({});
 
   const userId = localStorage.getItem('userId');
-
+  const token = localStorage.getItem('token');
   const API_BASE_URL = "http://localhost:8082/admin";
 
   const handleSubmit = (e) => {
@@ -34,7 +34,13 @@ const CreateCircular = () => {
     console.log(data);
 
 
-    axios.post(API_BASE_URL + '/create/circular', data)
+    axios.post(API_BASE_URL + '/create/circular', data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then((response) => {
         // Handle the success response
         console.log('Data saved successfully:', response.data);
