@@ -466,7 +466,7 @@ public class AdminServiceImpl implements AdminService {
         try {
 
             Long examId = 3l;
-            Long adminId = 5l;
+            Long adminId = 1l;
 
             AdminEntity adminEntity = repositoryManager.getAdminRepository().findById(adminId)
                     .orElseThrow(()->new AdminServiceException("Admin not found"));

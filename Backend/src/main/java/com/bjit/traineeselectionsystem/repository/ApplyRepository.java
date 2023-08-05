@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ApplyRepository extends JpaRepository<ApplyEntity , Long> {
 
-    Optional<ApplyEntity> findByApplicant(ApplicantEntity applicantEntity);
+    List<ApplyEntity> findByApplicant(ApplicantEntity applicantEntity);
 
     List<ApplyEntity> findByJobCircular(JobCircularEntity jobCircular);
 

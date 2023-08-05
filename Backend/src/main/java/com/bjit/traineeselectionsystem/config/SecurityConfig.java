@@ -55,6 +55,8 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/applicant/update"),
             new AntPathRequestMatcher("/download/{userId}"),
             new AntPathRequestMatcher("/applicant/get/{circularId}/{userId}"),
+            new AntPathRequestMatcher("/get/{circularId}"),
+
 
 
 //            new AntPathRequestMatcher("/applicant/get/{applicantId}"),
@@ -71,9 +73,11 @@ public class SecurityConfig {
 
     RequestMatcher[] adminAndEvaluatorMatchers = new RequestMatcher[]{
             new AntPathRequestMatcher("/admin/getAllExamCategory"),
-            new AntPathRequestMatcher("/admin/getAllCircular"),
-            new AntPathRequestMatcher("/get/{circularId}"),
             new AntPathRequestMatcher("/admin/get/written/{circularId}"),
+    };
+
+    RequestMatcher[] adminAndEvaluatorAndApplicantMatchers = new RequestMatcher[]{
+            new AntPathRequestMatcher("/admin/getAllCircular")
     };
 
     @Bean
@@ -88,7 +92,8 @@ public class SecurityConfig {
                 .requestMatchers(adminMatchers).hasAuthority("ADMIN")
                 .requestMatchers(applicantMatchers).hasAuthority("APPLICANT")
                 .requestMatchers(evaluatorMatchers).hasAuthority("EVALUATOR")
-                .requestMatchers(adminAndEvaluatorMatchers).hasAnyAuthority("ADMIN" , "EVALUATOR")
+                .requestMatchers(adminAndEvaluatorMatchers).hasAnyAuthority( "ADMIN" , "EVALUATOR")
+                .requestMatchers(adminAndEvaluatorAndApplicantMatchers).hasAnyAuthority( "APPLICANT" , "ADMIN" , "EVALUATOR")
                 .anyRequest()
                 .authenticated()
                 .and()

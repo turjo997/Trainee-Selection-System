@@ -247,12 +247,12 @@ public class ApplicantServiceImpl implements ApplicantService {
                     .orElseThrow(() -> new JobCircularServiceException("Job circular not found"));
 
 
-            if(examId == 3){
+            if(examId == 2){
                  examCategoryEntity = repositoryManager.getExamCreateRepository()
                         .findById(examId).orElseThrow(()->new ExamCreateServiceException("Exam not found"));
             }
 
-            if(examId == 4){
+            if(examId == 3){
                  examCategoryEntity = repositoryManager.getExamCreateRepository()
                         .findById(examId).orElseThrow(()->new ExamCreateServiceException("Exam not found"));
             }

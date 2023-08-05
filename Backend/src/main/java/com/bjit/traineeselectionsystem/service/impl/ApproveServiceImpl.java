@@ -45,11 +45,13 @@ public class ApproveServiceImpl implements ApproveService {
                     .findById(approvalModel.getApplicantId()).orElseThrow(()
                             -> new ApplicantServiceException("Applicant not found"));
 
-            Optional<ApplyEntity> applyOptional = repositoryManager.getApplyRepository()
+            List<ApplyEntity> applyOptional = repositoryManager.getApplyRepository()
                     .findByApplicant(applicantEntity);
 
-            applyOptional.orElseThrow(()
-                    -> new ApplyServiceException("ApplyEntity not found for the given applicant"));
+            if(applyOptional.size() == 0){
+                new ApplyServiceException("ApplyEntity not found for the given applicant");
+            }
+
 
             JobCircularEntity jobCircularEntity = repositoryManager.getJobCircularRepository()
                     .findById(approvalModel.getCircularId()).orElseThrow(()
