@@ -11,7 +11,7 @@ const UploadMarksByTechnical = () => {
   const [userId] = useState(localStorage.getItem('userId'));
   const [isFetchButtonClicked, setIsFetchButtonClicked] = useState(false);
   const token = localStorage.getItem('token');
-  const examId = 3;
+  const examId = 2;
 
   useEffect(() => {
     fetchCirculars();
@@ -118,7 +118,7 @@ const UploadMarksByTechnical = () => {
         userId,
         applicantId: applicant.applicantId,
         circularId: selectedJobCircular,
-        examId: 3,
+        examId: 2,
         marks: applicant.marks,
       };
 

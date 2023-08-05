@@ -11,7 +11,7 @@ const UploadMarksByHr = () => {
   const [userId] = useState(localStorage.getItem('userId'));
   const [isFetchButtonClicked, setIsFetchButtonClicked] = useState(false);
   const token = localStorage.getItem('token');
-  const examId = 4;
+  const examId = 3;
 
   useEffect(() => {
     fetchCirculars();
@@ -20,12 +20,13 @@ const UploadMarksByHr = () => {
 
   const fetchCirculars = async () => {
     try {
-      const response = await axios.get('http://localhost:8082/admin/getAllCircular', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      });
+      const response = await axios.get('http://localhost:8082/admin/getAllCircular',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
       setJobCirculars(response.data.data);
     } catch (error) {
       console.error('Error fetching circulars:', error);
@@ -34,12 +35,13 @@ const UploadMarksByHr = () => {
 
   const fetchStatusForApplicant = async (applicantId, circularId) => {
     try {
-      const response = await axios.get(`http://localhost:8082/admin/get/${applicantId}/${circularId}/${examId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
-      });
+      const response = await axios.get(`http://localhost:8082/admin/get/${applicantId}/${circularId}/${examId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
       console.log(response.data);
       return response.data; // Assuming the API response provides a boolean value
     } catch (error) {
@@ -80,6 +82,7 @@ const UploadMarksByHr = () => {
       const fetchedApplicants = response.data; // Assuming the API response provides an array of applicants
       if (fetchedApplicants.length === 0) {
         setErrorMessage('No applicants found for the selected Job Circular.');
+        return null;
       } else {
         setErrorMessage('');
 
@@ -88,10 +91,10 @@ const UploadMarksByHr = () => {
           fetchedApplicants.map(async (applicant) => {
             const statusResponse = await fetchStatusForApplicant(applicant.applicantId, selectedJobCircular);
             const status = statusResponse ? 'Submitted' : 'Not Submitted';
-
             return {
               ...applicant,
               status,
+              //marks,
             };
           })
         );
@@ -110,13 +113,12 @@ const UploadMarksByHr = () => {
       setErrorMessage('Please enter valid marks (0 to 100).');
       return;
     }
-
     try {
       const data = {
         userId,
         applicantId: applicant.applicantId,
         circularId: selectedJobCircular,
-        examId: 4,
+        examId: 3,
         marks: applicant.marks,
       };
 
@@ -140,9 +142,7 @@ const UploadMarksByHr = () => {
         );
         setSuccessMessage('Marks saved successfully!');
       }
-      // else {
-      //   setErrorMessage('Error uploading marks. Please try again later.');
-      // }
+
     } catch (error) {
       console.error('Error uploading marks:', error);
       setErrorMessage('Error uploading marks. Please try again later.');
@@ -175,6 +175,7 @@ const UploadMarksByHr = () => {
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
       {successMessage && <p className="success-message">{successMessage}</p>}
+
       {applicants.length > 0 && (
         <div className="applicants-table-container">
           <h3>Applicants:</h3>
@@ -233,7 +234,6 @@ const UploadMarksByHr = () => {
     </div>
   );
 };
-
 
 
 export default UploadMarksByHr;

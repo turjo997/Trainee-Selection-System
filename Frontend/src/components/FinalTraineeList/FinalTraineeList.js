@@ -36,7 +36,7 @@ const FinalTraineeList = () => {
             return;
         }
         axios
-            .post(`${API_BASE_URL}/get/trainees/${selectedCircular}`, {
+            .post(`${API_BASE_URL}/get/trainees/${selectedCircular}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -63,6 +63,8 @@ const FinalTraineeList = () => {
     return (
         <div className="trainees-table-container">
             <h2>Trainees Table</h2>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+
             <div className="select-circular">
                 <label>Select Circular:</label>
                 <select value={selectedCircular} onChange={(e) => setSelectedCircular(e.target.value)}>
@@ -79,7 +81,6 @@ const FinalTraineeList = () => {
                 See Final List
             </button>
 
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
 
             {applicants.length > 0 && (
                 <table className="trainees-table">

@@ -6,7 +6,7 @@ const ApproveByTechnical = () => {
   const [jobCirculars, setJobCirculars] = useState([]);
   const [examCategories, setExamCategories] = useState([]);
   const [selectedJobCircular, setSelectedJobCircular] = useState('');
-  const [selectedExamCategory, setSelectedExamCategory] = useState(1); // Set the default examId to 1
+  const [selectedExamCategory, setSelectedExamCategory] = useState(''); // Set the default examId to 1
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const token = localStorage.getItem('token');
@@ -71,6 +71,7 @@ const ApproveByTechnical = () => {
 
       const response = await axios.post(
         `http://localhost:8082/admin/approve/${data.userId}/${data.circularId}/${data.examId}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,6 +79,7 @@ const ApproveByTechnical = () => {
           }
         });
 
+      console.log(response.status);
 
       if (response.status === 200) {
         setSuccessMessage('Approved successfully!');

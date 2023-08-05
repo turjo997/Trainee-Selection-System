@@ -7,6 +7,7 @@ const CurrentOpenings = () => {
     const [appliedStatus, setAppliedStatus] = useState({});
 
     const userId = localStorage.getItem('userId');
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         fetchCirculars();
@@ -14,7 +15,12 @@ const CurrentOpenings = () => {
 
     const fetchCirculars = () => {
         axios
-            .get('http://localhost:8082/admin/getAllCircular')
+            .get('http://localhost:8082/admin/getAllCircular', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
             .then((response) => {
                 setCirculars(response.data.data);
                 checkAppliedStatus(response.data.data);
@@ -28,7 +34,12 @@ const CurrentOpenings = () => {
         try {
             const appliedStatusMap = {};
             for (const circular of circulars) {
-                const response = await axios.get(`http://localhost:8082/applicant/get/${circular.circularId}/${userId}`);
+                const response = await axios.get(`http://localhost:8082/applicant/get/${circular.circularId}/${userId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    }
+                });
                 appliedStatusMap[circular.circularId] = response.data;
             }
             setAppliedStatus(appliedStatusMap);

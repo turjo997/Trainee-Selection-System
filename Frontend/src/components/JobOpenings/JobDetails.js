@@ -7,6 +7,7 @@ const JobDetailsPage = () => {
     const [jobDetails, setJobDetails] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const token = localStorage.getItem('token');
 
     useEffect(() => {
         fetchJobDetails();
@@ -14,7 +15,12 @@ const JobDetailsPage = () => {
 
     const fetchJobDetails = () => {
         axios
-            .get(`http://localhost:8082/get/${circularId}`)
+            .get(`http://localhost:8082/get/${circularId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
             .then((response) => {
                 setJobDetails(response.data.data);
             })
@@ -30,7 +36,12 @@ const JobDetailsPage = () => {
         };
 
         axios
-            .post(`http://localhost:8082/applicant/apply`, data)
+            .post(`http://localhost:8082/applicant/apply`, data, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
             .then((response) => {
                 // Handle the success response
                 console.log('Data saved successfully:', response.data);

@@ -7,7 +7,7 @@ const ApproveByHr = () => {
   const [jobCirculars, setJobCirculars] = useState([]);
   const [examCategories, setExamCategories] = useState([]);
   const [selectedJobCircular, setSelectedJobCircular] = useState('');
-  const [selectedExamCategory, setSelectedExamCategory] = useState(1); // Set the default examId to 1
+  const [selectedExamCategory, setSelectedExamCategory] = useState(''); // Set the default examId to 1
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const token = localStorage.getItem('token');
@@ -68,7 +68,10 @@ const ApproveByHr = () => {
       };
 
       const response = await axios.post(
-        `http://localhost:8082/admin/approve/exam/${data.userId}/${data.circularId}/${data.examId}`,
+        `http://localhost:8082/admin/approve/${data.userId}/${data.circularId}/${data.examId}`
+        ,
+        {}
+        ,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +96,7 @@ const ApproveByHr = () => {
 
   return (
     <div className="approve-marks-container">
-      <h2 className="title">Approve for Technical Test</h2>
+      <h2 className="title">Approve for HR Test</h2>
       <div className="form-field">
         <label>Select Job Circular:</label>
         <select className="select-box" value={selectedJobCircular} onChange={handleJobCircularChange}>
@@ -109,7 +112,7 @@ const ApproveByHr = () => {
         <label>Select Exam Category:</label>
         <select className="select-box" value={selectedExamCategory} onChange={handleExamCategoryChange}>
           <option value="">Select Exam Category</option>
-          {examCategories.filter(examCategory => examCategory.examId === 4).map((examCategory) => (
+          {examCategories.filter(examCategory => examCategory.examId === 3).map((examCategory) => (
             <option key={examCategory.examId} value={examCategory.examId}>
               {examCategory.examTitle}
             </option>
